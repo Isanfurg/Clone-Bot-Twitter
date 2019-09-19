@@ -6,15 +6,15 @@
 
 <AnchorPane maxHeight="630.0" maxWidth="800.0" minHeight="630.0" minWidth="800.0" prefHeight="630.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UiComponents.MainWindowController">
    <children>
-      <AnchorPane fx:id="windowBar" maxHeight="30.0" maxWidth="800.0" minHeight="30.0" minWidth="800.0" prefHeight="30.0" prefWidth="800.0" styleClass="bar" stylesheets="@styles.css">
+      <AnchorPane fx:id="windowBar" maxHeight="30.0" maxWidth="800.0" minHeight="30.0" minWidth="800.0" prefHeight="30.0" prefWidth="800.0" styleClass="Bar" stylesheets="@styles.css">
          <children>
-            <Button layoutX="14.0" layoutY="5.0" maxHeight="20.0" maxWidth="20.0" minHeight="20.0" minWidth="20.0" mnemonicParsing="false" onAction="#closeWindow" prefHeight="20.0" prefWidth="20.0" styleClass="circleButton" stylesheets="@styles.css" />
-            <Button layoutX="49.0" layoutY="5.0" maxHeight="20.0" maxWidth="20.0" minHeight="20.0" minWidth="20.0" mnemonicParsing="false" onAction="#minimizeWindow" prefHeight="20.0" prefWidth="20.0" styleClass="circleButton" stylesheets="@styles.css" />
+            <Button layoutX="14.0" layoutY="5.0" maxHeight="20.0" maxWidth="20.0" minHeight="20.0" minWidth="20.0" mnemonicParsing="false" onAction="#closeWindow" prefHeight="20.0" prefWidth="20.0" styleClass="CircleButton" stylesheets="@styles.css" />
+            <Button layoutX="49.0" layoutY="5.0" maxHeight="20.0" maxWidth="20.0" minHeight="20.0" minWidth="20.0" mnemonicParsing="false" onAction="#minimizeWindow" prefHeight="20.0" prefWidth="20.0" styleClass="CircleButton" stylesheets="@styles.css" />
          </children>
          <cursor>
             <Cursor fx:constant="MOVE" />
          </cursor>
       </AnchorPane>
-      <AnchorPane fx:id="contentPane" layoutY="30.0" maxHeight="600.0" maxWidth="800.0" minHeight="600.0" minWidth="800.0" prefHeight="600.0" prefWidth="800.0" styleClass="bigAnchorPane" stylesheets="@styles.css" />
+      <AnchorPane fx:id="contentPane" layoutY="30.0" maxHeight="600.0" maxWidth="800.0" minHeight="600.0" minWidth="800.0" prefHeight="600.0" prefWidth="800.0" styleClass="BigAnchorPane" stylesheets="@styles.css" />
    </children>
 </AnchorPane>

@@ -1,17 +1,20 @@
-.optionButton{
+.OptionButton{
     -fx-font-weight:bold;
     -fx-background-color: #243641;
     -fx-background-radius: 0px;
+    -fx-border-color: #243641;
+    -fx-border-width: 1px;
     -fx-border-radius: 0px;
     -fx-text-fill: #ffffff;
-    -fx-text-alignment: center;
+    -fx-text-alignment: left;
     -fx-font-size: 20px;
 }
 
-.optionButton:hover{
+.OptionButton:hover{
     -fx-background-color: #10202d;
+    -fx-border-color:#10202d;
 }
-.button{
+.Button{
     -fx-font-weight:bold;
     -fx-background-color: #243641;
     -fx-background-radius: 5px;
@@ -21,14 +24,15 @@
     -fx-text-alignment: center;
     -fx-font-size: 20px;
 }
-.button:hover{
+.Button:hover{
+   
    -fx-background-color:#6a3fe1;
 }
 
-.bigAnchorPane{
+.BigAnchorPane{
     -fx-background-color: #10202d;
 }
-.textBox{
+.TextBox{
     -fx-font-family: "Roboto";
     -fx-font-size: 18px;
     -fx-background-color: #243641;
@@ -38,19 +42,19 @@
     -fx-text-fill: #ffffff;
     -fx-text-alignment: center;
 }
-.circleButton{
+.CircleButton{
     -fx-border-radius: 100px;
     -fx-background-radius: 100px;
     -fx-background-color:  #3d4f5d;
     -fx-border-color: #6a3fe1;
 }
-.bar{
+.Bar{
     -fx-background-color:  #02111c;
 }
-.lateralBar{
+.LateralBar{
     -fx-background-color: #243641 ;
 }
-.selectButton{
+.SelectButton{
    -fx-background-color: #10202d;
    -fx-font-size: 20px;
    -fx-text-fill: #606e78;

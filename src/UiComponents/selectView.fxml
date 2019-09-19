@@ -1,31 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane id="AnchorPane" maxHeight="600.0" maxWidth="800.0" minHeight="600.0" minWidth="800.0" prefHeight="600.0" prefWidth="800.0" styleClass="bigAnchorPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UiComponents.SelectViewController">
-    <stylesheets>
-        <URL value="@styles.css" />
-    </stylesheets>
+
+<AnchorPane id="AnchorPane" minHeight="600.0" minWidth="800.0" prefHeight="600.0" prefWidth="800.0" styleClass="BigAnchorPane" stylesheets="@styles.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.1" fx:controller="UiComponents.SelectViewController">
    <children>
-      <VBox maxHeight="600.0" maxWidth="200.0" minHeight="600.0" minWidth="200.0" prefHeight="600.0" prefWidth="200.0" styleClass="lateralBar">
-         <children>
-            <Button alignment="CENTER_RIGHT" maxHeight="50.0" maxWidth="200.0" minHeight="50.0" minWidth="200.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" styleClass="buttonOption" stylesheets="@styles.css" text="Button" />
-            <Button alignment="CENTER_RIGHT" maxHeight="50.0" maxWidth="200.0" minHeight="50.0" minWidth="200.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" styleClass="buttonOption" stylesheets="@styles.css" text="Button" />
-            <Button alignment="CENTER_RIGHT" maxHeight="50.0" maxWidth="200.0" minHeight="50.0" minWidth="200.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" styleClass="buttonOption" stylesheets="@styles.css" text="Button" />
-            <Button alignment="CENTER_RIGHT" maxHeight="50.0" maxWidth="200.0" minHeight="50.0" minWidth="200.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" styleClass="buttonOption" stylesheets="@styles.css" text="Button" />
-            <Button alignment="CENTER_RIGHT" maxHeight="50.0" maxWidth="200.0" minHeight="50.0" minWidth="200.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" styleClass="buttonOption" stylesheets="@styles.css" text="Button">
-               <VBox.margin>
-                  <Insets />
-               </VBox.margin>
-            </Button>
-         </children>
+      <VBox minHeight="600.0" minWidth="200.0" prefHeight="600.0" prefWidth="200.0" styleClass="LateralBar" stylesheets="@styles.css">
          <padding>
             <Insets top="200.0" />
          </padding>
+         <children>
+            <Button maxHeight="50.0" maxWidth="200.0" minHeight="50.0" minWidth="200.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" styleClass="OptionButton" stylesheets="@styles.css" text="Button" />
+            <Button maxHeight="50.0" maxWidth="200.0" minHeight="50.0" minWidth="200.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" styleClass="OptionButton" stylesheets="@styles.css" text="Button" />
+            <Button maxHeight="50.0" maxWidth="200.0" minHeight="50.0" minWidth="200.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" styleClass="OptionButton" stylesheets="@styles.css" text="Button" />
+            <Button maxHeight="50.0" maxWidth="200.0" minHeight="50.0" minWidth="200.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" styleClass="OptionButton" stylesheets="@styles.css" text="Button" />
+            <Button maxHeight="50.0" maxWidth="200.0" minHeight="50.0" minWidth="200.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" styleClass="OptionButton" stylesheets="@styles.css" text="Button" />
+         </children>
       </VBox>
    </children>
 </AnchorPane>
