@@ -9,7 +9,17 @@
     -fx-text-alignment: left;
     -fx-font-size: 20px;
 }
-
+.TextBig{
+   -fx-font-weight:bold;
+   -fx-font-size: 28px;
+}
+.TextMedium{
+    -fx-font-weight:bold;
+    -fx-font-size: 28px;
+}
+.TextLow{
+    -fx-font-size: 14px;
+}
 .OptionButton:hover{
     -fx-background-color: #10202d;
     -fx-border-color:#10202d;

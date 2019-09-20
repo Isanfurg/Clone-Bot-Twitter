@@ -44,7 +44,7 @@ public class LoginViewController implements Initializable,Notification {
         StringSelection stringSelection = new StringSelection(BOT.getInstance().generateUrl());
         Clipboard clpbrd = Toolkit.getDefaultToolkit().getSystemClipboard();
         clpbrd.setContents(stringSelection, null);
-        this.newNotification("Pin Copiado al portapapeles");
+        this.newNotification("URL Copiado al portapapeles");
     }
 
     @FXML

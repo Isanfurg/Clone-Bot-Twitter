@@ -28,11 +28,15 @@ public class BOT {
     private AccessToken accessToken ;
     private boolean access ;
     private BOT() throws TwitterException{
+        setPin();
+
+    }
+    private void setPin() throws TwitterException{ 
         this.twitterBot = new TwitterFactory().getInstance();
         this.twitterBot.setOAuthConsumer(CONSUMER_KEY, CONSUMER_KEY_SECRET);
         this.requestToken = twitterBot.getOAuthRequestToken();
         this.access = false;
-    }   
+    }
     public static BOT getInstance() throws TwitterException{
         if(instance == null){
             instance = new BOT();   
@@ -41,16 +45,17 @@ public class BOT {
     public String generateUrl() throws TwitterException{
         return requestToken.getAuthorizationURL();
     }
-    public void tryPin(String pin){
+    public void tryPin(String pin) throws TwitterException{
     try{
         accessToken = twitterBot.getOAuthAccessToken(this.requestToken, pin);
         this.access = true;
     } catch (TwitterException e) {
         System.out.println("Failed to get access token, caused by: "
         + e.getMessage());
- 
+        requestToken = null; 
         System.out.println("Retry input PIN");
     }
+    if(requestToken == null) setPin();
     }
 
     public boolean isAccess() {
@@ -75,14 +80,65 @@ public class BOT {
             return null;
         }
     }
-    public String getProfileBannerUrl(){
-        twitterBot.
-        return twitterBot.getProfileBanner600x200URL();
+    public String getName() throws TwitterException{
+        try{
+            return twitterBot.showUser(getUserName()).getName();
+        }catch(TwitterException e){
+            System.out.println(e);
+            return null;
+        }
+    }
+    public void test() throws TwitterException{
+        //seguidos
+        System.out.println(twitterBot.showUser(getUserName()).getFollowersCount());
+        //siguiendo
+        System.out.println(twitterBot.showUser(getUserName()).getFriendsCount());
+    }
+    public int getFollowersCount(){
+        try{    return twitterBot.showUser(getUserName()).getFollowersCount();
+        }catch(TwitterException e){     System.out.println(e);
+        } return -1;
+    }
+    public int getFollowersCount(String userName){
+        try{    return twitterBot.showUser(userName).getFollowersCount();
+        }catch(TwitterException e){     System.out.println(e);
+        } return -1;
+    }
+    public int getFriendsCount(){
+        try{    return twitterBot.showUser(getUserName()).getFriendsCount();
+        }catch(TwitterException e){     System.out.println(e);
+        } return -1;
+    }
+    public int getFriendsCount(String userName){
+        try{    return twitterBot.showUser(userName).getFriendsCount();
+        }catch(TwitterException e){     System.out.println(e);
+        } return -1;
+    }
+    public String getProfileBannerURL(){
+        try{    return twitterBot.showUser(getUserName()).getProfileBanner600x200URL();
+        }catch(TwitterException e){     System.out.println(e);
+        } return null;
+    }
+    
+    public String getProfileBannerURL(String userName){
+        try{    return twitterBot.showUser(userName).getProfileBanner600x200URL();
+        }catch(TwitterException e){     System.out.println(e);
+        } return null;
+    }
+    public String getProfileImageURL(){
+         try{    return twitterBot.showUser(getUserName()).get400x400ProfileImageURL();
+        }catch(TwitterException e){     System.out.println(e);
+        } return null;
+    }
+    public String getProfileImageURL(String userName){
+         try{    return twitterBot.showUser(userName).get400x400ProfileImageURL();
+        }catch(TwitterException e){     System.out.println(e);
+        } return null;
     }
     public ResponseList<Status> getTimeLine() throws TwitterException{
         try{
             
-            System.out.println(twitterBot.getUserTimeline());
+            //System.out.println(twitterBot.getUserTimeline());
             return twitterBot.getUserTimeline();
         }catch(TwitterException e){
             System.out.println(e.getMessage());

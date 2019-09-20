@@ -5,15 +5,24 @@
  */
 package UiComponents;
 
+import BotComponents.BOT;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import twitter4j.ResponseList;
+import twitter4j.Status;
 import twitter4j.TwitterException;
 
 /**
@@ -29,6 +38,14 @@ public class UserViewController implements Initializable,Notification {
     private ImageView profileImg;
     @FXML
     private Text userName;
+    @FXML
+    private Text followers;
+    @FXML
+    private Text following;
+    @FXML
+    private Text name;
+    @FXML
+    private VBox tweets;
 
     /**
      * Initializes the controller class.
@@ -36,16 +53,51 @@ public class UserViewController implements Initializable,Notification {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         try {
-            userName.setText(BotComponents.BOT.getInstance().getUserName());
+            BotComponents.BOT.getInstance().test();
+            
+            bannerImg.setImage(
+                    new Image(BOT.getInstance().getProfileBannerURL())
+            );
+            profileImg.setImage(
+                    new Image(BOT.getInstance().getProfileImageURL())
+            );
+            name.setText(
+                    BOT.getInstance().getName()
+            );
+            userName.setText(
+                    "@"+BOT.getInstance().getUserName()
+            );
+            following.setText(
+                    Integer.toString(BOT.getInstance().getFriendsCount())+" Siguiendo"
+                    );
+            followers.setText(
+                    Integer.toString(BOT.getInstance().getFollowersCount())+" Seguidores"
+                    );
+
+            setTimelineInUi();
             // TODO
         } catch (TwitterException ex) {
             
+        } catch (IOException ex) {
+            Logger.getLogger(UserViewController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }    
+    private void setTimelineInUi() throws TwitterException, IOException{
+        ResponseList<Status> timeline = BOT.getInstance().getTimeLine();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("tweetTemplate.fxml"));
+        tweets.getChildren().add(loader.load());
+        TweetTemplateController templateController = loader.getController();
+        templateController.setItem("text ex");
 
-    private void sendNewTweet(ActionEvent event) throws TwitterException {
-        BotComponents.BOT.getInstance().getTimeLine();
-        this.newNotification("Try");
+        //AnchorPane tweetPane = (AnchorPane)loader.load();
+
+//            System.out.println("User: "+status.getUser().getName()+" - "+ status.getUser().getScreenName());
+//            System.out.println("Text: "+status.getText());
+//            System.out.println("Retweeted: "+ status.getRetweetedStatus()+ " - "+ status.getRetweetCount());
+//            System.out.println("Liked: "+ status.isFavorited()+" - "+status.getFavoriteCount());
+            
+            //loader.setController(controller);            System.out.println("xflsdlf\n\n");
+            
+            
     }
-    
 }
