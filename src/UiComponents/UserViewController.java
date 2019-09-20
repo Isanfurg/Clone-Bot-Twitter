@@ -53,7 +53,7 @@ public class UserViewController implements Initializable,Notification {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         try {
-            BotComponents.BOT.getInstance().test();
+            //BotComponents.BOT.getInstance().test();
             
             bannerImg.setImage(
                     new Image(BOT.getInstance().getProfileBannerURL())
@@ -84,12 +84,19 @@ public class UserViewController implements Initializable,Notification {
     }    
     private void setTimelineInUi() throws TwitterException, IOException{
         ResponseList<Status> timeline = BOT.getInstance().getTimeLine();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("tweetTemplate.fxml"));
-        tweets.getChildren().add(loader.load());
-        TweetTemplateController templateController = loader.getController();
-        templateController.setItem("text ex");
 
-        //AnchorPane tweetPane = (AnchorPane)loader.load();
+
+        for (Status status : timeline) {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("tweetTemplate.fxml"));
+            tweets.getChildren().add(loader.load());
+            TweetTemplateController templateController = loader.getController();
+            templateController.setItems(
+                    status.getUser().getName(),
+                    status.getUser().getScreenName(),
+                    status.getUser().get400x400ProfileImageURL(),
+                    status.getText()
+            );
+        }
 
 //            System.out.println("User: "+status.getUser().getName()+" - "+ status.getUser().getScreenName());
 //            System.out.println("Text: "+status.getText());

@@ -10,6 +10,8 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 
 /**
@@ -25,6 +27,8 @@ public class TweetTemplateController implements Initializable {
     private Text userName;
     @FXML
     private TextArea tweetBox;
+    @FXML
+    private ImageView profileImg;
 
     /**
      * Initializes the controller class.
@@ -33,7 +37,10 @@ public class TweetTemplateController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
     }    
-    public void setItem(String pera){
-        tweetBox.setText(pera);
+    public void setItems(String user,String UserName, String ProfileImgURL,String tweetText){
+        this.User.setText(user);
+        this.userName.setText(UserName);
+        this.tweetBox.setText(tweetText);
+        this.profileImg.setImage(new Image(ProfileImgURL));
     }
 }
