@@ -5,6 +5,7 @@
  */
 package UiComponents;
 
+import BotComponents.BOT;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -13,6 +14,8 @@ import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
+import twitter4j.Status;
+import twitter4j.TwitterException;
 
 /**
  * FXML Controller class
@@ -29,7 +32,7 @@ public class TweetTemplateController implements Initializable {
     private TextArea tweetBox;
     @FXML
     private ImageView profileImg;
-
+    
     /**
      * Initializes the controller class.
      */
@@ -37,10 +40,24 @@ public class TweetTemplateController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
     }    
-    public void setItems(String user,String UserName, String ProfileImgURL,String tweetText){
+    public void setItems(Status status) throws TwitterException{
+        String text = status.getText();
+        String user = status.getUser().getName();
+        String userName = status.getUser().getScreenName();
+        String profileImgURL = status.getUser().getProfileImageURL();
+        String[] parts = text.split(" ");
+        if("RT".equals(parts[0])){
+            userName = parts[1].substring(1, parts[1].length()-1);
+            System.out.println(userName);
+            text = text.substring(4+ parts[1].length());
+            user = BOT.getInstance().getName(userName);
+            profileImgURL = BOT.getInstance().getProfileImageURL(userName);
+        }
+        tweetBox.setText(text);
         this.User.setText(user);
-        this.userName.setText(UserName);
-        this.tweetBox.setText(tweetText);
-        this.profileImg.setImage(new Image(ProfileImgURL));
+        profileImg.setImage(new Image(profileImgURL));
+        this.userName.setText(userName);
+        
+        
     }
 }

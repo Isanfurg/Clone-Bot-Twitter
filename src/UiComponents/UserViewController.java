@@ -55,12 +55,18 @@ public class UserViewController implements Initializable,Notification {
         try {
             //BotComponents.BOT.getInstance().test();
             
-            bannerImg.setImage(
+            if(BOT.getInstance().getProfileBannerURL()!=null){
+                profileImg.setImage(
                     new Image(BOT.getInstance().getProfileBannerURL())
-            );
-            profileImg.setImage(
+                );
+            }
+            
+            if(BOT.getInstance().getProfileImageURL()!=null){
+                profileImg.setImage(
                     new Image(BOT.getInstance().getProfileImageURL())
-            );
+                );
+            }
+           
             name.setText(
                     BOT.getInstance().getName()
             );
@@ -90,12 +96,7 @@ public class UserViewController implements Initializable,Notification {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("tweetTemplate.fxml"));
             tweets.getChildren().add(loader.load());
             TweetTemplateController templateController = loader.getController();
-            templateController.setItems(
-                    status.getUser().getName(),
-                    status.getUser().getScreenName(),
-                    status.getUser().get400x400ProfileImageURL(),
-                    status.getText()
-            );
+            templateController.setItems(status);
         }
 
 //            System.out.println("User: "+status.getUser().getName()+" - "+ status.getUser().getScreenName());

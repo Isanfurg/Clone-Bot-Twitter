@@ -61,6 +61,12 @@ public class BOT {
     public boolean isAccess() {
         return access;
     }
+    public Status getStatus(long id) throws TwitterException{
+        try{return twitterBot.showStatus(id);
+        }catch(TwitterException e){
+            return null;
+        }
+    }
 
     public void newTweet(String msg) throws TwitterException {
         try{
@@ -83,6 +89,15 @@ public class BOT {
     public String getName() throws TwitterException{
         try{
             return twitterBot.showUser(getUserName()).getName();
+        }catch(TwitterException e){
+            System.out.println(e);
+            return null;
+        }
+    }
+    
+    public String getName(String userName) throws TwitterException{
+        try{
+            return twitterBot.showUser(userName).getName();
         }catch(TwitterException e){
             System.out.println(e);
             return null;

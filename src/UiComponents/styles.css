@@ -28,14 +28,14 @@
     -fx-font-size: 12px;
     -fx-background-color: #243641;
     -fx-background-radius: 5px;
-    -fx-border-radius: 10px;
+    -fx-border-radius: 5px;
     -fx-border-color: #6a3fe1;
     -fx-fill-color: #10202d;
 
 }
 .CircleImg{
     -fx-border-radius: 100px;
-    -fx-background-radios: 100px;
+    -fx-background-radius: 100px;
 }
 .Button{
     -fx-font-weight:bold;
