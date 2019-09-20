@@ -5,6 +5,8 @@
  */
 package BotComponents;
 
+import twitter4j.ResponseList;
+import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
@@ -43,9 +45,9 @@ public class BOT {
     try{
         accessToken = twitterBot.getOAuthAccessToken(this.requestToken, pin);
         this.access = true;
-    } catch (TwitterException te) {
+    } catch (TwitterException e) {
         System.out.println("Failed to get access token, caused by: "
-        + te.getMessage());
+        + e.getMessage());
  
         System.out.println("Retry input PIN");
     }
@@ -53,6 +55,39 @@ public class BOT {
 
     public boolean isAccess() {
         return access;
+    }
+
+    public void newTweet(String msg) throws TwitterException {
+        try{
+            twitterBot.updateStatus(msg);
+        System.out.println("Sucesfull!");
+        }catch(TwitterException e){
+            System.out.println("update error by:"
+            +e.getMessage());
+        }
+        
+    }
+    public String getUserName() throws TwitterException{
+        try{
+            return twitterBot.getScreenName();
+        }catch(TwitterException e){
+            System.out.println(e);
+            return null;
+        }
+    }
+    public String getProfileBannerUrl(){
+        twitterBot.
+        return twitterBot.getProfileBanner600x200URL();
+    }
+    public ResponseList<Status> getTimeLine() throws TwitterException{
+        try{
+            
+            System.out.println(twitterBot.getUserTimeline());
+            return twitterBot.getUserTimeline();
+        }catch(TwitterException e){
+            System.out.println(e.getMessage());
+            return null;
+        }
     }
     
 }
