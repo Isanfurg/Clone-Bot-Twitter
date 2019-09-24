@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package UiComponents;
+package UiComponents.Controllers;
 
 import BotComponents.BOT;
+import UiComponents.Interfaces.Notification;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;

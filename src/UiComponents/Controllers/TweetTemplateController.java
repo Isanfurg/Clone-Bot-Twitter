@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package UiComponents;
+package UiComponents.Controllers;
 
 import BotComponents.BOT;
 import java.net.URL;
@@ -55,6 +55,9 @@ public class TweetTemplateController implements Initializable {
         }
         tweetBox.setText(text);
         this.User.setText(user);
+        profileImg.setFitHeight(70);
+        
+        profileImg.setFitWidth(70);
         profileImg.setImage(new Image(profileImgURL));
         this.userName.setText(userName);
         

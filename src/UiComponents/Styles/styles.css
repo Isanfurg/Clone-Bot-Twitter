@@ -77,7 +77,28 @@
 .LateralBar{
     -fx-background-color: #243641 ;
 }
-.SelectButton{
+.ScrollPane>.viewport {
+   -fx-background-color: transparent;
+   -fx-alignment: center;
+}
+.ScrollPane>.scroll-bar >.increment-button, .decrement-button{
+   -fx-background-color:  #243641;
+   -fx-border-color:#6a3fe1;
+   
+}
+.ScrollPane>.scroll-bar >.track{
+   -fx-background-color:  #243641;
+   
+}
+.ScrollPane>.scroll-bar >.thumb{
+   -fx-background-color:  #243641;
+   
+}
+
+.ScrollPane {
+   -fx-background-color: transparent;
+}
+.SelectButton{      
    -fx-background-color: #10202d;
    -fx-font-size: 20px;
    -fx-text-fill: #606e78;

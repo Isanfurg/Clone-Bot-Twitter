@@ -20,7 +20,7 @@ public class LohKumahCabroh extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/UiComponents/mainWindow.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/UiComponents/Fxml/mainWindow.fxml"));
         Scene scene = new Scene(root);
         stage.setResizable(false);
         stage.initStyle(StageStyle.UNDECORATED);

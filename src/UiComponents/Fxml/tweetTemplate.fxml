@@ -9,7 +9,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane id="AnchorPane" maxHeight="200.0" maxWidth="500.0" minHeight="200.0" minWidth="500.0" prefHeight="200.0" prefWidth="500.0" styleClass="BigAnchorPane" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UiComponents.TweetTemplateController">
+<AnchorPane id="AnchorPane" maxHeight="200.0" maxWidth="500.0" minHeight="200.0" minWidth="500.0" prefHeight="200.0" prefWidth="500.0" styleClass="BigAnchorPane" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UiComponents.Controllers.TweetTemplateController">
    <children>
       <VBox fillWidth="false" layoutX="10.0" layoutY="10.0" minHeight="180.0" minWidth="480.0" prefHeight="180.0" prefWidth="480.0" styleClass="Button" stylesheets="@styles.css" AnchorPane.topAnchor="10.0">
          <children>

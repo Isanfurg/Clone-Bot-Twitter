@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package UiComponents;
+package UiComponents.Controllers;
 
-import UiComponents.DraggedScene;
+import UiComponents.Interfaces.DraggedScene;
+import UiComponents.Interfaces.DraggedScene;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -39,7 +40,7 @@ public class MainWindowController implements Initializable,DraggedScene {
     public void initialize(URL url, ResourceBundle rb) {
        this.onDraggedScene(windowBar);
         try {
-            AnchorPane newPane = FXMLLoader.load(getClass().getResource("loginView.fxml"));
+            AnchorPane newPane = FXMLLoader.load(getClass().getResource("/UiComponents/Fxml/loginView.fxml"));
             contentPane.getChildren().setAll(newPane);
         } catch (IOException ex) {
             Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);

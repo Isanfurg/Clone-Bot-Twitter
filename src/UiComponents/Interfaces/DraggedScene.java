@@ -1,4 +1,4 @@
-package UiComponents;
+package UiComponents.Interfaces;
 
 
 import java.util.concurrent.atomic.AtomicReference;

@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package UiComponents;
+package UiComponents.Controllers;
 
 import BotComponents.BOT;
+import UiComponents.Interfaces.Notification;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -56,7 +57,7 @@ public class UserViewController implements Initializable,Notification {
             //BotComponents.BOT.getInstance().test();
             
             if(BOT.getInstance().getProfileBannerURL()!=null){
-                profileImg.setImage(
+                bannerImg.setImage(
                     new Image(BOT.getInstance().getProfileBannerURL())
                 );
             }
