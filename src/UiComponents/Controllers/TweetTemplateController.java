@@ -27,9 +27,7 @@ import twitter4j.TwitterException;
  * @author isanfurg
  */
 public class TweetTemplateController implements Initializable {
-    private boolean status_fav;
-    private boolean status_retweet;
-    long idTweet;
+    Status data;
     @FXML
     private Text userName;
     @FXML
@@ -62,14 +60,14 @@ public class TweetTemplateController implements Initializable {
             profileImgURL = BOT.getInstance().getProfileImageURL(userName);
         }
         if(status.isRetweet()){
-            user = "Retweeted from: ";
+            user = "Retweeted from: "+ user;
         }
         content.setText(text);
         this.user.setText(user);
         Image img = new Image(profileImgURL);
         profileImg.setFill(new ImagePattern(img));
         this.userName.setText("@"+userName);
-        idTweet = status.getId();
+        data = status;
         
         
         
