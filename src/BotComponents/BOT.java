@@ -10,6 +10,7 @@ import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
+import twitter4j.User;
 import twitter4j.auth.RequestToken;
 import twitter4j.auth.AccessToken;
 
@@ -198,7 +199,14 @@ public class BOT {
         }catch(TwitterException e){     System.out.println(e);
         } return null;
     }
-    public ResponseList<Status> getTimeLine() throws TwitterException{
+    public ResponseList<User> searchUser(String user){
+        try{
+            return twitterBot.searchUsers(user, 10);
+        }catch(TwitterException e){
+            return null;
+        }
+    }
+    public ResponseList<Status> getTimeLine(){
         try{
             
             //System.out.println(twitterBot.getUserTimeline());

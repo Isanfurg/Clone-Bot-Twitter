@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
@@ -41,5 +43,21 @@
             </VBox>
          </children>
       </HBox>
+      <VBox alignment="BASELINE_LEFT" layoutX="545.0" layoutY="54.0" prefHeight="114.0" prefWidth="209.0">
+         <children>
+            <HBox alignment="BASELINE_RIGHT" prefHeight="0.0" prefWidth="209.0">
+               <children>
+                  <TextField fx:id="id_user" promptText="Search user" />
+                  <Button mnemonicParsing="false" onAction="#search_user" prefHeight="28.0" prefWidth="24.0" />
+               </children>
+            </HBox>
+            <HBox alignment="BOTTOM_RIGHT" prefHeight="73.0" prefWidth="209.0">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#new_tweet" prefHeight="28.0" prefWidth="108.0" text="Button" />
+                  <Button mnemonicParsing="false" onAction="#show_direct_messages" prefHeight="28.0" prefWidth="107.0" text="Button" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
    </children>
 </AnchorPane>

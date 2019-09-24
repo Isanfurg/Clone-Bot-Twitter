@@ -7,7 +7,7 @@
 <?import javafx.scene.text.Text?>
 
 
-<Button mnemonicParsing="false" onAction="#selectUser" prefHeight="78.0" prefWidth="235.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UiComponents.Fxml.UserButtonController">
+<Button mnemonicParsing="false" onAction="#selectUser" prefHeight="78.0" prefWidth="235.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UiComponents.Controllers.UserButtonController">
    <graphic>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
          <children>

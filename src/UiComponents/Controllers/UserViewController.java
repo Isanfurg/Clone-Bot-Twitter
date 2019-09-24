@@ -16,7 +16,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -49,6 +49,8 @@ public class UserViewController implements Initializable,Notification {
     private Text name;
     @FXML
     private VBox tweets;
+    @FXML
+    private TextField id_user;
 
     /**
      * Initializes the controller class.
@@ -110,5 +112,23 @@ public class UserViewController implements Initializable,Notification {
             //loader.setController(controller);            System.out.println("xflsdlf\n\n");
             
             
+    }
+
+    @FXML
+    private void search_user(ActionEvent event) throws TwitterException {
+        if(id_user.getText().length()!=0){
+            System.out.println(BOT.getInstance().searchUser(id_user.getText()));
+            
+        }else{
+            System.out.println("No puede buscar...");
+        }
+    }
+
+    @FXML
+    private void new_tweet(ActionEvent event) {
+    }
+
+    @FXML
+    private void show_direct_messages(ActionEvent event) {
     }
 }
