@@ -8,9 +8,11 @@ package UiComponents.Controllers;
 import BotComponents.BOT;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -40,6 +42,10 @@ public class TweetTemplateController implements Initializable {
     private Text user;
     @FXML
     private TextArea content;
+    @FXML
+    private Button like;
+    @FXML
+    private Button retweet;
     
     /**
      * Initializes the controller class.
@@ -72,6 +78,11 @@ public class TweetTemplateController implements Initializable {
         profileImg.setFill(new ImagePattern(img));
         this.userName.setText("@"+userName);
         idTweet = status.getId();
+        status_fav = status.isFavorited();
+        status_retweet = status.isRetweet();
+        
+        if(status_fav) like.setStyle("-fx-background-color: red;");
+        if(status_retweet) retweet.setStyle("-fx-background-color: red;");
         
         
         
@@ -79,9 +90,49 @@ public class TweetTemplateController implements Initializable {
 
     @FXML
     private void sendLike(ActionEvent event) {
+        Task<Void> task = new Task(){
+            @Override
+            protected Void call() throws Exception {
+                BOT bot = BOT.getInstance();
+                if(!status_fav){ 
+                    bot.likeTweet(idTweet);
+                    like.setStyle("-fx-background-color: red;");
+                    status_fav = true;
+                }
+                
+                else{
+                    System.out.println(idTweet);
+                    bot.destroylikeTweet(idTweet);
+                    like.setStyle(null);
+                    status_fav = false;
+                }
+                return null;
+            }
+        };
+        
+        new Thread(task).start();
+        
     }
 
     @FXML
     private void reTweet(ActionEvent event) {
+        Task<Void> task = new Task(){
+            @Override
+            protected Void call() throws Exception {
+                BOT bot = BOT.getInstance();
+                if(!status_retweet){ 
+                    bot.retweet(idTweet);
+                    retweet.setStyle("-fx-background-color: red;");
+                }
+                
+                else{
+                    
+                    like.setStyle(null);
+                }
+                return null;
+            }
+        };
+        
     }
 }
+

@@ -31,12 +31,12 @@
             </HBox>
             <HBox alignment="BOTTOM_RIGHT" minHeight="40.0" minWidth="460.0" prefHeight="40.0" prefWidth="460.0">
                <children>
-                  <Button maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#sendLike" prefHeight="40.0" prefWidth="40.0">
+                  <Button fx:id="like" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#sendLike" prefHeight="40.0" prefWidth="40.0">
                      <graphic>
                         <FontAwesomeIconView glyphName="CREADIT_CARD" glyphStyle="asdasd" text="" />
                      </graphic>
                   </Button>
-                  <Button maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#reTweet" prefHeight="40.0" prefWidth="40.0" />
+                  <Button fx:id="retweet" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#reTweet" prefHeight="40.0" prefWidth="40.0" />
                </children>
             </HBox>
          </children>

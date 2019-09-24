@@ -98,15 +98,7 @@ public class UserViewController implements Initializable,Notification {
             tweets.getChildren().add(loader.load());
             TweetTemplateController templateController = loader.getController();
             templateController.setItems(status);
-        }
-
-//            System.out.println("User: "+status.getUser().getName()+" - "+ status.getUser().getScreenName());
-//            System.out.println("Text: "+status.getText());
-//            System.out.println("Retweeted: "+ status.getRetweetedStatus()+ " - "+ status.getRetweetCount());
-//            System.out.println("Liked: "+ status.isFavorited()+" - "+status.getFavoriteCount());
-            
-            //loader.setController(controller);            System.out.println("xflsdlf\n\n");
-            
+        }            
             
     }
 }

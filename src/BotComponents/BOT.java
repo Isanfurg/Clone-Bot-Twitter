@@ -78,6 +78,7 @@ public class BOT {
         }
         
     }
+    
     public void likeTweet(long id)throws TwitterException {
         try{
             twitterBot.createFavorite(id);
