@@ -78,6 +78,34 @@ public class BOT {
         }
         
     }
+    public void likeTweet(String url)throws TwitterException {
+        try{
+            String[] parts = url.split("-");
+            Long id = new Long(Long.parseLong(parts[parts.length-1]));
+            twitterBot.createFavorite(id);
+        }catch(TwitterException e){
+            System.out.println("update error by:"
+            +e.getMessage());
+        }  
+    }
+    public void sendDirectMenssage(String screenName, String text)throws TwitterException {
+        try{
+            twitterBot.sendDirectMessage(screenName,text);
+        }catch(TwitterException e){
+            System.out.println("update error by:"
+            +e.getMessage());
+        }  
+    }
+     public void retweet(String url)throws TwitterException {
+        try{
+            String[] parts = url.split("-");
+            Long id = new Long(Long.parseLong(parts[parts.length-1]));
+            twitterBot.retweetStatus(id);
+        }catch(TwitterException e){
+            System.out.println("update error by:"
+            +e.getMessage());
+        }  
+    }
     public String getUserName() throws TwitterException{
         try{
             return twitterBot.getScreenName();
