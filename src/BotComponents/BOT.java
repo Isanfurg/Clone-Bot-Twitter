@@ -68,7 +68,24 @@ public class BOT {
             return null;
         }
     }
-
+    public void followUser(String user)throws TwitterException {
+        try{
+            twitterBot.createFriendship(user);
+        System.out.println("Sucesfull!");
+        }catch(TwitterException e){
+            System.out.println("update error by:"
+            +e.getMessage());
+        }  
+    }
+    public void unfollowUser(String user)throws TwitterException {
+        try{
+            twitterBot.destroyFriendship(user);
+        System.out.println("Sucesfull!");
+        }catch(TwitterException e){
+            System.out.println("update error by:"
+            +e.getMessage());
+        }  
+    }
     public void newTweet(String msg) throws TwitterException {
         try{
             twitterBot.updateStatus(msg);
@@ -79,6 +96,7 @@ public class BOT {
         }
         
     }
+    
     public void likeTweet(long id)throws TwitterException {
         try{
             twitterBot.createFavorite(id);
