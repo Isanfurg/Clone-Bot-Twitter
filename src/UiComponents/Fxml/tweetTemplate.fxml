@@ -1,55 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TextArea?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane id="AnchorPane" maxHeight="200.0" maxWidth="500.0" minHeight="200.0" minWidth="500.0" prefHeight="200.0" prefWidth="500.0" styleClass="BigAnchorPane" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UiComponents.Controllers.TweetTemplateController">
+<AnchorPane id="AnchorPane" fx:id="circleImg" maxHeight="180.0" maxWidth="500.0" minHeight="180.0" minWidth="500.0" prefHeight="180.0" prefWidth="500.0" styleClass="BigAnchorPane" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UiComponents.Controllers.TweetTemplateController">
    <children>
-      <VBox fillWidth="false" layoutX="10.0" layoutY="10.0" minHeight="180.0" minWidth="480.0" prefHeight="180.0" prefWidth="480.0" styleClass="Button" stylesheets="@styles.css" AnchorPane.topAnchor="10.0">
+      <VBox layoutX="20.0" layoutY="10.0" minHeight="160.0" minWidth="460.0" prefHeight="160.0" prefWidth="460.0">
          <children>
-            <HBox minHeight="130.0" minWidth="480.0" prefHeight="130.0" prefWidth="480.0">
+            <HBox minHeight="120.0" minWidth="460.0" prefHeight="120.0" prefWidth="460.0" spacing="10.0">
                <children>
-                  <ImageView fx:id="profileImg" fitHeight="90.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
-                     <HBox.margin>
-                        <Insets top="10.0" />
-                     </HBox.margin></ImageView>
-                  <VBox prefHeight="130.0" prefWidth="359.0">
+                  <Circle fx:id="profileImg" fill="WHITE" radius="40.0" stroke="BLACK" strokeType="INSIDE" />
+                  <VBox prefHeight="120.0" prefWidth="363.0" spacing="3.0">
                      <children>
-                        <HBox alignment="BOTTOM_LEFT" minHeight="27.0" minWidth="390.0" prefHeight="27.0" prefWidth="390.0" spacing="30.0">
+                        <HBox alignment="BOTTOM_LEFT" prefHeight="33.0" prefWidth="381.0" spacing="10.0">
                            <children>
-                              <Text fx:id="User" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="TextLow" text="Text">
-                                 <font>
-                                    <Font name="System Bold" size="16.0" />
-                                 </font>
-                              </Text>
-                              <Text fx:id="userName" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Text">
-                                 <font>
-                                    <Font size="12.0" />
-                                 </font>
-                              </Text>
-                              <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Text">
-                                 <font>
-                                    <Font size="12.0" />
-                                 </font>
-                              </Text>
+                              <Text fx:id="user" strokeType="OUTSIDE" strokeWidth="0.0" text="User" />
+                              <Text fx:id="userName" strokeType="OUTSIDE" strokeWidth="0.0" text="UserName" />
                            </children>
                         </HBox>
-                        <TextArea fx:id="tweetBox" maxHeight="370.0" maxWidth="370.0" minHeight="80.0" minWidth="370.0" prefHeight="103.0" prefWidth="370.0" styleClass="TweetBox" wrapText="true" />
+                        <TextArea fx:id="content" editable="false" prefHeight="200.0" prefWidth="200.0" text="Content&#10;" wrapText="true" />
                      </children>
                   </VBox>
                </children>
             </HBox>
-            <HBox minHeight="50.0" minWidth="480.0" prefHeight="50.0" prefWidth="480.0" />
+            <HBox alignment="BOTTOM_RIGHT" minHeight="40.0" minWidth="460.0" prefHeight="40.0" prefWidth="460.0">
+               <children>
+                  <Button maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#sendLike" prefHeight="40.0" prefWidth="40.0">
+                     <graphic>
+                        <FontAwesomeIconView glyphName="CREADIT_CARD" glyphStyle="asdasd" text="" />
+                     </graphic>
+                  </Button>
+                  <Button maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#reTweet" prefHeight="40.0" prefWidth="40.0" />
+               </children>
+            </HBox>
          </children>
-         <padding>
-            <Insets top="10.0" />
-         </padding>
       </VBox>
    </children>
 </AnchorPane>

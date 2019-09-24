@@ -94,7 +94,7 @@ public class UserViewController implements Initializable,Notification {
 
 
         for (Status status : timeline) {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("tweetTemplate.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/UiComponents/Fxml/tweetTemplate.fxml"));
             tweets.getChildren().add(loader.load());
             TweetTemplateController templateController = loader.getController();
             templateController.setItems(status);

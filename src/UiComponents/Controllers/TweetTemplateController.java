@@ -8,11 +8,15 @@ package UiComponents.Controllers;
 import BotComponents.BOT;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import twitter4j.Status;
 import twitter4j.TwitterException;
@@ -23,15 +27,19 @@ import twitter4j.TwitterException;
  * @author isanfurg
  */
 public class TweetTemplateController implements Initializable {
-
-    @FXML
-    private Text User;
+    private boolean status_fav;
+    private boolean status_retweet;
+    long idTweet;
     @FXML
     private Text userName;
     @FXML
-    private TextArea tweetBox;
+    private Circle profileImg;
     @FXML
-    private ImageView profileImg;
+    private AnchorPane circleImg;
+    @FXML
+    private Text user;
+    @FXML
+    private TextArea content;
     
     /**
      * Initializes the controller class.
@@ -53,14 +61,27 @@ public class TweetTemplateController implements Initializable {
             user = BOT.getInstance().getName(userName);
             profileImgURL = BOT.getInstance().getProfileImageURL(userName);
         }
-        tweetBox.setText(text);
-        this.User.setText(user);
-        profileImg.setFitHeight(70);
+        System.out.println(status.isRetweet());
+        if(status.isRetweet()){
+            System.out.println("dick");
+            user = "Retweeted from: ";
+        }
+        content.setText(text);
+        this.user.setText(user);
+        Image img = new Image(profileImgURL);
+        profileImg.setFill(new ImagePattern(img));
+        this.userName.setText("@"+userName);
+        idTweet = status.getId();
         
-        profileImg.setFitWidth(70);
-        profileImg.setImage(new Image(profileImgURL));
-        this.userName.setText(userName);
         
         
+    }
+
+    @FXML
+    private void sendLike(ActionEvent event) {
+    }
+
+    @FXML
+    private void reTweet(ActionEvent event) {
     }
 }

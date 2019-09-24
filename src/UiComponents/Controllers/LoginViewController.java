@@ -53,7 +53,7 @@ public class LoginViewController implements Initializable,Notification {
         BOT.getInstance().tryPin(pinBox.getText());
         if(BOT.getInstance().isAccess()){
             this.newNotification("Pin Correcto");
-            AnchorPane newPanel = FXMLLoader.load(getClass().getResource("/UiComponents/userView.fxml"));
+            AnchorPane newPanel = FXMLLoader.load(getClass().getResource("/UiComponents/Fxml/userView.fxml"));
             contentPane.getChildren().setAll(newPanel);   
         }else{
             this.newNotification("Pin Incorrecto");
