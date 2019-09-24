@@ -44,6 +44,9 @@ public class TweetTemplateController implements Initializable {
     private Button like;
     @FXML
     private Button retweet;
+    private long idTweet;
+    boolean status_fav;
+    boolean status_retweet;
 
     /**
      * Initializes the controller class.
