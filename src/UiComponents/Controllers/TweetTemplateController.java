@@ -61,9 +61,7 @@ public class TweetTemplateController implements Initializable {
             user = BOT.getInstance().getName(userName);
             profileImgURL = BOT.getInstance().getProfileImageURL(userName);
         }
-        System.out.println(status.isRetweet());
         if(status.isRetweet()){
-            System.out.println("dick");
             user = "Retweeted from: ";
         }
         content.setText(text);
