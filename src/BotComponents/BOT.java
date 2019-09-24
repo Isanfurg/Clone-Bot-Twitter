@@ -78,11 +78,17 @@ public class BOT {
         }
         
     }
-    public void likeTweet(String url)throws TwitterException {
+    public void likeTweet(long id)throws TwitterException {
         try{
-            String[] parts = url.split("-");
-            Long id = new Long(Long.parseLong(parts[parts.length-1]));
             twitterBot.createFavorite(id);
+        }catch(TwitterException e){
+            System.out.println("update error by:"
+            +e.getMessage());
+        }  
+    }
+    public void destroylikeTweet(long id)throws TwitterException {
+        try{
+            twitterBot.destroyFavorite(id);
         }catch(TwitterException e){
             System.out.println("update error by:"
             +e.getMessage());
@@ -96,11 +102,25 @@ public class BOT {
             +e.getMessage());
         }  
     }
-     public void retweet(String url)throws TwitterException {
+    public void destroyDirectMenssage(long id)throws TwitterException {
         try{
-            String[] parts = url.split("-");
-            Long id = new Long(Long.parseLong(parts[parts.length-1]));
+            twitterBot.destroyDirectMessage(id);
+        }catch(TwitterException e){
+            System.out.println("update error by:"
+            +e.getMessage());
+        }  
+    }
+    public void retweet(long id)throws TwitterException {
+        try{
             twitterBot.retweetStatus(id);
+        }catch(TwitterException e){
+            System.out.println("update error by:"
+            +e.getMessage());
+        }  
+    }
+    public void destroyTweet(long id)throws TwitterException {
+        try{
+            twitterBot.destroyStatus(id);
         }catch(TwitterException e){
             System.out.println("update error by:"
             +e.getMessage());
