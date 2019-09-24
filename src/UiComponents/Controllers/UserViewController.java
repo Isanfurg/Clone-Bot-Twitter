@@ -21,6 +21,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import twitter4j.ResponseList;
 import twitter4j.Status;
@@ -36,7 +38,7 @@ public class UserViewController implements Initializable,Notification {
     @FXML
     private ImageView bannerImg;
     @FXML
-    private ImageView profileImg;
+    private Circle profileImg;
     @FXML
     private Text userName;
     @FXML
@@ -62,11 +64,11 @@ public class UserViewController implements Initializable,Notification {
                 );
             }
             
-            if(BOT.getInstance().getProfileImageURL()!=null){
-                profileImg.setImage(
-                    new Image(BOT.getInstance().getProfileImageURL())
+                profileImg.setFill(new ImagePattern(
+                        new Image(BOT.getInstance().getProfileImageURL())
+                    )
                 );
-            }
+
            
             name.setText(
                     BOT.getInstance().getName()

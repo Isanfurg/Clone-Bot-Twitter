@@ -29,9 +29,7 @@ import twitter4j.TwitterException;
  * @author isanfurg
  */
 public class TweetTemplateController implements Initializable {
-    private boolean status_fav;
-    private boolean status_retweet;
-    long idTweet;
+    Status data;
     @FXML
     private Text userName;
     @FXML
@@ -46,14 +44,14 @@ public class TweetTemplateController implements Initializable {
     private Button like;
     @FXML
     private Button retweet;
-    
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-    }    
+    }
     public void setItems(Status status) throws TwitterException{
         String text = status.getText();
         String user = status.getUser().getName();
@@ -67,10 +65,8 @@ public class TweetTemplateController implements Initializable {
             user = BOT.getInstance().getName(userName);
             profileImgURL = BOT.getInstance().getProfileImageURL(userName);
         }
-        System.out.println(status.isRetweet());
         if(status.isRetweet()){
-            System.out.println("dick");
-            user = "Retweeted from: ";
+            user = "Retweeted from: "+ user;
         }
         content.setText(text);
         this.user.setText(user);
@@ -80,12 +76,12 @@ public class TweetTemplateController implements Initializable {
         idTweet = status.getId();
         status_fav = status.isFavorited();
         status_retweet = status.isRetweet();
-        
+
         if(status_fav) like.setStyle("-fx-background-color: red;");
         if(status_retweet) retweet.setStyle("-fx-background-color: red;");
-        
-        
-        
+
+
+
     }
 
     @FXML
@@ -94,12 +90,12 @@ public class TweetTemplateController implements Initializable {
             @Override
             protected Void call() throws Exception {
                 BOT bot = BOT.getInstance();
-                if(!status_fav){ 
+                if(!status_fav){
                     bot.likeTweet(idTweet);
                     like.setStyle("-fx-background-color: red;");
                     status_fav = true;
                 }
-                
+
                 else{
                     System.out.println(idTweet);
                     bot.destroylikeTweet(idTweet);
@@ -109,9 +105,9 @@ public class TweetTemplateController implements Initializable {
                 return null;
             }
         };
-        
+
         new Thread(task).start();
-        
+
     }
 
     @FXML
@@ -120,19 +116,18 @@ public class TweetTemplateController implements Initializable {
             @Override
             protected Void call() throws Exception {
                 BOT bot = BOT.getInstance();
-                if(!status_retweet){ 
+                if(!status_retweet){
                     bot.retweet(idTweet);
                     retweet.setStyle("-fx-background-color: red;");
                 }
-                
+
                 else{
-                    
+
                     like.setStyle(null);
                 }
                 return null;
             }
         };
-        
+
     }
 }
-
