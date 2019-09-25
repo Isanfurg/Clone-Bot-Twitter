@@ -6,7 +6,6 @@
 package UiComponents.Controllers;
 
 import BotComponents.BOT;
-import de.jensd.fx.glyphs.GlyphsDude;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -18,7 +17,6 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
-import javax.swing.text.html.HTML;
 import twitter4j.TwitterException;
 import twitter4j.User;
 
@@ -48,6 +46,7 @@ public class UserButtonController implements Initializable {
 
     @FXML
     private void selectUser(ActionEvent event) {
+        System.out.println("charge user info in ui");
     }
     public void setInfoUser(User info) throws TwitterException{
         dUser = info;
