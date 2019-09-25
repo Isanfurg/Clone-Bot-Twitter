@@ -43,9 +43,11 @@ public class BOT {
             instance = new BOT();   
         }return instance;
     }
+    
     public String generateUrl() throws TwitterException{
         return requestToken.getAuthorizationURL();
     }
+    
     public void tryPin(String pin) throws TwitterException{
     try{
         accessToken = twitterBot.getOAuthAccessToken(this.requestToken, pin);
@@ -62,12 +64,14 @@ public class BOT {
     public boolean isAccess() {
         return access;
     }
+    
     public Status getStatus(long id) throws TwitterException{
         try{return twitterBot.showStatus(id);
         }catch(TwitterException e){
             return null;
         }
     }
+    
     public void followUser(String user)throws TwitterException {
         try{
             twitterBot.createFriendship(user);
@@ -77,6 +81,7 @@ public class BOT {
             +e.getMessage());
         }  
     }
+    
     public void unfollowUser(String user)throws TwitterException {
         try{
             twitterBot.destroyFriendship(user);
@@ -86,6 +91,7 @@ public class BOT {
             +e.getMessage());
         }  
     }
+    
     public void newTweet(String msg) throws TwitterException {
         try{
             twitterBot.updateStatus(msg);
@@ -105,6 +111,7 @@ public class BOT {
             +e.getMessage());
         }  
     }
+    
     public void destroylikeTweet(long id)throws TwitterException {
         try{
             twitterBot.destroyFavorite(id);
@@ -121,6 +128,7 @@ public class BOT {
             +e.getMessage());
         }  
     }
+    
     public void destroyDirectMenssage(long id)throws TwitterException {
         try{
             twitterBot.destroyDirectMessage(id);
@@ -129,13 +137,25 @@ public class BOT {
             +e.getMessage());
         }  
     }
+    
     public void retweet(long id)throws TwitterException {
         try{
             twitterBot.retweetStatus(id);
+            
         }catch(TwitterException e){
             System.out.println("update error by:"
             +e.getMessage());
         }  
+    }
+    
+    public void unRetweet(long id) throws TwitterException{
+        
+        try {
+            twitterBot.unRetweetStatus(id);
+        } catch (TwitterException e) {
+            System.out.println("Unretweet error by: "+e.getMessage());
+        }
+
     }
     public void destroyTweet(long id)throws TwitterException {
         try{
@@ -145,6 +165,7 @@ public class BOT {
             +e.getMessage());
         }  
     }
+    
     public String getUserName() throws TwitterException{
         try{
             return twitterBot.getScreenName();

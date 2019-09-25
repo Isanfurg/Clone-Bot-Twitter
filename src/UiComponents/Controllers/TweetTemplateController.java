@@ -8,9 +8,13 @@ package UiComponents.Controllers;
 import BotComponents.BOT;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
@@ -47,6 +51,7 @@ public class TweetTemplateController implements Initializable {
     private long idTweet;
     boolean status_fav;
     boolean status_retweet;
+    private int tweetPosition;
 
     /**
      * Initializes the controller class.
@@ -55,7 +60,8 @@ public class TweetTemplateController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
     }
-    public void setItems(Status status) throws TwitterException{
+    public void setItems(Status status, int tweetPosition) throws TwitterException{
+        data = status;
         String text = status.getText();
         String user = status.getUser().getName();
         String userName = status.getUser().getScreenName();
@@ -78,7 +84,7 @@ public class TweetTemplateController implements Initializable {
         this.userName.setText("@"+userName);
         idTweet = status.getId();
         status_fav = status.isFavorited();
-        status_retweet = status.isRetweet();
+        status_retweet = status.isRetweetedByMe();
 
         if(status_fav) like.setStyle("-fx-background-color: red;");
         if(status_retweet) retweet.setStyle("-fx-background-color: red;");
@@ -100,7 +106,6 @@ public class TweetTemplateController implements Initializable {
                 }
 
                 else{
-                    System.out.println(idTweet);
                     bot.destroylikeTweet(idTweet);
                     like.setStyle(null);
                     status_fav = false;
@@ -122,15 +127,19 @@ public class TweetTemplateController implements Initializable {
                 if(!status_retweet){
                     bot.retweet(idTweet);
                     retweet.setStyle("-fx-background-color: red;");
+                    status_retweet = true;
                 }
 
                 else{
-
-                    like.setStyle(null);
+                    bot.unRetweet(idTweet);
+                    retweet.setStyle(null);
+                    status_retweet = false;
                 }
                 return null;
             }
         };
-
+        
+        new Thread(task).start();
+      
     }
 }
