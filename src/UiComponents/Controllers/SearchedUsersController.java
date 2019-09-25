@@ -63,6 +63,7 @@ public class SearchedUsersController implements Initializable {
             searched.add(loader.load(),columunIndex,rowIndex);
             UserButtonController controller = loader.getController();
             controller.setInfoUser(users.get(i));
+            controller.checkFollow();
             rowIndex++;
             if(rowIndex==5){rowIndex=0;columunIndex++;}
         }

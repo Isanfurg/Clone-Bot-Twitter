@@ -61,13 +61,13 @@
                   </HBox>
                   <HBox alignment="BOTTOM_RIGHT" prefHeight="79.0" prefWidth="209.0" spacing="5.0">
                      <children>
-                        <Button mnemonicParsing="false" onAction="#new_tweet" prefHeight="28.0" prefWidth="108.0" text="Button">
+                        <Button mnemonicParsing="false" onAction="#new_tweet" prefHeight="28.0" prefWidth="108.0" text="New tweet">
                            <graphic>
-                              <FontAwesomeIconView text="" />
+                              <FontAwesomeIconView glyphName="SHARE_SQUARE_ALT" />
                            </graphic></Button>
-                        <Button mnemonicParsing="false" onAction="#show_direct_messages" prefHeight="28.0" prefWidth="107.0" text="Button">
+                        <Button mnemonicParsing="false" onAction="#show_direct_messages" prefHeight="28.0" prefWidth="107.0" text="Messages">
                            <graphic>
-                              <FontAwesomeIconView />
+                              <FontAwesomeIconView glyphName="COMMENT_ALT" />
                            </graphic></Button>
                      </children>
                   </HBox>

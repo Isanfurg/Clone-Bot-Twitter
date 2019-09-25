@@ -6,6 +6,8 @@
 package UiComponents.Controllers;
 
 import BotComponents.BOT;
+import de.jensd.fx.glyphs.GlyphsDude;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -15,6 +17,7 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
+import javax.swing.text.html.HTML;
 import twitter4j.TwitterException;
 import twitter4j.User;
 
@@ -24,11 +27,13 @@ import twitter4j.User;
  * @author isanfurg
  */
 public class UserButtonController implements Initializable {
-
+    User dUser ;
     @FXML
     private Circle profileImg;
     @FXML
     private Text username;
+    @FXML
+    private FontAwesomeIconView followCheck;
 
     /**
      * Initializes the controller class.
@@ -42,12 +47,33 @@ public class UserButtonController implements Initializable {
     private void selectUser(ActionEvent event) {
     }
     public void setInfoUser(User info) throws TwitterException{
+        dUser = info;
         String name = info.getScreenName();
         if(name.length()>11){
             name = name.substring(0, 10)+"...";
         }
         username .setText(name);
         profileImg.setFill(new ImagePattern(new Image(info.get400x400ProfileImageURL())));
+    }
+
+    @FXML
+    private void followThisUser(ActionEvent event) throws TwitterException {
+        if(BOT.getInstance().isFollowed(dUser.getId())){
+           BOT.getInstance().unfollowUser(dUser.getId());
+            System.out.println("unfollowed");
+        }else{
+            BOT.getInstance().followUser(dUser.getId());
+            System.out.println("followed");
+        }
+        checkFollow();
+    }
+    public void checkFollow() throws TwitterException{
+        System.out.println(followCheck.getGlyphStyle());
+        if(BOT.getInstance().isFollowed(dUser.getId())){
+            followCheck.setGlyphStyle("\uf046");
+        }else{
+            //followCheck.setGlyphStyle();
+        }
     }
     
 }

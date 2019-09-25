@@ -5,6 +5,7 @@
  */
 package BotComponents;
 
+import twitter4j.IDs;
 import twitter4j.ResponseList;
 import twitter4j.Status;
 import twitter4j.Twitter;
@@ -72,9 +73,9 @@ public class BOT {
         }
     }
     
-    public void followUser(String user)throws TwitterException {
+    public void followUser(long id)throws TwitterException {
         try{
-            twitterBot.createFriendship(user);
+            twitterBot.createFriendship(id);
         System.out.println("Sucesfull!");
         }catch(TwitterException e){
             System.out.println("update error by:"
@@ -82,9 +83,9 @@ public class BOT {
         }  
     }
     
-    public void unfollowUser(String user)throws TwitterException {
+    public void unfollowUser(long id)throws TwitterException {
         try{
-            twitterBot.destroyFriendship(user);
+            twitterBot.destroyFriendship(id);
         System.out.println("Sucesfull!");
         }catch(TwitterException e){
             System.out.println("update error by:"
@@ -244,6 +245,19 @@ public class BOT {
         }catch(TwitterException e){
             return null;
         }
+    }
+    public boolean isFollowed(long idU){
+        try{
+           IDs ids = twitterBot.getFriendsIDs(-1);
+            for (long id : ids.getIDs()) {
+                if(idU==id){
+                    return true;
+                }
+            }
+        }catch(TwitterException e){
+            System.out.println("error"+ e);
+        }
+        return false;
     }
     public ResponseList<Status> getTimeLine(){
         try{

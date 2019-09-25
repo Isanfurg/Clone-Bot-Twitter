@@ -39,7 +39,7 @@
                   </Button>
                   <Button fx:id="retweet" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#reTweet" prefHeight="40.0" prefWidth="40.0">
                      <graphic>
-                        <FontAwesomeIconView glyphName="" text="" />
+                        <FontAwesomeIconView glyphName="RETWEET" />
                      </graphic></Button>
                </children>
                <VBox.margin>
