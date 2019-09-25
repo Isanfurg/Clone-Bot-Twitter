@@ -19,6 +19,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import twitter4j.TwitterException;
 
 /**
@@ -53,7 +54,7 @@ public class LoginViewController implements Initializable,Notification {
         BOT.getInstance().tryPin(pinBox.getText());
         if(BOT.getInstance().isAccess()){
             this.newNotification("Pin Correcto");
-            AnchorPane newPanel = FXMLLoader.load(getClass().getResource("/UiComponents/Fxml/userView.fxml"));
+            StackPane newPanel = FXMLLoader.load(getClass().getResource("/UiComponents/Fxml/userView.fxml"));
             contentPane.getChildren().setAll(newPanel);   
         }else{
             this.newNotification("Pin Incorrecto");
