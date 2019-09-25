@@ -7,6 +7,7 @@ package UiComponents.Controllers;
 
 import BotComponents.BOT;
 import UiComponents.Interfaces.Notification;
+import com.jfoenix.controls.JFXDialog;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -27,6 +28,7 @@ import javafx.scene.text.Text;
 import twitter4j.ResponseList;
 import twitter4j.Status;
 import twitter4j.TwitterException;
+import twitter4j.User;
 
 /**
  * FXML Controller class
@@ -51,6 +53,8 @@ public class UserViewController implements Initializable,Notification {
     private VBox tweets;
     @FXML
     private TextField id_user;
+    @FXML
+    private AnchorPane rootPane;
 
     /**
      * Initializes the controller class.
@@ -109,7 +113,15 @@ public class UserViewController implements Initializable,Notification {
     @FXML
     private void search_user(ActionEvent event) throws TwitterException {
         if(id_user.getText().length()!=0){
-            System.out.println(BOT.getInstance().searchUser(id_user.getText()));
+            ResponseList<User> users  = BOT.getInstance().searchUser(id_user.getText());
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/UiComponents/Fxml/searchedUsers.fxml"));
+            JFXDialog newSearch = new JFXDialog
+            SearchedUsersController controller = loader.getController();
+            if(users!=null){
+                controller.
+            }else{
+                
+            }
             
         }else{
             System.out.println("No puede buscar...");
@@ -122,5 +134,8 @@ public class UserViewController implements Initializable,Notification {
 
     @FXML
     private void show_direct_messages(ActionEvent event) {
+    }
+    public void deleteRetweet(AnchorPane delete){
+        this.tweets.getChildren().remove(delete);
     }
 }

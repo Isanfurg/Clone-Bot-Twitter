@@ -6,15 +6,14 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Text?>
 
-
-<Button mnemonicParsing="false" onAction="#selectUser" prefHeight="78.0" prefWidth="235.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UiComponents.Controllers.UserButtonController">
+<Button minHeight="80.0" minWidth="200.0" mnemonicParsing="false" onAction="#selectUser" prefHeight="80.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UiComponents.Controllers.UserButtonController">
    <graphic>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
          <children>
-            <Circle fill="WHITE" radius="34.0" stroke="BLACK" strokeType="INSIDE" />
+            <Circle fx:id="profileImg" fill="WHITE" radius="34.0" stroke="BLACK" strokeType="INSIDE" />
             <VBox alignment="CENTER_LEFT" prefHeight="68.0" prefWidth="126.0">
                <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="UserName" />
+                  <Text fx:id="username" strokeType="OUTSIDE" strokeWidth="0.0" text="UserName" />
                </children>
             </VBox>
          </children>
