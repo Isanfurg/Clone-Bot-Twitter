@@ -8,15 +8,12 @@ package UiComponents.Controllers;
     import BotComponents.BOT;
 import UiComponents.Interfaces.Notification;
 import com.jfoenix.controls.JFXDialog;
-import com.jfoenix.controls.events.JFXDialogEvent;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -147,8 +144,16 @@ public class UserViewController implements Initializable,Notification {
     }
 
     @FXML
-    private void new_tweet(ActionEvent event) {
-    
+    private void new_tweet(ActionEvent event) throws IOException {
+        BoxBlur blur = new BoxBlur(3, 3, 3);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/UiComponents/Fxml/newTweet.fxml"));
+        rootAnchorPane.setDisable(true);
+        rootAnchorPane.setEffect(blur);
+        JFXDialog newTweet = new JFXDialog(rootPane, loader.load(), JFXDialog.DialogTransition.TOP);
+        newTweet.setOverlayClose(false);
+        NewTweetController controller = loader.getController();
+        controller.setToClose(newTweet, rootAnchorPane);
+        newTweet.show();
     }
 
     @FXML
