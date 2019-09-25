@@ -56,7 +56,7 @@ public class SearchedUsersController implements Initializable {
         GridPane searched= new GridPane();
         int columunIndex = 0;
         int rowIndex = 0;
-        
+        if(!users.isEmpty()){
         containerUsers.getChildren().clear();
         for(int i = page*10;i<10*(page+1);i++){
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/UiComponents/Fxml/userButton.fxml"));
@@ -69,6 +69,7 @@ public class SearchedUsersController implements Initializable {
         }
 
         containerUsers.getChildren().addAll(searched);
+        }else{setTextOnScene();}
     }
 
     @FXML

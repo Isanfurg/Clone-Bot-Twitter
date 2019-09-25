@@ -13,6 +13,7 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
@@ -34,6 +35,8 @@ public class UserButtonController implements Initializable {
     private Text username;
     @FXML
     private FontAwesomeIconView followCheck;
+    @FXML
+    private Button followB;
 
     /**
      * Initializes the controller class.
@@ -58,7 +61,7 @@ public class UserButtonController implements Initializable {
 
     @FXML
     private void followThisUser(ActionEvent event) throws TwitterException {
-        if(BOT.getInstance().isFollowed(dUser.getId())){
+        if(BOT.getInstance().isFollowed(BOT.getInstance().getUserName(),dUser.getScreenName())){
            BOT.getInstance().unfollowUser(dUser.getId());
             System.out.println("unfollowed");
         }else{
@@ -69,10 +72,12 @@ public class UserButtonController implements Initializable {
     }
     public void checkFollow() throws TwitterException{
         System.out.println(followCheck.getGlyphStyle());
-        if(BOT.getInstance().isFollowed(dUser.getId())){
-            followCheck.setGlyphStyle("\uf046");
+        if(BOT.getInstance().isFollowed(BOT.getInstance().getUserName(),dUser.getScreenName())){
+            followB.setText("Followed");
+            followCheck.setGlyphName("CHECK");
         }else{
-            //followCheck.setGlyphStyle();
+            followB.setText("Follow");
+            followCheck.setGlyphName("CIRCLE_ALT");
         }
     }
     

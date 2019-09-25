@@ -193,10 +193,7 @@ public class BOT {
         }
     }
     public void test() throws TwitterException{
-        //seguidos
-        System.out.println(twitterBot.showUser(getUserName()).getFollowersCount());
-        //siguiendo
-        System.out.println(twitterBot.showUser(getUserName()).getFriendsCount());
+        this.isFollowed(getUserName(), "BotSavawa");
     }
     public int getFollowersCount(){
         try{    return twitterBot.showUser(getUserName()).getFollowersCount();
@@ -246,16 +243,13 @@ public class BOT {
             return null;
         }
     }
-    public boolean isFollowed(long idU){
+    public boolean isFollowed(String isFollowing,String thisUser){
         try{
-           IDs ids = twitterBot.getFriendsIDs(-1);
-            for (long id : ids.getIDs()) {
-                if(idU==id){
-                    return true;
-                }
-            }
+            return twitterBot.showFriendship(isFollowing, thisUser).isSourceFollowingTarget();
+                
+
         }catch(TwitterException e){
-            System.out.println("error"+ e);
+            System.out.println("error"+ e.getMessage());
         }
         return false;
     }
