@@ -42,7 +42,11 @@ public class UserButtonController implements Initializable {
     private void selectUser(ActionEvent event) {
     }
     public void setInfoUser(User info) throws TwitterException{
-        username.setText(BOT.getInstance().getName(info.getScreenName()));
+        String name = info.getScreenName();
+        if(name.length()>11){
+            name = name.substring(0, 10)+"...";
+        }
+        username .setText(name);
         profileImg.setFill(new ImagePattern(new Image(info.get400x400ProfileImageURL())));
     }
     

@@ -219,7 +219,7 @@ public class BOT {
     }
     public ResponseList<User> searchUser(String user){
         try{
-            return twitterBot.searchUsers(user, 10);
+            return twitterBot.searchUsers(user, 0);
         }catch(TwitterException e){
             return null;
         }

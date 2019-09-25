@@ -5,22 +5,27 @@
  */
 package UiComponents.Controllers;
 
-import BotComponents.BOT;
+    import BotComponents.BOT;
 import UiComponents.Interfaces.Notification;
 import com.jfoenix.controls.JFXDialog;
+import com.jfoenix.controls.events.JFXDialogEvent;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.BoxBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
@@ -54,7 +59,11 @@ public class UserViewController implements Initializable,Notification {
     @FXML
     private TextField id_user;
     @FXML
-    private AnchorPane rootPane;
+    private StackPane rootPane;
+    @FXML
+    private ScrollPane scrolltweets;
+    @FXML
+    private AnchorPane rootAnchorPane;
 
     /**
      * Initializes the controller class.
@@ -111,21 +120,29 @@ public class UserViewController implements Initializable,Notification {
     }
 
     @FXML
-    private void search_user(ActionEvent event) throws TwitterException {
+    private void searchUser(ActionEvent event) throws TwitterException, IOException {
+        BoxBlur blur = new BoxBlur(3, 3, 3);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/UiComponents/Fxml/searchedUsers.fxml"));
+        rootAnchorPane.setDisable(true);
+        rootAnchorPane.setEffect(blur);
+        JFXDialog newSearch = new JFXDialog(rootPane, loader.load(), JFXDialog.DialogTransition.TOP);
+        newSearch.setOverlayClose(false);
+        SearchedUsersController controller = loader.getController();
         if(id_user.getText().length()!=0){
+            
             ResponseList<User> users  = BOT.getInstance().searchUser(id_user.getText());
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/UiComponents/Fxml/searchedUsers.fxml"));
-            JFXDialog newSearch = new JFXDialog
-            SearchedUsersController controller = loader.getController();
+
             if(users!=null){
-                controller.
+                controller.setContainerUsers(users);
             }else{
-                
+                controller.setTextOnScene();
             }
             
         }else{
-            System.out.println("No puede buscar...");
+           controller.setTextOnScene();
         }
+        controller.setToClose(newSearch, rootAnchorPane);
+        newSearch.show();
     }
 
     @FXML
