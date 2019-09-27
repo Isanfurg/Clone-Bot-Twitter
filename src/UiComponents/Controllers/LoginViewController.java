@@ -17,6 +17,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.FadeTransition;
+import javafx.animation.RotateTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -25,10 +26,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 import twitter4j.TwitterException;
 
@@ -37,7 +39,7 @@ import twitter4j.TwitterException;
  *
  * @author isanfurg
  */
-public class LoginViewController implements Initializable{
+public class LoginViewController implements Initializable,UiComponents.Interfaces.Notification{
 
     @FXML
     private AnchorPane contentPane;
@@ -45,18 +47,27 @@ public class LoginViewController implements Initializable{
     private TextField pinBox;
     @FXML
     private JFXSpinner loadSpinner;
+    @FXML
+    private Circle rotate;
     
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        rotate.setFill(new ImagePattern(new Image("/UiComponents/Img/outIcon.png")));
+        RotateTransition rotateTransition = new RotateTransition(Duration.seconds(20), rotate);
+        rotateTransition.setByAngle(360);
+        rotateTransition.setCycleCount((int) Double.POSITIVE_INFINITY);
+        rotateTransition.setRate(1);
+        rotateTransition.play();
     }    
 
     @FXML
     private void copiarUrl(ActionEvent event) throws TwitterException {
         
        new Thread(this::copyUrlThread).start();
+       this.newNotification("Url copiado al portapapeles");
 
     }
 
@@ -109,6 +120,7 @@ public class LoginViewController implements Initializable{
                 loadSpinner.setVisible(false);
             
             });
+            
             
         } catch (TwitterException ex) {
             Logger.getLogger(LoginViewController.class.getName()).log(Level.SEVERE, null, ex);

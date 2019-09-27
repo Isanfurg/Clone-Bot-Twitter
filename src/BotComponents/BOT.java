@@ -5,7 +5,6 @@
  */
 package BotComponents;
 
-import twitter4j.IDs;
 import twitter4j.ResponseList;
 import twitter4j.Status;
 import twitter4j.Twitter;
@@ -15,12 +14,11 @@ import twitter4j.User;
 import twitter4j.auth.RequestToken;
 import twitter4j.auth.AccessToken;
 
-
 /**
  *
  * @author isanfurg
  */
-public class BOT {
+public class BOT{
     private static BOT instance = null;
     private final static String CONSUMER_KEY = "nrZMs1iwC8sbkZP6Fdwnr0IbY";
     private final static String CONSUMER_KEY_SECRET = "EkJ6ZuOME85MeQCHN6hT0s7bs7c9iyjwwCKQyRRZEG06qjcE9Q";
@@ -52,6 +50,7 @@ public class BOT {
     public void tryPin(String pin) throws TwitterException{
     try{
         accessToken = twitterBot.getOAuthAccessToken(this.requestToken, pin);
+
         this.access = true;
     } catch (TwitterException e) {
         System.out.println("Failed to get access token, caused by: "
@@ -67,8 +66,10 @@ public class BOT {
     }
     
     public Status getStatus(long id) throws TwitterException{
-        try{return twitterBot.showStatus(id);
+        try{
+            return twitterBot.showStatus(id);
         }catch(TwitterException e){
+            
             return null;
         }
     }
@@ -90,6 +91,7 @@ public class BOT {
         }catch(TwitterException e){
             System.out.println("update error by:"
             +e.getMessage());
+
         }  
     }
     
