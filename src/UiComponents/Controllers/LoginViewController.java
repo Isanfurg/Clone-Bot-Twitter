@@ -37,7 +37,7 @@ import twitter4j.TwitterException;
  *
  * @author isanfurg
  */
-public class LoginViewController implements Initializable,Notification {
+public class LoginViewController implements Initializable{
 
     @FXML
     private AnchorPane contentPane;
@@ -62,7 +62,6 @@ public class LoginViewController implements Initializable,Notification {
 
     @FXML
     private void login(ActionEvent event) throws IOException, TwitterException {
-        fadeContentPane(1, 0, 1000);
         new Thread(this::loginThread).start();
         
     }
@@ -91,7 +90,7 @@ public class LoginViewController implements Initializable,Notification {
                 });
 
             }else{
-                this.newNotification("Pin Incorrecto");
+                
             }
         } catch (TwitterException ex) {
             Logger.getLogger(LoginViewController.class.getName()).log(Level.SEVERE, null, ex);
@@ -107,7 +106,6 @@ public class LoginViewController implements Initializable,Notification {
             Clipboard clpbrd = Toolkit.getDefaultToolkit().getSystemClipboard();
             clpbrd.setContents(stringSelection, null);
             Platform.runLater(()->{
-                this.newNotification("URL Copiado al portapapeles");
                 loadSpinner.setVisible(false);
             
             });
