@@ -28,6 +28,8 @@ public class MainWindowController implements Initializable,DraggedScene {
     private AnchorPane windowBar;
     @FXML
     private AnchorPane contentPane;
+    @FXML
+    private AnchorPane load;
 
 
     /**

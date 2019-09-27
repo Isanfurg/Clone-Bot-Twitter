@@ -7,6 +7,7 @@ package UiComponents.Controllers;
 
 import BotComponents.BOT;
 import UiComponents.Interfaces.Notification;
+import com.jfoenix.controls.JFXSpinner;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
@@ -15,14 +16,20 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.util.Duration;
 import twitter4j.TwitterException;
 
 /**
@@ -36,6 +43,8 @@ public class LoginViewController implements Initializable,Notification {
     private AnchorPane contentPane;
     @FXML
     private TextField pinBox;
+    @FXML
+    private JFXSpinner loadSpinner;
     
     /**
      * Initializes the controller class.
@@ -53,13 +62,14 @@ public class LoginViewController implements Initializable,Notification {
 
     @FXML
     private void login(ActionEvent event) throws IOException, TwitterException {
-        
+        fadeContentPane(1, 0, 1000);
         new Thread(this::loginThread).start();
         
     }
-    
+
     private void loginThread(){
-        contentPane.setVisible(false);
+        
+        
         try {
             BOT.getInstance().tryPin(pinBox.getText());
             
@@ -69,13 +79,14 @@ public class LoginViewController implements Initializable,Notification {
                     
                     StackPane newPanel;
                     try {
+                        
                         newPanel = FXMLLoader.load(getClass().getResource("/UiComponents/Fxml/userView.fxml"));
                         contentPane.getChildren().setAll(newPanel);
                     } catch (IOException ex) {
                         Logger.getLogger(LoginViewController.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     
-                    contentPane.setVisible(true);
+                    fadeContentPane(0, 1, 2000);
                 
                 });
 
@@ -89,12 +100,15 @@ public class LoginViewController implements Initializable,Notification {
     
     private void copyUrlThread(){
         StringSelection stringSelection;
+        
+        loadSpinner.setVisible(true);
         try {
             stringSelection = new StringSelection(BOT.getInstance().generateUrl());
             Clipboard clpbrd = Toolkit.getDefaultToolkit().getSystemClipboard();
             clpbrd.setContents(stringSelection, null);
             Platform.runLater(()->{
                 this.newNotification("URL Copiado al portapapeles");
+                loadSpinner.setVisible(false);
             
             });
             
@@ -102,6 +116,14 @@ public class LoginViewController implements Initializable,Notification {
             Logger.getLogger(LoginViewController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-    }      
-    
+    }
+
+    private void fadeContentPane(int from, int to, int millis) {
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(millis), contentPane);
+        fadeOut.setFromValue(from);
+        fadeOut.setToValue(to);
+        fadeOut.play();
+        
+    }
+       
 }
