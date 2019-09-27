@@ -6,6 +6,7 @@
 package UiComponents.Controllers;
 
 import BotComponents.BOT;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -128,8 +129,9 @@ public class TweetTemplateController implements Initializable {
             protected Void call() throws Exception {
                 BOT bot = BOT.getInstance();
                 if(!status_retweet){
-                    bot.retweet(idTweet);
+                    bot.retweet(idTweet);                    
                     retweet.setStyle("-fx-background-color: red;");
+                    
                     status_retweet = true;
                 }
 
@@ -144,5 +146,12 @@ public class TweetTemplateController implements Initializable {
         
         new Thread(task).start();
       
+    }
+    
+    private void delete(){
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/UiComponents/Fxml/UserViewController.fxml"));
+        UserViewController userViewController = loader.getController();
+        userViewController.deleteRetweet(circleImg);
+    
     }
 }

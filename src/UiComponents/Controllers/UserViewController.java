@@ -38,7 +38,7 @@ import twitter4j.User;
  *
  * @author isanfurg
  */
-public class UserViewController implements Initializable,Notification {
+public class UserViewController implements Initializable, Notification {
 
     @FXML
     private ImageView bannerImg;
@@ -154,6 +154,7 @@ public class UserViewController implements Initializable,Notification {
         NewTweetController controller = loader.getController();
         controller.setToClose(newTweet, rootAnchorPane);
         newTweet.show();
+        
     }
 
     @FXML
@@ -162,5 +163,9 @@ public class UserViewController implements Initializable,Notification {
     }
     public void deleteRetweet(AnchorPane delete){
         this.tweets.getChildren().remove(delete);
+    }
+    
+    public void addTweetToTimeline(AnchorPane tweet){
+        tweets.getChildren().add(0, tweet);
     }
 }
