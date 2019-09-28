@@ -67,12 +67,12 @@ public class LoginViewController implements Initializable,UiComponents.Interface
     private void copiarUrl(ActionEvent event) throws TwitterException {
         
        new Thread(this::copyUrlThread).start();
-       this.newNotification("Url copiado al portapapeles");
+       
 
     }
 
     @FXML
-    private void login(ActionEvent event) throws IOException, TwitterException {
+    private void login(ActionEvent event) throws IOException{
         new Thread(this::loginThread).start();
         
     }
@@ -82,7 +82,6 @@ public class LoginViewController implements Initializable,UiComponents.Interface
         
         try {
             BOT.getInstance().tryPin(pinBox.getText());
-            
             if(BOT.getInstance().isAccess()){
                 
                 Platform.runLater(()->{
@@ -117,6 +116,7 @@ public class LoginViewController implements Initializable,UiComponents.Interface
             Clipboard clpbrd = Toolkit.getDefaultToolkit().getSystemClipboard();
             clpbrd.setContents(stringSelection, null);
             Platform.runLater(()->{
+                this.newNotification("Url copiado al portapapeles");
                 loadSpinner.setVisible(false);
             
             });

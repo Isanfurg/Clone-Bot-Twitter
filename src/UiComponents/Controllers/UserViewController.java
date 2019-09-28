@@ -129,9 +129,10 @@ public class UserViewController implements Initializable, Notification {
         if(id_user.getText().length()!=0){
             
             ResponseList<User> users  = BOT.getInstance().searchUser(id_user.getText());
+            System.out.println(users.size());
 
             if(users!=null){
-                controller.setContainerUsers(users);
+                controller.setContainerUsers(users, 0);
             }else{
                 controller.setTextOnScene();
             }
@@ -153,6 +154,7 @@ public class UserViewController implements Initializable, Notification {
         newTweet.setOverlayClose(false);
         NewTweetController controller = loader.getController();
         controller.setToClose(newTweet, rootAnchorPane);
+        controller.setTimeLine(tweets);
         newTweet.show();
         
     }

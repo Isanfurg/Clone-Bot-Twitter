@@ -13,7 +13,7 @@
          </graphic>
       </Button>
       <TextArea fx:id="tweetContent" layoutX="36.0" layoutY="26.0" minHeight="160.0" minWidth="520.0" onKeyTyped="#count" prefHeight="160.0" prefWidth="520.0" />
-      <Button layoutX="436.0" layoutY="218.0" minHeight="40.0" minWidth="120.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="120.0" text="Send Tweet">
+      <Button layoutX="436.0" layoutY="218.0" minHeight="40.0" minWidth="120.0" mnemonicParsing="false" onAction="#send_tweet" prefHeight="40.0" prefWidth="120.0" text="Send Tweet">
          <graphic>
             <FontAwesomeIconView glyphName="TWITTER" size="20" />
          </graphic>

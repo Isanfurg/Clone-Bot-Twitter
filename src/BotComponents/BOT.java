@@ -5,6 +5,8 @@
  */
 package BotComponents;
 
+import UiComponents.Interfaces.Notification;
+import javafx.application.Platform;
 import twitter4j.ResponseList;
 import twitter4j.Status;
 import twitter4j.Twitter;
@@ -18,7 +20,7 @@ import twitter4j.auth.AccessToken;
  *
  * @author isanfurg
  */
-public class BOT{
+public class BOT implements Notification{
     private static BOT instance = null;
     private final static String CONSUMER_KEY = "nrZMs1iwC8sbkZP6Fdwnr0IbY";
     private final static String CONSUMER_KEY_SECRET = "EkJ6ZuOME85MeQCHN6hT0s7bs7c9iyjwwCKQyRRZEG06qjcE9Q";
@@ -53,6 +55,8 @@ public class BOT{
 
         this.access = true;
     } catch (TwitterException e) {
+        Platform.runLater(()->{this.newNotification("Error al procesar el PIN.");});
+        
         System.out.println("Failed to get access token, caused by: "
         + e.getMessage());
         requestToken = null; 
@@ -95,14 +99,14 @@ public class BOT{
         }  
     }
     
-    public void newTweet(String msg) throws TwitterException {
+    public Status newTweet(String msg) throws TwitterException {
         try{
-            twitterBot.updateStatus(msg);
-        System.out.println("Sucesfull!");
+            return twitterBot.updateStatus(msg);
         }catch(TwitterException e){
             System.out.println("update error by:"
             +e.getMessage());
         }
+        return null;
         
     }
     
