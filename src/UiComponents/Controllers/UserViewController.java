@@ -5,7 +5,7 @@
  */
 package UiComponents.Controllers;
 
-    import BotComponents.BOT;
+import BotComponents.BOT;
 import UiComponents.Interfaces.Notification;
 import com.jfoenix.controls.JFXDialog;
 import java.io.IOException;

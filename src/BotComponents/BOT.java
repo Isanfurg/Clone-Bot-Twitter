@@ -5,11 +5,14 @@
  */
 package BotComponents;
 
+import java.io.File;
 import twitter4j.ResponseList;
 import twitter4j.Status;
+import twitter4j.StatusUpdate;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
+import twitter4j.UploadedMedia;
 import twitter4j.User;
 import twitter4j.auth.RequestToken;
 import twitter4j.auth.AccessToken;
@@ -28,6 +31,7 @@ public class BOT{
     private AccessToken accessToken ;
     private boolean access ;
     private BOT() throws TwitterException{
+        twitterBot.
         setPin();
 
     }
@@ -95,9 +99,11 @@ public class BOT{
         }  
     }
     
-    public void newTweet(String msg) throws TwitterException {
+    public void newTweet(String msg, File fi) throws TwitterException {
         try{
-            twitterBot.updateStatus(msg);
+            UploadedMedia media = twitterBot.uploadMedia(fi);
+            StatusUpdate statusUpdate = new StatusUpdate(msg);
+            Status status = twitterBot.updateStatus(statusUpdate);
         System.out.println("Sucesfull!");
         }catch(TwitterException e){
             System.out.println("update error by:"
