@@ -22,8 +22,8 @@ import twitter4j.auth.AccessToken;
  */
 public class BOT implements Notification{
     private static BOT instance = null;
-    private final static String CONSUMER_KEY = "nrZMs1iwC8sbkZP6Fdwnr0IbY";
-    private final static String CONSUMER_KEY_SECRET = "EkJ6ZuOME85MeQCHN6hT0s7bs7c9iyjwwCKQyRRZEG06qjcE9Q";
+    private final static String CONSUMER_KEY = "SrIUForUjeiOw76LBGnsbnq86";
+    private final static String CONSUMER_KEY_SECRET = "2JXMuQ1mM2eLl2EdWjy0e6fjsI1iVCycK72PCHs5YojGBqvY2Q";
     
     private Twitter twitterBot;
     private RequestToken requestToken ;
