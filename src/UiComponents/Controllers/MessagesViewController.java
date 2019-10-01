@@ -21,12 +21,12 @@ import javafx.scene.layout.VBox;
  */
 public class MessagesViewController implements Initializable {
 
-    @FXML
-    private VBox usersToChat;
-    @FXML
-    private VBox chatBox;
     JFXDialog toClose ;
     AnchorPane rootPane;
+    @FXML
+    private VBox usersViev;
+    @FXML
+    private VBox chatView;
 
     /**
      * Initializes the controller class.
@@ -46,6 +46,10 @@ public class MessagesViewController implements Initializable {
         public void setToClose(JFXDialog toClose, AnchorPane rootPane){
         this.rootPane = rootPane;
         this.toClose = toClose;
+    }
+
+    @FXML
+    private void sendNewMessage(ActionEvent event) {
     }
     
 }
