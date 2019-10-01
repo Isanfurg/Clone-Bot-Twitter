@@ -24,10 +24,16 @@ public class BOT implements Notification{
     private RequestToken requestToken ;
     private AccessToken accessToken;
     private boolean access ;
+    
     private BOT() throws TwitterException{
         setPin();
 
     }
+
+    public ResponseList<DirectMessage> getChatsData() {
+        return chatsData;
+    }
+    
     private void setPin() throws TwitterException{ 
         this.twitterBot = new TwitterFactory().getInstance();
         this.twitterBot.setOAuthConsumer(CONSUMER_KEY, CONSUMER_KEY_SECRET);
@@ -269,7 +275,7 @@ public class BOT implements Notification{
             @Override
             public void run() {
                 try {
-                    chatsData = twitterBot.getDirectMessages();
+                    chatsData = twitterBot.getDirectMessages((int)twitterBot.getId());
                 } catch (TwitterException ex) {
                     Logger.getLogger(BOT.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -281,7 +287,14 @@ public class BOT implements Notification{
         System.out.println("Stream of messages started");
           
     }
-
+    public long getMyUserID(){
+        try {
+            return twitterBot.showUser(getName()).getId();
+        } catch (TwitterException e) {
+            System.out.println(e.getMessage());
+        }return -1;
+                
+    }
     public DirectMessageList mensageUser(String user){
         try{
             return twitterBot.getDirectMessages(0, user);

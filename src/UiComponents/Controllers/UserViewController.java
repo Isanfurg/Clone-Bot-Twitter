@@ -159,7 +159,7 @@ public class UserViewController implements Initializable, Notification {
     }
 
     @FXML
-    private void show_direct_messages(ActionEvent event) throws IOException {
+    private void show_direct_messages(ActionEvent event) throws IOException, TwitterException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/UiComponents/Fxml/messagesView.fxml"));
         rootAnchorPane.setDisable(true);
         rootAnchorPane.setEffect(new BoxBlur(3, 3, 3));
@@ -167,6 +167,7 @@ public class UserViewController implements Initializable, Notification {
         messages.setOverlayClose(false);
         MessagesViewController controller = loader.getController();
         controller.setToClose(messages, rootAnchorPane);
+        controller.setData();
         messages.show();
     }
     public void deleteRetweet(AnchorPane delete){

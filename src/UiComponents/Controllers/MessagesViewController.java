@@ -5,14 +5,18 @@
  */
 package UiComponents.Controllers;
 
+import BotComponents.chats;
 import com.jfoenix.controls.JFXDialog;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import twitter4j.DirectMessage;
+import twitter4j.TwitterException;
 
 /**
  * FXML Controller class
@@ -20,14 +24,14 @@ import javafx.scene.layout.VBox;
  * @author isanfurg
  */
 public class MessagesViewController implements Initializable {
-
+    long selectedUser;
     JFXDialog toClose ;
     AnchorPane rootPane;
     @FXML
     private VBox usersViev;
     @FXML
     private VBox chatView;
-
+    
     /**
      * Initializes the controller class.
      */
@@ -50,6 +54,16 @@ public class MessagesViewController implements Initializable {
 
     @FXML
     private void sendNewMessage(ActionEvent event) {
-    }
     
+    public void setData() throws TwitterException{
+        chats data = new chats();
+        for (DirectMessage directMessage : BotComponents.BOT.getInstance().getChatsData()) {
+            if(data.existUser(directMessage.getRecipientId()|| data.existUser(directMessage.getSenderId()))){
+                System.out.println("sdsd");
+            }
+            System.out.println("from: "+directMessage.getRecipientId());
+            System.out.println("to: " +directMessage.getSenderId());
+            System.out.println("msg: "+directMessage.getText());
+        }
+    }
 }
