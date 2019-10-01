@@ -7,6 +7,7 @@ package BotComponents;
 
 import UiComponents.Interfaces.Notification;
 import javafx.application.Platform;
+import twitter4j.DirectMessageList;
 import twitter4j.ResponseList;
 import twitter4j.Status;
 import twitter4j.Twitter;
@@ -269,5 +270,11 @@ public class BOT implements Notification{
             return null;
         }
     }
-
+    public DirectMessageList mensageUser(String user){
+        try{
+            return twitterBot.getDirectMessages(0, user);
+        }catch(TwitterException e){
+            return null;
+        }
+    }
 }
