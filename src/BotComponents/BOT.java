@@ -1,33 +1,27 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package BotComponents;
-
 import UiComponents.Interfaces.Notification;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
+import twitter4j.DirectMessage;
 import twitter4j.ResponseList;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.User;
-import twitter4j.auth.RequestToken;
 import twitter4j.auth.AccessToken;
-
-/**
- *
- * @author isanfurg
- */
+import twitter4j.auth.RequestToken;
 public class BOT implements Notification{
     private static BOT instance = null;
     private final static String CONSUMER_KEY = "SrIUForUjeiOw76LBGnsbnq86";
     private final static String CONSUMER_KEY_SECRET = "2JXMuQ1mM2eLl2EdWjy0e6fjsI1iVCycK72PCHs5YojGBqvY2Q";
-    
+    private ResponseList<DirectMessage> chatsData= null;
     private Twitter twitterBot;
     private RequestToken requestToken ;
-    private AccessToken accessToken ;
+    private AccessToken accessToken;
     private boolean access ;
     private BOT() throws TwitterException{
         setPin();
@@ -52,7 +46,7 @@ public class BOT implements Notification{
     public void tryPin(String pin) throws TwitterException{
     try{
         accessToken = twitterBot.getOAuthAccessToken(this.requestToken, pin);
-
+                streamMessages();
         this.access = true;
     } catch (TwitterException e) {
         Platform.runLater(()->{this.newNotification("Error al procesar el PIN.");});
@@ -268,6 +262,23 @@ public class BOT implements Notification{
             System.out.println(e.getMessage());
             return null;
         }
+    }
+    public void streamMessages(){
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    chatsData = twitterBot.getDirectMessages();
+                } catch (TwitterException ex) {
+                    Logger.getLogger(BOT.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            
+        };
+        Timer timer = new Timer(true);
+        timer.scheduleAtFixedRate(timerTask, 0, 60*1000);
+        System.out.println("Stream of messages started");
+          
     }
 
 }
