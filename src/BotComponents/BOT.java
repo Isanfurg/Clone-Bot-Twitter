@@ -139,7 +139,8 @@ public class BOT implements Notification{
     }
     public void sendDirectMenssage(String screenName, String text)throws TwitterException {
         try{
-            twitterBot.sendDirectMessage(screenName,text);
+            
+            chatsData.add(0,twitterBot.sendDirectMessage(screenName,text));
         }catch(TwitterException e){
             System.out.println("update error by:"
             +e.getMessage());

@@ -12,6 +12,8 @@ import javafx.scene.shape.Circle;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
@@ -21,6 +23,8 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
@@ -43,6 +47,10 @@ public class MessagesViewController implements Initializable {
     @FXML
     private VBox chatView;
     ArrayList<Long> ids = new ArrayList<>();
+    @FXML
+    private TextArea newMsg;
+    @FXML
+    private ScrollPane scrollPChts;
     /**
      * Initializes the controller class.
      */
@@ -64,9 +72,14 @@ public class MessagesViewController implements Initializable {
     }
 
     @FXML
-    private void sendNewMessage(ActionEvent event){
+    private void sendNewMessage(ActionEvent event) throws TwitterException, IOException{
+        if(newMsg.getText().length()!=0){
+            BOT.getInstance().sendDirectMenssage(BOT.getInstance().showUser(selectedUser).getScreenName(), newMsg.getText());
+        }
+        newMsg.setText("");
+        setData();
     }
-    public void setData() throws TwitterException{
+    public void setData() throws TwitterException, IOException{
         ArrayList<Long> ids = new ArrayList <>();
         for (DirectMessage directMessage : BOT.getInstance().getChatsData()) {
             if(!ids.contains(directMessage.getSenderId())){ids.add(directMessage.getSenderId());}
@@ -81,7 +94,24 @@ public class MessagesViewController implements Initializable {
         this.ids = ids;
         setUserIdsOnScreen();
     }
-    public void setUserIdsOnScreen() throws TwitterException{
+    public void refreshMesssages(){
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    setData();
+                } catch (TwitterException ex) {
+                    Logger.getLogger(MessagesViewController.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(MessagesViewController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        };
+        Timer timer =new Timer();
+        timer.scheduleAtFixedRate(timerTask, 0, 60*1000);
+    }
+    public void setUserIdsOnScreen() throws TwitterException, IOException{
+        usersViev.getChildren().clear();
         for (Long id : ids) {
             User user = BOT.getInstance().showUser(id);
             Button nb = new Button();
@@ -109,6 +139,7 @@ public class MessagesViewController implements Initializable {
             nb.setText(user.getScreenName());
             usersViev.getChildren().add(nb);
         }
+        if(selectedUser!=0)setTweetsOf(selectedUser);
         
     }
     private void setTweetsOf(long userId) throws IOException, TwitterException{
@@ -117,13 +148,13 @@ public class MessagesViewController implements Initializable {
         for (DirectMessage dm : BOT.getInstance().getChatsData()) {
             if(dm.getRecipientId() == userId && dm.getSenderId()==myId){
                   FXMLLoader loader = new FXMLLoader(getClass().getResource("/UiComponents/Fxml/messageTemplate.fxml"));
-                  chatView.getChildren().add(loader.load());
+                  chatView.getChildren().add(0,loader.load());
                   MessageTemplateController controller = loader.getController();
                   controller.setInfo(Pos.CENTER_RIGHT, dm.getText());
             }else if(dm.getSenderId() == userId && dm.getRecipientId()==myId){
                 
                   FXMLLoader loader = new FXMLLoader(getClass().getResource("/UiComponents/Fxml/messageTemplate.fxml"));
-                  chatView.getChildren().add(loader.load());
+                  chatView.getChildren().add(0,loader.load());
                   MessageTemplateController controller = loader.getController();
                   controller.setInfo(Pos.CENTER_LEFT, dm.getText());
             }
