@@ -5,26 +5,37 @@
  */
 package UiComponents.Controllers;
 
+import BotComponents.BOT;
 import com.jfoenix.controls.JFXDialog;
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import twitter4j.Status;
+import twitter4j.TwitterException;
 
 /**
  * FXML Controller class
  *
  * @author isanfurg
  */
-public class NewTweetController implements Initializable {
+public class NewTweetController implements Initializable, UiComponents.Interfaces.Notification{
+    private VBox timeline;
     private ArrayList fileFormats;
     private File f = null;
     @FXML
@@ -76,10 +87,57 @@ public class NewTweetController implements Initializable {
         this.rootPane = rootPane;
         this.toClose = toClose;
     }
+    
+    public void setTimeLine(VBox timeline){
+        this.timeline = timeline;
+    }
 
     @FXML
     private void count(KeyEvent event) {
         System.out.println("keyPressed");
+    }
+
+    @FXML
+    private void send_tweet(ActionEvent event) {
+        
+        new Thread(()->{
+            try {
+                if(isValid(tweetContent.getText())){
+                    Status status = BOT.getInstance().newTweet(tweetContent.getText());
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/UiComponents/Fxml/tweetTemplate.fxml"));
+                    AnchorPane tweetTemplate = loader.load();
+
+                    TweetTemplateController tweetTemplateController = loader.getController();
+                    tweetTemplateController.setItems(status, 0, timeline);
+
+
+                    Platform.runLater(()->{
+                        timeline.getChildren().add(0, tweetTemplate);
+                        close(event);
+                    });
+                }else{
+                    Platform.runLater(()->{ 
+                        this.newNotification("Tweet no cumple el formato.");
+                    
+                    });
+                }
+
+                
+            } catch (TwitterException ex) {
+                Logger.getLogger(NewTweetController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(NewTweetController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            
+
+        
+        }).start();
+        
+    }
+    
+    private boolean isValid(String content){
+        return content.length() > 0;
     }
     
 }

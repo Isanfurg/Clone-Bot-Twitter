@@ -51,24 +51,29 @@ public class SearchedUsersController implements Initializable {
         antPage.setDisable(true);
     }
 
-    public void setContainerUsers(ResponseList<User> users) throws IOException, TwitterException {
+    public void setContainerUsers(ResponseList<User> users, int from) throws IOException, TwitterException {
         data = users;
         GridPane searched= new GridPane();
         int columunIndex = 0;
         int rowIndex = 0;
+
         if(!users.isEmpty()){
         containerUsers.getChildren().clear();
-        for(int i = page*10;i<10*(page+1);i++){
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/UiComponents/Fxml/userButton.fxml"));
-            searched.add(loader.load(),columunIndex,rowIndex);
-            UserButtonController controller = loader.getController();
-            controller.setInfoUser(users.get(i));
-            controller.checkFollow();
-            rowIndex++;
-            if(rowIndex==5){rowIndex=0;columunIndex++;}
-        }
+            for(int i = from; i<users.size();i++){
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/UiComponents/Fxml/userButton.fxml"));
+                searched.add(loader.load(),columunIndex,rowIndex);
+                UserButtonController controller = loader.getController();
+                controller.setInfoUser(users.get(i));
+                controller.checkFollow();
+                rowIndex++;
+                
+                if(rowIndex==5){ rowIndex=0;columunIndex++; }
+                if(i==9)       break;
+            }
 
         containerUsers.getChildren().addAll(searched);
+        if(users.size()<=10) nextPage.setDisable(true);
+        
         }else{setTextOnScene();}
     }
 
@@ -90,7 +95,7 @@ public class SearchedUsersController implements Initializable {
             page=0;
             nextPage.setDisable(false);
             antPage.setDisable(true);
-            setContainerUsers(data);
+            setContainerUsers(data, 0);
         }else{
             setTextOnScene();
         }
@@ -102,7 +107,7 @@ public class SearchedUsersController implements Initializable {
             page=0;
             nextPage.setDisable(false);
             antPage.setDisable(true);
-            setContainerUsers(data);
+            setContainerUsers(data, 0);
         }
    
     }
@@ -112,7 +117,7 @@ public class SearchedUsersController implements Initializable {
             page++;
             nextPage.setDisable(true);
             antPage.setDisable(false);
-            setContainerUsers(data);
+            setContainerUsers(data, 10);
         }
         
     }

@@ -129,9 +129,10 @@ public class UserViewController implements Initializable, Notification {
         if(id_user.getText().length()!=0){
             
             ResponseList<User> users  = BOT.getInstance().searchUser(id_user.getText());
+            System.out.println(users.size());
 
             if(users!=null){
-                controller.setContainerUsers(users);
+                controller.setContainerUsers(users, 0);
             }else{
                 controller.setTextOnScene();
             }
@@ -145,21 +146,29 @@ public class UserViewController implements Initializable, Notification {
 
     @FXML
     private void new_tweet(ActionEvent event) throws IOException {
-        BoxBlur blur = new BoxBlur(3, 3, 3);
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/UiComponents/Fxml/newTweet.fxml"));
         rootAnchorPane.setDisable(true);
-        rootAnchorPane.setEffect(blur);
+        rootAnchorPane.setEffect(new BoxBlur(3, 3, 3));
         JFXDialog newTweet = new JFXDialog(rootPane, loader.load(), JFXDialog.DialogTransition.TOP);
         newTweet.setOverlayClose(false);
         NewTweetController controller = loader.getController();
         controller.setToClose(newTweet, rootAnchorPane);
+        controller.setTimeLine(tweets);
         newTweet.show();
         
     }
 
     @FXML
-    private void show_direct_messages(ActionEvent event) {
-        
+    private void show_direct_messages(ActionEvent event) throws IOException, TwitterException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/UiComponents/Fxml/messagesView.fxml"));
+        rootAnchorPane.setDisable(true);
+        rootAnchorPane.setEffect(new BoxBlur(3, 3, 3));
+        JFXDialog messages = new JFXDialog(rootPane, loader.load(), JFXDialog.DialogTransition.TOP);
+        messages.setOverlayClose(false);
+        MessagesViewController controller = loader.getController();
+        controller.setToClose(messages, rootAnchorPane);
+        controller.setData();
+        messages.show();
     }
     public void deleteRetweet(AnchorPane delete){
         this.tweets.getChildren().remove(delete);
