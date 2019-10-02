@@ -81,6 +81,7 @@ public class MessagesViewController implements Initializable {
     }
     public void setData() throws TwitterException, IOException{
         ArrayList<Long> ids = new ArrayList <>();
+        
         for (DirectMessage directMessage : BOT.getInstance().getChatsData()) {
             if(!ids.contains(directMessage.getSenderId())){ids.add(directMessage.getSenderId());}
             else if(!ids.contains(directMessage.getRecipientId())){ids.add(directMessage.getRecipientId());}
@@ -159,6 +160,10 @@ public class MessagesViewController implements Initializable {
                   controller.setInfo(Pos.CENTER_LEFT, dm.getText());
             }
         }
+        System.out.println(scrollPChts.getVvalue());
+        System.out.println(scrollPChts.getVmax());
+        System.out.println(scrollPChts.getVmin());
+        scrollPChts.setVvalue(scrollPChts.getVmin());
     }
 
 }
