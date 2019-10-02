@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Text?>
+
+
+<Label fx:id="container" alignment="CENTER" minHeight="100.0" minWidth="400.0" prefHeight="100.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UiComponents.Controllers.MessageTemplateController">
+   <graphic>
+      <AnchorPane maxHeight="80.0" maxWidth="260.0" minHeight="80.0" minWidth="180.0" prefHeight="80.0" prefWidth="180.0" style="-fx-background-color: LightGrey; -fx-border-radius: 100px; -fx-background-radius: 100px;">
+         <children>
+            <Text layoutX="38.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="324.126953125" />
+            <Label fx:id="msgContent" layoutX="14.0" layoutY="15.0" prefHeight="49.0" prefWidth="240.0" text="content" />
+         </children>
+      </AnchorPane>
+   </graphic>
+</Label>

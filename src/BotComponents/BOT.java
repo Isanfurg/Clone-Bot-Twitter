@@ -19,7 +19,7 @@ public class BOT implements Notification{
     private static BOT instance = null;
     private final static String CONSUMER_KEY = "SrIUForUjeiOw76LBGnsbnq86";
     private final static String CONSUMER_KEY_SECRET = "2JXMuQ1mM2eLl2EdWjy0e6fjsI1iVCycK72PCHs5YojGBqvY2Q";
-    private ResponseList<DirectMessage> chatsData= null;
+    private ResponseList<DirectMessage> chatsData;
     private Twitter twitterBot;
     private RequestToken requestToken ;
     private AccessToken accessToken;
@@ -127,6 +127,14 @@ public class BOT implements Notification{
             System.out.println("update error by:"
             +e.getMessage());
         }  
+    }
+    public User showUser(long id){
+        try{
+            return twitterBot.showUser(id);
+        }catch(TwitterException e){
+            System.out.println(e.getMessage());
+        }
+        return null;
     }
     public void sendDirectMenssage(String screenName, String text)throws TwitterException {
         try{
@@ -289,7 +297,8 @@ public class BOT implements Notification{
     }
     public long getMyUserID(){
         try {
-            return twitterBot.showUser(getName()).getId();
+
+            return twitterBot.getId();
         } catch (TwitterException e) {
             System.out.println(e.getMessage());
         }return -1;
