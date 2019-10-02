@@ -278,16 +278,30 @@ public class BOT implements Notification{
             return null;
         }
     }
-    //en proceso(No me lo muevan, pd: el manuel es otaku)
-    public void hashtagReply(Status status){
-        HashtagEntity[] tt  = status.getHashtagEntities();
-        String like = "#Like";
-        String reTwiit = "#ReTwiit";
-        String follow = "#Seguir";
-        for (HashtagEntity i: tt) {
-            if(i.getText().equals(like)){
-                
+    //en proceso(No me lo muevan, pd: el manuel es otaku).
+    public HashtagEntity[] hashtagReply(Status status){
+        try{
+            HashtagEntity[] tt  = status.getHashtagEntities();
+            for (HashtagEntity i: tt) {
+                String[] x = i.getText().split(" ");
+                if(x[1].equals("#Like")){
+                    //aun no se de donde sacar la id uwu
+                    long id = 178823411L;
+                    likeTweet(id);
+                }else if(x[1].equals("#Seguir")){
+                    //aun no se de donde sacar la id uwu
+                    long id = 178823411L;
+                    followUser(id);
+                    sendDirectMenssage(x[2],x[0]+" "+x[2]);
+                }else if(x[1].equals("#ReTwitt")){
+                    //aun no se de donde sacar la id uwu
+                    long id = 178823411L;
+                    retweet(id);
+                }
             }
+            return tt;
+        }catch(TwitterException e){
+            return null;
         }
     }
 }
