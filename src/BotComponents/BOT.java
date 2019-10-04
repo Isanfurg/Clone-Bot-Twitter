@@ -1,5 +1,6 @@
 package BotComponents;
 import UiComponents.Interfaces.Notification;
+import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
@@ -10,6 +11,7 @@ import twitter4j.DirectMessageList;
 import twitter4j.HashtagEntity;
 import twitter4j.ResponseList;
 import twitter4j.Status;
+import twitter4j.StatusUpdate;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
@@ -101,9 +103,14 @@ public class BOT implements Notification{
         }  
     }
     
-    public Status newTweet(String msg) throws TwitterException {
+    public Status newTweet(String msg, File fi) throws TwitterException {
         try{
-            return twitterBot.updateStatus(msg);
+            StatusUpdate statusUpdate = new StatusUpdate(msg);
+            if(fi!=null){
+                statusUpdate.setMedia(fi);
+            }
+            Status status = twitterBot.updateStatus(statusUpdate);
+            return status;
         }catch(TwitterException e){
             System.out.println("update error by:"
             +e.getMessage());
