@@ -22,7 +22,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
@@ -39,24 +38,20 @@ import twitter4j.User;
  * @author isanfurg
  */
 public class MessagesViewController implements Initializable {
+    @FXML private VBox usersViev;
+    @FXML private VBox chatView;
+    @FXML private TextArea newMsg;
+    @FXML private ScrollPane scrollPChts;
+    
+    ArrayList<Long> ids = new ArrayList<>();
     long selectedUser;
     JFXDialog toClose ;
     AnchorPane rootPane;
-    @FXML
-    private VBox usersViev;
-    @FXML
-    private VBox chatView;
-    ArrayList<Long> ids = new ArrayList<>();
-    @FXML
-    private TextArea newMsg;
-    @FXML
-    private ScrollPane scrollPChts;
-    /**
-     * Initializes the controller class.
-     */
+    
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        
     }    
 
     @FXML
@@ -70,6 +65,7 @@ public class MessagesViewController implements Initializable {
         this.rootPane = rootPane;
         this.toClose = toClose;
     }
+        
 
     @FXML
     private void sendNewMessage(ActionEvent event) throws TwitterException, IOException{
@@ -83,15 +79,17 @@ public class MessagesViewController implements Initializable {
         ArrayList<Long> ids = new ArrayList <>();
         
         for (DirectMessage directMessage : BOT.getInstance().getChatsData()) {
-            if(!ids.contains(directMessage.getSenderId())){ids.add(directMessage.getSenderId());}
-            else if(!ids.contains(directMessage.getRecipientId())){ids.add(directMessage.getRecipientId());}
+            if     (!ids.contains(directMessage.getSenderId()))     ids.add(directMessage.getSenderId());
+            else if(!ids.contains(directMessage.getRecipientId()))  ids.add(directMessage.getRecipientId());
             
         }
         System.out.println(ids.toString());
         System.out.println(BOT.getInstance().getMyUserID());
+        
         if(ids.contains(BOT.getInstance().getMyUserID())){
             ids.remove(BOT.getInstance().getMyUserID());
         }
+        
         this.ids = ids;
         setUserIdsOnScreen();
     }
@@ -113,6 +111,7 @@ public class MessagesViewController implements Initializable {
     }
     public void setUserIdsOnScreen() throws TwitterException, IOException{
         usersViev.getChildren().clear();
+        
         for (Long id : ids) {
             User user = BOT.getInstance().showUser(id);
             Button nb = new Button();
@@ -124,9 +123,11 @@ public class MessagesViewController implements Initializable {
                         new Image(user.getOriginalProfileImageURL())
                     )
                 );
+            
             nb.setOnAction((event) -> {
                 try {
-                    setTweetsOf(user.getId());
+                    setMessagesOf(user.getId());
+                    
                 } catch (IOException ex) {
                     Logger.getLogger(MessagesViewController.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (TwitterException ex) {
@@ -138,20 +139,23 @@ public class MessagesViewController implements Initializable {
             nb.setAlignment(Pos.CENTER_LEFT);
             nb.setGraphic(circle);
             nb.setText(user.getScreenName());
+            
             usersViev.getChildren().add(nb);
         }
-        if(selectedUser!=0)setTweetsOf(selectedUser);
+        if(selectedUser!=0) setMessagesOf(selectedUser);
         
     }
-    private void setTweetsOf(long userId) throws IOException, TwitterException{
+    private void setMessagesOf(long userId) throws IOException, TwitterException{
         long myId = BOT.getInstance().getMyUserID();
         chatView.getChildren().clear();
+        
         for (DirectMessage dm : BOT.getInstance().getChatsData()) {
-            if(dm.getRecipientId() == userId && dm.getSenderId()==myId){
+            if(dm.getRecipientId() == userId && dm.getSenderId() == myId){
                   FXMLLoader loader = new FXMLLoader(getClass().getResource("/UiComponents/Fxml/messageTemplate.fxml"));
-                  chatView.getChildren().add(0,loader.load());
+                  chatView.getChildren().add(0, loader.load());
                   MessageTemplateController controller = loader.getController();
                   controller.setInfo(Pos.CENTER_RIGHT, dm.getText());
+                  
             }else if(dm.getSenderId() == userId && dm.getRecipientId()==myId){
                 
                   FXMLLoader loader = new FXMLLoader(getClass().getResource("/UiComponents/Fxml/messageTemplate.fxml"));
@@ -160,6 +164,7 @@ public class MessagesViewController implements Initializable {
                   controller.setInfo(Pos.CENTER_LEFT, dm.getText());
             }
         }
+        
         System.out.println(scrollPChts.getVvalue());
         System.out.println(scrollPChts.getVmax());
         System.out.println(scrollPChts.getVmin());

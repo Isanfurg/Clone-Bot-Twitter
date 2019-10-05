@@ -9,8 +9,6 @@ import BotComponents.BOT;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -20,7 +18,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.ImagePattern;
@@ -35,26 +32,20 @@ import twitter4j.TwitterException;
  * @author isanfurg
  */
 public class TweetTemplateController implements Initializable {
+    @FXML private Text userName;
+    @FXML private Circle profileImg;
+    @FXML private AnchorPane circleImg;
+    @FXML private Text user;
+    @FXML private TextArea content;
+    @FXML private Button like;
+    @FXML private Button retweet;
+    private long idTweet;
+    boolean isFav;
+    boolean isRetweet;
+    boolean isRetweetedByMe;
+    private int tweetPosition;
     private VBox parent ;
     private Status data;
-    @FXML
-    private Text userName;
-    @FXML
-    private Circle profileImg;
-    @FXML
-    private AnchorPane circleImg;
-    @FXML
-    private Text user;
-    @FXML
-    private TextArea content;
-    @FXML
-    private Button like;
-    @FXML
-    private Button retweet;
-    private long idTweet;
-    boolean status_fav;
-    boolean status_retweet;
-    private int tweetPosition;
 
     /**
      * Initializes the controller class.
@@ -64,6 +55,13 @@ public class TweetTemplateController implements Initializable {
         // TODO
     }
     public void setItems(Status status, int tweetPosition, VBox parent) throws TwitterException{
+        idTweet = status.getId();
+        isFav = status.isFavorited();
+        isRetweet = status.isRetweet();
+        isRetweetedByMe = status.isRetweetedByMe();
+        
+        System.out.println("isRetweetedByMe: "+isRetweetedByMe);
+        
         data = status;
         this.parent = parent;
         String text = status.getText();
@@ -78,6 +76,8 @@ public class TweetTemplateController implements Initializable {
             user = BOT.getInstance().getName(userName);
             profileImgURL = BOT.getInstance().getProfileImageURL(userName);
         }
+        
+        
         if(status.isRetweet()){
             user = "Retweeted from: "+ user;
         }
@@ -86,12 +86,9 @@ public class TweetTemplateController implements Initializable {
         Image img = new Image(profileImgURL);
         profileImg.setFill(new ImagePattern(img));
         this.userName.setText("@"+userName);
-        idTweet = status.getId();
-        status_fav = status.isFavorited();
-        status_retweet = status.isRetweetedByMe();
 
-        if(status_fav) like.setStyle("-fx-background-color: red;");
-        if(status_retweet) retweet.setStyle("-fx-background-color: red;");
+        if(isFav) like.setStyle("-fx-background-color: red;");
+        if(isRetweetedByMe) retweet.setStyle("-fx-background-color: red;");
 
 
 
@@ -103,16 +100,16 @@ public class TweetTemplateController implements Initializable {
             @Override
             protected Void call() throws Exception {
                 BOT bot = BOT.getInstance();
-                if(!status_fav){
+                if(!isFav){
                     bot.likeTweet(idTweet);
                     like.setStyle("-fx-background-color: red;");
-                    status_fav = true;
+                    isFav = true;
                 }
 
                 else{
                     bot.destroylikeTweet(idTweet);
                     like.setStyle(null);
-                    status_fav = false;
+                    isFav = false;
                 }
                 return null;
             }
@@ -124,29 +121,45 @@ public class TweetTemplateController implements Initializable {
 
     @FXML
     private void reTweet(ActionEvent event) {
-        Task<Void> task = new Task(){
-            @Override
-            protected Void call() throws Exception {
+        new Thread(()->{
+            try {
                 BOT bot = BOT.getInstance();
-                if(!status_retweet){
-                    bot.retweet(idTweet);                    
-                    retweet.setStyle("-fx-background-color: red;");
+                Status retweetedStatus = bot.retweet(idTweet);
+                
+                if(!isRetweetedByMe){
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/UiComponents/Fxml/tweetTemplate.fxml"));
                     
-                    status_retweet = true;
+                    Platform.runLater(()->{
+                        try {
+                            parent.getChildren().add(0, loader.load());
+                            TweetTemplateController templateController = loader.getController();
+                            templateController.setItems(retweetedStatus, 0, parent);
+                            retweet.setStyle("-fx-background-color: red;");
+                            
+                        } catch (IOException ex) {
+                            System.out.println(ex.getMessage());
+                        } catch (TwitterException ex) {
+                            System.out.println(ex.getMessage());
+                        }
+                        
+                    });
+                    isRetweetedByMe = true;
                 }
-
+                
                 else{
                     bot.unRetweet(idTweet);
                     retweet.setStyle(null);
-                    status_retweet = false;
+                    isRetweetedByMe = false;
                 }
-                return null;
+            } catch (TwitterException ex) {
+                System.out.println(ex.getMessage());
             }
-        };
         
-        new Thread(task).start();
+        }).start();
+        
       
     }
+ 
     
     private void delete(){
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/UiComponents/Fxml/UserViewController.fxml"));

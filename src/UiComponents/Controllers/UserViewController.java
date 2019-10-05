@@ -40,28 +40,17 @@ import twitter4j.User;
  */
 public class UserViewController implements Initializable, Notification {
 
-    @FXML
-    private ImageView bannerImg;
-    @FXML
-    private Circle profileImg;
-    @FXML
-    private Text userName;
-    @FXML
-    private Text followers;
-    @FXML
-    private Text following;
-    @FXML
-    private Text name;
-    @FXML
-    private VBox tweets;
-    @FXML
-    private TextField id_user;
-    @FXML
-    private StackPane rootPane;
-    @FXML
-    private ScrollPane scrolltweets;
-    @FXML
-    private AnchorPane rootAnchorPane;
+    @FXML private ImageView bannerImg;
+    @FXML private Circle profileImg;
+    @FXML private Text userName;
+    @FXML private Text followers;
+    @FXML private Text following;
+    @FXML private Text name;
+    @FXML private VBox tweets;
+    @FXML private TextField id_user;
+    @FXML private StackPane rootPane;
+    @FXML private ScrollPane scrolltweets;
+    @FXML private AnchorPane rootAnchorPane;
 
     /**
      * Initializes the controller class.
