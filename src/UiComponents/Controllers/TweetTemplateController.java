@@ -18,11 +18,16 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
+import twitter4j.MediaEntity;
 import twitter4j.Status;
 import twitter4j.TwitterException;
 
@@ -34,9 +39,9 @@ import twitter4j.TwitterException;
 public class TweetTemplateController implements Initializable {
     @FXML private Text userName;
     @FXML private Circle profileImg;
-    @FXML private AnchorPane circleImg;
+    private AnchorPane circleImg;
     @FXML private Text user;
-    @FXML private TextArea content;
+    private TextArea content;
     @FXML private Button like;
     @FXML private Button retweet;
     private long idTweet;
@@ -46,6 +51,12 @@ public class TweetTemplateController implements Initializable {
     private int tweetPosition;
     private VBox parent ;
     private Status data;
+    @FXML
+    private AnchorPane container;
+    @FXML
+    private VBox tweetInfoContainer;
+    @FXML
+    private TextFlow tweetContent;
 
     /**
      * Initializes the controller class.
@@ -64,24 +75,43 @@ public class TweetTemplateController implements Initializable {
         
         data = status;
         this.parent = parent;
-        String text = status.getText();
         String user = status.getUser().getName();
         String userName = status.getUser().getScreenName();
         String profileImgURL = status.getUser().getProfileImageURL();
-        String[] parts = text.split(" ");
+        int textStart = 0;
+        int textFinish = 0;
+        String[] parts = status.getText().split(" ");
         if("RT".equals(parts[0])){
             userName = parts[1].substring(1, parts[1].length()-1);
             System.out.println(userName);
-            text = text.substring(4+ parts[1].length());
             user = BOT.getInstance().getName(userName);
             profileImgURL = BOT.getInstance().getProfileImageURL(userName);
+            textStart =2;
         }
-        
+        for (MediaEntity mediaEntity : status.getMediaEntities()) {
+            if(!"video".equals(mediaEntity.getType())){
+                Image img = new Image(mediaEntity.getMediaURL());
+                ImageView imageView = new ImageView();
+                imageView.setFitWidth(360);
+                imageView.setPreserveRatio(true);  
+                imageView.setImage(img);
+                tweetInfoContainer.getChildren().add(2, imageView);
+                textFinish+=1;
+            }
+        }
         
         if(status.isRetweet()){
             user = "Retweeted from: "+ user;
         }
-        content.setText(text);
+        for(int i = textStart;i<parts.length-textFinish;i++){
+            Text text = new Text(parts[i]+" ");
+            if(parts[i].length()>0){
+                if(parts[i].charAt(0)=='#' || parts[i].charAt(0)=='@'){
+                    text.setFill(Color.BLUE);
+                }
+            }
+            tweetContent.getChildren().add(text);
+        }
         this.user.setText(user);
         Image img = new Image(profileImgURL);
         profileImg.setFill(new ImagePattern(img));

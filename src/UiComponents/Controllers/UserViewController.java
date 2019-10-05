@@ -5,8 +5,9 @@
  */
 package UiComponents.Controllers;
 
-    import BotComponents.BOT;
+import BotComponents.BOT;
 import UiComponents.Interfaces.Notification;
+import javafx.scene.shape.Line;
 import com.jfoenix.controls.JFXDialog;
 import java.io.IOException;
 import java.net.URL;
@@ -102,6 +103,7 @@ public class UserViewController implements Initializable, Notification {
             tweets.getChildren().add(loader.load());
             TweetTemplateController templateController = loader.getController();
             templateController.setItems(status, timeline.indexOf(status),tweets);
+            
         }            
             
     }
