@@ -39,11 +39,17 @@ import twitter4j.TwitterException;
 public class TweetTemplateController implements Initializable {
     @FXML private Text userName;
     @FXML private Circle profileImg;
-    private AnchorPane circleImg;
     @FXML private Text user;
-    private TextArea content;
     @FXML private Button like;
     @FXML private Button retweet;
+    @FXML private AnchorPane container;
+    @FXML private VBox tweetInfoContainer;
+    @FXML private TextFlow tweetContent;
+    @FXML private Button eliminarTweet;
+    
+    private AnchorPane thisTweet;
+    private AnchorPane circleImg;
+    private TextArea content;
     private long idTweet;
     boolean isFav;
     boolean isRetweet;
@@ -51,14 +57,7 @@ public class TweetTemplateController implements Initializable {
     private int tweetPosition;
     private VBox parent ;
     private Status data;
-    @FXML
-    private AnchorPane container;
-    @FXML
-    private VBox tweetInfoContainer;
-    @FXML
-    private TextFlow tweetContent;
-    @FXML
-    private Button eliminarTweet;
+
 
     /**
      * Initializes the controller class.
@@ -67,11 +66,13 @@ public class TweetTemplateController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
     }
-    public void setItems(Status status, int tweetPosition, VBox parent) throws TwitterException{
+    public void setItems(Status status, int tweetPosition, VBox parent, AnchorPane thisTweet) throws TwitterException{
         idTweet = status.getId();
         isFav = status.isFavorited();
         isRetweet = status.isRetweet();
         isRetweetedByMe = status.isRetweetedByMe();
+        this.tweetPosition = tweetPosition;
+        this.thisTweet = thisTweet;
         
         data = status;
         this.parent = parent;
@@ -163,9 +164,10 @@ public class TweetTemplateController implements Initializable {
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("/UiComponents/Fxml/tweetTemplate.fxml"));    
                     Platform.runLater(()->{
                         try {
-                            parent.getChildren().add(0, loader.load());
+                            AnchorPane retweetTemplate = loader.load();
+                            parent.getChildren().add(0, retweetTemplate);
                             TweetTemplateController templateController = loader.getController();
-                            templateController.setItems(retweetedStatus, 0, parent);
+                            templateController.setItems(retweetedStatus, 0, parent, retweetTemplate);
                             retweet.setStyle("-fx-background-color: red;");
                             
                         } catch (IOException ex) {
@@ -206,7 +208,7 @@ public class TweetTemplateController implements Initializable {
             protected Void call() throws Exception {
                 BOT bot = BOT.getInstance();
                 bot.destroyTweet(idTweet);
-                Platform.runLater(()->{ parent.getChildren().remove(tweetPosition); });
+                Platform.runLater(()->{ parent.getChildren().remove(thisTweet); });
                 return null;
             }
         };
