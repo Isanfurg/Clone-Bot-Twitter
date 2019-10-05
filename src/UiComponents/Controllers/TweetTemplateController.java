@@ -57,6 +57,8 @@ public class TweetTemplateController implements Initializable {
     private VBox tweetInfoContainer;
     @FXML
     private TextFlow tweetContent;
+    @FXML
+    private Button eliminarTweet;
 
     /**
      * Initializes the controller class.
@@ -158,8 +160,7 @@ public class TweetTemplateController implements Initializable {
                 Status retweetedStatus = bot.retweet(idTweet);
                 
                 if(!isRetweetedByMe){
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/UiComponents/Fxml/tweetTemplate.fxml"));
-                    
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/UiComponents/Fxml/tweetTemplate.fxml"));    
                     Platform.runLater(()->{
                         try {
                             parent.getChildren().add(0, loader.load());
@@ -187,8 +188,7 @@ public class TweetTemplateController implements Initializable {
             }
         
         }).start();
-        
-      
+           
     }
  
     
@@ -197,5 +197,19 @@ public class TweetTemplateController implements Initializable {
         UserViewController userViewController = loader.getController();
         userViewController.deleteRetweet(circleImg);
     
+    }
+
+    @FXML
+    private void deleteTweet(ActionEvent event) {
+        Task<Void> task = new Task(){
+            @Override
+            protected Void call() throws Exception {
+                BOT bot = BOT.getInstance();
+                bot.destroyTweet(idTweet);
+                Platform.runLater(()->{ parent.getChildren().remove(tweetPosition); });
+                return null;
+            }
+        };
+        new Thread(task).start();
     }
 }

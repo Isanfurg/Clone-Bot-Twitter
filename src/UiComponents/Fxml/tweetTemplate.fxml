@@ -40,6 +40,11 @@
                                     <FontAwesomeIconView glyphName="RETWEET" />
                                  </graphic>
                               </Button>
+                              <Button fx:id="eliminarTweet" layoutX="324.0" layoutY="10.0" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#deleteTweet" prefHeight="40.0" prefWidth="40.0">
+                                 <graphic>
+                                    <FontAwesomeIconView glyphName="CLOSE" />
+                                 </graphic>
+                              </Button>
                            </children>
                            <VBox.margin>
                               <Insets right="10.0" />
