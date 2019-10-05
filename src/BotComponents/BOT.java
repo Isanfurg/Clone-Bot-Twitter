@@ -308,10 +308,10 @@ public class BOT implements Notification{
                         else chatsData = twitterBot.getDirectMessages(50);
                     }
                     
-                    chatsData.forEach((directMessage) -> {
-                        System.out.println(directMessage.toString());
-                    });
-                    
+//                    chatsData.forEach((directMessage) -> {
+//                        System.out.println(directMessage.toString());
+//                    });
+//                    
                 } catch (TwitterException ex) {
                     Logger.getLogger(BOT.class.getName()).log(Level.SEVERE, null, ex);
                 }

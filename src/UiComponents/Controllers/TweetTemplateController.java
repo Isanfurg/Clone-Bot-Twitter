@@ -71,8 +71,6 @@ public class TweetTemplateController implements Initializable {
         isRetweet = status.isRetweet();
         isRetweetedByMe = status.isRetweetedByMe();
         
-        System.out.println("isRetweetedByMe: "+isRetweetedByMe);
-        
         data = status;
         this.parent = parent;
         String user = status.getUser().getName();
@@ -83,10 +81,16 @@ public class TweetTemplateController implements Initializable {
         String[] parts = status.getText().split(" ");
         if("RT".equals(parts[0])){
             userName = parts[1].substring(1, parts[1].length()-1);
-            System.out.println(userName);
+            //System.out.println(userName);
             user = BOT.getInstance().getName(userName);
             profileImgURL = BOT.getInstance().getProfileImageURL(userName);
             textStart =2;
+            System.out.println(status.getMediaEntities().toString());
+            for (MediaEntity mediaEntity : status.getMediaEntities()) {
+                System.out.println(mediaEntity.getMediaURLHttps());
+                System.out.println(mediaEntity.getMediaURL());
+                
+            }
         }
         for (MediaEntity mediaEntity : status.getMediaEntities()) {
             if(!"video".equals(mediaEntity.getType())){
@@ -100,9 +104,6 @@ public class TweetTemplateController implements Initializable {
             }
         }
         
-        if(status.isRetweet()){
-            user = "Retweeted from: "+ user;
-        }
         for(int i = textStart;i<parts.length-textFinish;i++){
             Text text = new Text(parts[i]+" ");
             if(parts[i].length()>0){
@@ -112,11 +113,11 @@ public class TweetTemplateController implements Initializable {
             }
             tweetContent.getChildren().add(text);
         }
-        this.user.setText(user);
+        this.user.setText("</b>"+user+"</b>");
         Image img = new Image(profileImgURL);
         profileImg.setFill(new ImagePattern(img));
         this.userName.setText("@"+userName);
-
+        this.userName.setFill(Paint.valueOf("#7D94B3"));
         if(isFav) like.setStyle("-fx-background-color: red;");
         if(isRetweetedByMe) retweet.setStyle("-fx-background-color: red;");
 
