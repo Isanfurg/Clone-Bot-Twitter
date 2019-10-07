@@ -20,6 +20,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
@@ -46,6 +47,7 @@ public class TweetTemplateController implements Initializable {
     @FXML private VBox tweetInfoContainer;
     @FXML private TextFlow tweetContent;
     @FXML private Button eliminarTweet;
+    @FXML private HBox buttonBar;
     
     private AnchorPane thisTweet;
     private AnchorPane circleImg;
@@ -73,6 +75,10 @@ public class TweetTemplateController implements Initializable {
         isRetweetedByMe = status.isRetweetedByMe();
         this.tweetPosition = tweetPosition;
         this.thisTweet = thisTweet;
+        
+        System.out.println("Is retweeted by me: "+isRetweetedByMe);
+        
+        if(status.getUser().getId() != BOT.getInstance().getMyUserID()) buttonBar.getChildren().remove(eliminarTweet);
         
         data = status;
         this.parent = parent;
@@ -158,25 +164,10 @@ public class TweetTemplateController implements Initializable {
         new Thread(()->{
             try {
                 BOT bot = BOT.getInstance();
-                Status retweetedStatus = bot.retweet(idTweet);
                 
                 if(!isRetweetedByMe){
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/UiComponents/Fxml/tweetTemplate.fxml"));    
-                    Platform.runLater(()->{
-                        try {
-                            AnchorPane retweetTemplate = loader.load();
-                            parent.getChildren().add(0, retweetTemplate);
-                            TweetTemplateController templateController = loader.getController();
-                            templateController.setItems(retweetedStatus, 0, parent, retweetTemplate);
-                            retweet.setStyle("-fx-background-color: red;");
-                            
-                        } catch (IOException ex) {
-                            System.out.println(ex.getMessage());
-                        } catch (TwitterException ex) {
-                            System.out.println(ex.getMessage());
-                        }
-                        
-                    });
+                    Status retweetedStatus = bot.retweet(idTweet);
+                    retweet.setStyle("-fx-background-color: red");
                     isRetweetedByMe = true;
                 }
                 
@@ -213,5 +204,10 @@ public class TweetTemplateController implements Initializable {
             }
         };
         new Thread(task).start();
+    }
+    
+    public void setRetweeted(boolean isRetweet, boolean isRetweetedByMe){
+        this.isRetweet = isRetweet;
+        this.isRetweetedByMe = isRetweetedByMe;
     }
 }

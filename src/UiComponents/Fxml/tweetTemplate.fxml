@@ -28,7 +28,7 @@
                            </children>
                         </HBox>
                         <TextFlow fx:id="tweetContent" prefWidth="360.0" textAlignment="JUSTIFY" />
-                        <HBox alignment="BOTTOM_RIGHT" minHeight="40.0" minWidth="407.0" prefHeight="40.0" prefWidth="407.0" spacing="5.0">
+                        <HBox fx:id="buttonBar" alignment="BOTTOM_RIGHT" minHeight="40.0" minWidth="407.0" prefHeight="40.0" prefWidth="407.0" spacing="5.0">
                            <children>
                               <Button fx:id="like" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#sendLike" prefHeight="40.0" prefWidth="40.0">
                                  <graphic>

@@ -112,7 +112,7 @@ public class NewTweetController implements Initializable, UiComponents.Interface
                     AnchorPane tweetTemplate = loader.load();
 
                     TweetTemplateController tweetTemplateController = loader.getController();
-                    tweetTemplateController.setItems(status, 0, timeline);
+                    tweetTemplateController.setItems(status, 0, timeline, tweetTemplate);
 
 
                     Platform.runLater(()->{

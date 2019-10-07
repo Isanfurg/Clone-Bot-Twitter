@@ -293,6 +293,15 @@ public class BOT implements Notification{
         }
     }
     
+    public ResponseList<Status> getHomeTimeLine(){
+        try {
+            return twitterBot.getHomeTimeline();
+        } catch (TwitterException ex) {
+            System.out.println(ex.getMessage());
+            return null;
+        }
+    }
+    
     
     public void streamMessages() throws TwitterException{     
         TimerTask timerTask = new TimerTask() {
