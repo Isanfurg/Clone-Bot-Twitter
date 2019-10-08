@@ -6,14 +6,19 @@
 package UiComponents.Controllers;
 
 import BotComponents.BOT;
+import com.jfoenix.controls.JFXDialog;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
@@ -26,7 +31,7 @@ import twitter4j.User;
  * @author isanfurg
  */
 public class UserButtonController implements Initializable {
-    User dUser ;
+    private User dUser ;
     @FXML
     private Circle profileImg;
     @FXML
@@ -35,7 +40,7 @@ public class UserButtonController implements Initializable {
     private FontAwesomeIconView followCheck;
     @FXML
     private Button followB;
-
+    private StackPane container;
     /**
      * Initializes the controller class.
      */
@@ -45,10 +50,19 @@ public class UserButtonController implements Initializable {
     }    
 
     @FXML
-    private void selectUser(ActionEvent event) {
-        System.out.println("charge user info in ui");
+    private void selectUser(ActionEvent event) throws IOException, TwitterException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/UiComponents/Fxml/searchedUserView.fxml"));
+        
+        JFXDialog seachedUser = new JFXDialog(container,loader.load(), JFXDialog.DialogTransition.TOP);
+        seachedUser.setOverlayClose(false);
+        SearchedUserViewController controller = loader.getController();
+        controller.setItems(dUser);
+        controller.setToClose(seachedUser);
+        seachedUser.show();
+        
     }
-    public void setInfoUser(User info) throws TwitterException{
+    public void setInfoUser(User info, StackPane container) throws TwitterException{
+        this.container = container;
         dUser = info;
         String name = info.getScreenName();
         if(name.length()>11){

@@ -18,6 +18,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import BotComponents.BOT;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import twitter4j.ResponseList;
 import twitter4j.TwitterException;
@@ -33,9 +34,11 @@ public class SearchedUsersController implements Initializable {
     @FXML private Button antPage;
     @FXML private Button nextPage;
     @FXML private TextField userSrch;
+    private StackPane parentRootPane ;
     
-    JFXDialog toClose ;
-    AnchorPane rootPane;
+    private JFXDialog toClose ;
+    private AnchorPane rootPane;
+
     private ResponseList<User> data ;
     int page = 0; //page index
 
@@ -53,14 +56,13 @@ public class SearchedUsersController implements Initializable {
         GridPane searched= new GridPane();
         int columunIndex = 0;
         int rowIndex = 0;
-
         if(!users.isEmpty()){
         containerUsers.getChildren().clear();
             for(int i = from; i<users.size();i++){
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/UiComponents/Fxml/userButton.fxml"));
                 searched.add(loader.load(),columunIndex,rowIndex);
                 UserButtonController controller = loader.getController();
-                controller.setInfoUser(users.get(i));
+                controller.setInfoUser(users.get(i),parentRootPane);
                 controller.checkFollow();
                 rowIndex++;
                 
@@ -80,9 +82,10 @@ public class SearchedUsersController implements Initializable {
         rootPane.setDisable(false);
         toClose.close();
     }
-    public void setToClose(JFXDialog toClose, AnchorPane rootPane){
+    public void setToClose(JFXDialog toClose, AnchorPane rootPane,StackPane stackPane){
         this.rootPane = rootPane;
         this.toClose = toClose;
+        this.parentRootPane = stackPane;
     }
 
     @FXML
