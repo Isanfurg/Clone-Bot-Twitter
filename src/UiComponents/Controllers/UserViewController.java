@@ -125,7 +125,9 @@ public class UserViewController implements Initializable, Notification {
         rootAnchorPane.setEffect(blur);
         JFXDialog newSearch = new JFXDialog(rootPane, loader.load(), JFXDialog.DialogTransition.TOP);
         newSearch.setOverlayClose(false);
+        
         SearchedUsersController controller = loader.getController();
+        controller.setToClose(newSearch, rootAnchorPane,rootPane);
         if(id_user.getText().length()!=0){
             
             ResponseList<User> users  = BOT.getInstance().searchUser(id_user.getText());
@@ -140,7 +142,6 @@ public class UserViewController implements Initializable, Notification {
         }else{
            controller.setTextOnScene();
         }
-        controller.setToClose(newSearch, rootAnchorPane);
         newSearch.show();
     }
 
