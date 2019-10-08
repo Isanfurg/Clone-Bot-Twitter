@@ -116,7 +116,6 @@ public class TweetTemplateController implements Initializable, Notification{
                 textFinish+=1;
             }
         }
-        
         for(int i = textStart;i<parts.length-textFinish;i++){
             Text text = new Text(parts[i]+" ");
             if(parts[i].length()>0){

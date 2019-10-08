@@ -105,6 +105,7 @@ public class NewTweetController implements Initializable, UiComponents.Interface
         
         new Thread(()->{
             try {
+                toClose.setDisable(true);
                 if(isValid(tweetContent.getText()) || f != null){
                     if(tweetContent.getText().length()==0)tweetContent.setText("");
                     Status status = BOT.getInstance().newTweet(tweetContent.getText(),f);
