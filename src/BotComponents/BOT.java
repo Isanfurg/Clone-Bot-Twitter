@@ -2,6 +2,7 @@ package BotComponents;
 
 import java.io.File;
 import UiComponents.Interfaces.Notification;
+import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
@@ -24,7 +25,7 @@ public class BOT implements Notification{
     private static BOT instance = null;
     private final static String CONSUMER_KEY = "SrIUForUjeiOw76LBGnsbnq86";
     private final static String CONSUMER_KEY_SECRET = "2JXMuQ1mM2eLl2EdWjy0e6fjsI1iVCycK72PCHs5YojGBqvY2Q";
-    private ResponseList<DirectMessage> chatsData;
+    private ResponseList<DirectMessage> chatsData = null;
     private Twitter twitterBot;
     private RequestToken requestToken ;
     private AccessToken accessToken;
@@ -106,9 +107,14 @@ public class BOT implements Notification{
         }  
     }
     
-    public Status newTweet(String msg) throws TwitterException {
+    public Status newTweet(String msg, File fi) throws TwitterException {
         try{
-            return twitterBot.updateStatus(msg);
+            StatusUpdate statusUpdate = new StatusUpdate(msg);
+            if(fi!=null){
+                statusUpdate.setMedia(fi);
+            }
+            Status status = twitterBot.updateStatus(statusUpdate);
+            return status;
         }catch(TwitterException e){
             System.out.println("update error by:"
             +e.getMessage());
@@ -143,8 +149,14 @@ public class BOT implements Notification{
         return null;
     }
     public void sendDirectMenssage(String screenName, String text)throws TwitterException {
-        try{
-            twitterBot.sendDirectMessage(screenName,text);
+        try{    
+            chatsData.add(0,twitterBot.sendDirectMessage(screenName,text));
+            System.out.println("Message sended.");
+            
+            for (DirectMessage directMessage : chatsData) {
+                System.out.println(directMessage.toString());
+            }
+            
         }catch(TwitterException e){
             System.out.println("update error by:"
             +e.getMessage());
@@ -160,22 +172,23 @@ public class BOT implements Notification{
         }  
     }
     
-    public void retweet(long id)throws TwitterException {
+    public Status retweet(long id)throws TwitterException {
         try{
-            twitterBot.retweetStatus(id);
-            
+            return twitterBot.retweetStatus(id);
         }catch(TwitterException e){
             System.out.println("update error by:"
             +e.getMessage());
-        }  
+        } 
+        return null;
     }
     
-    public void unRetweet(long id) throws TwitterException{
+    public Status unRetweet(long id) throws TwitterException{
         
         try {
-            twitterBot.unRetweetStatus(id);
+            return twitterBot.unRetweetStatus(id);
         } catch (TwitterException e) {
             System.out.println("Unretweet error by: "+e.getMessage());
+            return null;
         }
 
     }
@@ -284,12 +297,35 @@ public class BOT implements Notification{
             return null;
         }
     }
-    public void streamMessages(){
+    
+    public ResponseList<Status> getHomeTimeLine(){
+        try {
+            return twitterBot.getHomeTimeline();
+        } catch (TwitterException ex) {
+            System.out.println(ex.getMessage());
+            return null;
+        }
+    }
+    
+    
+    public void streamMessages() throws TwitterException{     
         TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
                 try {
-                    chatsData = twitterBot.getDirectMessages((int)twitterBot.getId());
+                    System.out.println("Updating...");
+                    
+                    for (DirectMessage directMessage : twitterBot.getDirectMessages(50)) {
+                        if(chatsData != null){
+                            if (!chatsData.contains(directMessage)) chatsData.add(directMessage);
+                        }
+                        else chatsData = twitterBot.getDirectMessages(50);
+                    }
+                    
+//                    chatsData.forEach((directMessage) -> {
+//                        System.out.println(directMessage.toString());
+//                    });
+//                    
                 } catch (TwitterException ex) {
                     Logger.getLogger(BOT.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -317,6 +353,20 @@ public class BOT implements Notification{
             return null;
         }
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     //en proceso(No me lo muevan, pd: el manuel es otaku).
     public HashtagEntity[] hashtagReply(Status status){
         try{

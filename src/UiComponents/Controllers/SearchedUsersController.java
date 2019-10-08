@@ -39,16 +39,7 @@ public class SearchedUsersController implements Initializable {
     private JFXDialog toClose ;
     private AnchorPane rootPane;
     private ResponseList<User> data ;
-    //page index
-    int page = 0;
-    @FXML
-    private AnchorPane containerUsers;
-    @FXML
-    private Button antPage;
-    @FXML
-    private Button nextPage;
-    @FXML
-    private TextField userSrch;
+    int page = 0; //page index
 
     /**
      * Initializes the controller class.
@@ -56,6 +47,7 @@ public class SearchedUsersController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         antPage.setDisable(true);
+        
     }
 
     public void setContainerUsers(ResponseList<User> users, int from) throws IOException, TwitterException {
@@ -131,6 +123,7 @@ public class SearchedUsersController implements Initializable {
     public void setTextOnScene(){
         containerUsers.getChildren().clear();
         containerUsers.getChildren().addAll(new Text("Busqueda Invalida"));
+        nextPage.setDisable(true);
     }
     
     
