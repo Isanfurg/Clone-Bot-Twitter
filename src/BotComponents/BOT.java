@@ -178,12 +178,13 @@ public class BOT implements Notification{
         return null;
     }
     
-    public void unRetweet(long id) throws TwitterException{
+    public Status unRetweet(long id) throws TwitterException{
         
         try {
-            twitterBot.unRetweetStatus(id);
+            return twitterBot.unRetweetStatus(id);
         } catch (TwitterException e) {
             System.out.println("Unretweet error by: "+e.getMessage());
+            return null;
         }
 
     }

@@ -6,6 +6,9 @@
 package UiComponents.Controllers;
 
 import BotComponents.BOT;
+import UiComponents.Interfaces.Notification;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -16,6 +19,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -37,7 +41,7 @@ import twitter4j.TwitterException;
  *
  * @author isanfurg
  */
-public class TweetTemplateController implements Initializable {
+public class TweetTemplateController implements Initializable, Notification{
     @FXML private Text userName;
     @FXML private Circle profileImg;
     @FXML private Text user;
@@ -76,9 +80,9 @@ public class TweetTemplateController implements Initializable {
         this.tweetPosition = tweetPosition;
         this.thisTweet = thisTweet;
         
-        System.out.println("Is retweeted by me: "+isRetweetedByMe);
-        
-        if(status.getUser().getId() != BOT.getInstance().getMyUserID()) buttonBar.getChildren().remove(eliminarTweet);
+        if(status.getUser().getId() != BOT.getInstance().getMyUserID() || isRetweet) {
+            buttonBar.getChildren().remove(eliminarTweet);
+        }
         
         data = status;
         this.parent = parent;
@@ -127,8 +131,36 @@ public class TweetTemplateController implements Initializable {
         profileImg.setFill(new ImagePattern(img));
         this.userName.setText("@"+userName);
         this.userName.setFill(Paint.valueOf("#7D94B3"));
+        
         if(isFav) like.setStyle("-fx-background-color: red;");
         if(isRetweetedByMe) retweet.setStyle("-fx-background-color: red;");
+        
+        if(status.isRetweet()){
+            if(status.getUser().getId() == BOT.getInstance().getMyUserID()){
+                retweet.setStyle("-fx-background-color: red;");
+                isRetweetedByMe = true;
+                isRetweet = true;
+                
+            }
+        }
+        
+        
+        if(status.isRetweet()){
+            String labelContent;
+            
+            if(status.getUser().getId() == BOT.getInstance().getMyUserID()){
+                labelContent = "You retweeted";
+                
+            }
+            else labelContent = status.getUser().getScreenName()+" Retweeted";
+            
+            Label from = new Label(labelContent);
+            FontAwesomeIconView retweet = new FontAwesomeIconView(FontAwesomeIcon.RETWEET);
+            from.setGraphic(retweet);
+            tweetInfoContainer.getChildren().add(0, from);
+            
+        } 
+        
 
 
 
@@ -172,11 +204,24 @@ public class TweetTemplateController implements Initializable {
                 }
                 
                 else{
-                    bot.unRetweet(idTweet);
+                    Status unretweetedStatus = bot.unRetweet(idTweet);
+                    
+                    if(data.isRetweet()){
+                        Platform.runLater(()->{
+                            parent.getChildren().remove(thisTweet);
+                        
+                        }); 
+                    }
+    
+                    
                     retweet.setStyle(null);
                     isRetweetedByMe = false;
                 }
             } catch (TwitterException ex) {
+                Platform.runLater(()->{
+                    this.newNotification("Status inexistente.");
+            
+                });
                 System.out.println(ex.getMessage());
             }
         
