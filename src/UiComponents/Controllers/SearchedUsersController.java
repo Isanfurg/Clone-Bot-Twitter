@@ -38,7 +38,6 @@ public class SearchedUsersController implements Initializable {
     
     private JFXDialog toClose ;
     private AnchorPane rootPane;
-
     private ResponseList<User> data ;
     int page = 0; //page index
 
