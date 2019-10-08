@@ -25,6 +25,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import twitter4j.Status;
 import twitter4j.TwitterException;
@@ -44,6 +45,8 @@ public class NewTweetController implements Initializable, UiComponents.Interface
     AnchorPane rootPane;
     @FXML
     private Button chooseFileB;
+    @FXML
+    private Text wordsCount;
     /**
      * Initializes the controller class.
      */
@@ -82,7 +85,7 @@ public class NewTweetController implements Initializable, UiComponents.Interface
         rootPane.setEffect(null);
         rootPane.setDisable(false);
         toClose.close();
-    }
+    }   
     public void setToClose(JFXDialog toClose, AnchorPane rootPane){
         this.rootPane = rootPane;
         this.toClose = toClose;
@@ -94,7 +97,7 @@ public class NewTweetController implements Initializable, UiComponents.Interface
 
     @FXML
     private void count(KeyEvent event) {
-        System.out.println("keyPressed");
+        wordsCount.setText(tweetContent.getText().length()+"/280");
     }
 
     @FXML
@@ -102,13 +105,15 @@ public class NewTweetController implements Initializable, UiComponents.Interface
         
         new Thread(()->{
             try {
-                if(isValid(tweetContent.getText())){
-                    Status status = BOT.getInstance().newTweet(tweetContent.getText());
+                toClose.setDisable(true);
+                if(isValid(tweetContent.getText()) || f != null){
+                    if(tweetContent.getText().length()==0)tweetContent.setText("");
+                    Status status = BOT.getInstance().newTweet(tweetContent.getText(),f);
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("/UiComponents/Fxml/tweetTemplate.fxml"));
                     AnchorPane tweetTemplate = loader.load();
 
                     TweetTemplateController tweetTemplateController = loader.getController();
-                    tweetTemplateController.setItems(status, 0, timeline);
+                    tweetTemplateController.setItems(status, 0, timeline, tweetTemplate);
 
 
                     Platform.runLater(()->{
@@ -137,7 +142,7 @@ public class NewTweetController implements Initializable, UiComponents.Interface
     }
     
     private boolean isValid(String content){
-        return content.length() > 0;
+        return content.length() >= 0 && content.length()<=280;
     }
     
 }

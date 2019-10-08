@@ -29,7 +29,8 @@ public class MainWindowController implements Initializable,DraggedScene {
     @FXML
     private AnchorPane contentPane;
 
-
+    //pene
+    
     /**
      * Initializes the controller class.
      */

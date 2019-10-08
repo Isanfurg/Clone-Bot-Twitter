@@ -7,12 +7,15 @@ package UiComponents.Controllers;
 
 import BotComponents.BOT;
 import UiComponents.Interfaces.Notification;
+import javafx.scene.shape.Line;
 import com.jfoenix.controls.JFXDialog;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.animation.FadeTransition;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -20,6 +23,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.BoxBlur;
+import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -28,10 +32,13 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 import twitter4j.ResponseList;
 import twitter4j.Status;
 import twitter4j.TwitterException;
 import twitter4j.User;
+import twitter4j.UserStreamAdapter;
+import twitter4j.UserStreamListener;
 
 /**
  * FXML Controller class
@@ -40,28 +47,17 @@ import twitter4j.User;
  */
 public class UserViewController implements Initializable, Notification {
 
-    @FXML
-    private ImageView bannerImg;
-    @FXML
-    private Circle profileImg;
-    @FXML
-    private Text userName;
-    @FXML
-    private Text followers;
-    @FXML
-    private Text following;
-    @FXML
-    private Text name;
-    @FXML
-    private VBox tweets;
-    @FXML
-    private TextField id_user;
-    @FXML
-    private StackPane rootPane;
-    @FXML
-    private ScrollPane scrolltweets;
-    @FXML
-    private AnchorPane rootAnchorPane;
+    @FXML private ImageView bannerImg;
+    @FXML private Circle profileImg;
+    @FXML private Text userName;
+    @FXML private Text followers;
+    @FXML private Text following;
+    @FXML private Text name;
+    @FXML private VBox tweets;
+    @FXML private TextField id_user;
+    @FXML private StackPane rootPane;
+    @FXML private ScrollPane scrolltweets;
+    @FXML private AnchorPane rootAnchorPane;
 
     /**
      * Initializes the controller class.
@@ -94,25 +90,28 @@ public class UserViewController implements Initializable, Notification {
                     );
             followers.setText(
                     Integer.toString(BOT.getInstance().getFollowersCount())+" Seguidores"
-                    );
+                    );   
 
-            setTimelineInUi();
+            setTimelineInUi(BOT.getInstance().getHomeTimeLine());
             // TODO
         } catch (TwitterException ex) {
             
         } catch (IOException ex) {
             Logger.getLogger(UserViewController.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }    
-    private void setTimelineInUi() throws TwitterException, IOException{
-        ResponseList<Status> timeline = BOT.getInstance().getTimeLine();
+    }
+    
+    
+    private void setTimelineInUi(ResponseList<Status> statusList) throws TwitterException, IOException{
 
 
-        for (Status status : timeline) {
+        for (Status status : statusList) {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/UiComponents/Fxml/tweetTemplate.fxml"));
-            tweets.getChildren().add(loader.load());
+            AnchorPane thisTweet = loader.load();
+            tweets.getChildren().add(thisTweet);
             TweetTemplateController templateController = loader.getController();
-            templateController.setItems(status, timeline.indexOf(status),tweets);
+            templateController.setItems(status, statusList.indexOf(status),tweets, thisTweet);
+            
         }            
             
     }
@@ -177,5 +176,68 @@ public class UserViewController implements Initializable, Notification {
     
     public void addTweetToTimeline(AnchorPane tweet){
         tweets.getChildren().add(0, tweet);
+    }
+
+    @FXML
+    private void view_profile(ActionEvent event) {
+        
+        new Thread(()->{
+            //fadeContentPane(1, 0, 2000);
+            
+            Platform.runLater(()->{
+                tweets.getChildren().clear();
+                
+                try {
+                    setTimelineInUi(BOT.getInstance().getTimeLine());
+                    
+                    fadeContentPane(0, 1, 2000);
+                    
+                }catch (IOException | TwitterException ex) {
+                    System.out.println(ex.getMessage());
+                }
+                
+            });
+        
+        
+        }).start();
+        
+        
+    }
+    
+
+
+    @FXML
+    private void view_home(ActionEvent event) {
+        
+        new Thread(()->{
+            Platform.runLater(()->{
+                tweets.getChildren().clear();
+                
+                try {
+                    setTimelineInUi(BOT.getInstance().getHomeTimeLine());
+                    fadeContentPane(0, 1, 2000);
+                    
+                } catch (TwitterException ex) {
+                    Logger.getLogger(UserViewController.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(UserViewController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+                
+            });
+        
+        
+        }).start();
+
+    }
+    
+        
+    
+    private void fadeContentPane(int from, int to, int millis) {
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(millis), scrolltweets);
+        fadeOut.setFromValue(from);
+        fadeOut.setToValue(to);
+        fadeOut.play();
+        
     }
 }

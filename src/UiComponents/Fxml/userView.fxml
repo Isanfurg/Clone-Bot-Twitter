@@ -59,7 +59,7 @@
                            </graphic></Button>
                      </children>
                   </HBox>
-                  <HBox alignment="BOTTOM_RIGHT" prefHeight="79.0" prefWidth="209.0" spacing="5.0">
+                  <HBox alignment="BOTTOM_RIGHT" prefHeight="79.0" prefWidth="274.0" spacing="5.0">
                      <children>
                         <Button mnemonicParsing="false" onAction="#new_tweet" prefHeight="28.0" prefWidth="108.0" text="New tweet">
                            <graphic>
@@ -70,6 +70,26 @@
                               <FontAwesomeIconView glyphName="COMMENT_ALT" />
                            </graphic></Button>
                      </children>
+                     <VBox.margin>
+                        <Insets top="46.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox prefHeight="100.0" prefWidth="200.0" spacing="5.0">
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#view_profile" prefHeight="26.0" prefWidth="108.0" text="Profile">
+                           <graphic>
+                              <FontAwesomeIconView glyphName="USER" />
+                           </graphic>
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#view_home" prefHeight="26.0" prefWidth="107.0" text="Home">
+                           <graphic>
+                              <FontAwesomeIconView glyphName="HOME" />
+                           </graphic>
+                        </Button>
+                     </children>
+                     <VBox.margin>
+                        <Insets top="8.0" />
+                     </VBox.margin>
                   </HBox>
                </children>
             </VBox>
