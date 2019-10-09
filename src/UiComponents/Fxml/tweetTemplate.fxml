@@ -8,14 +8,14 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
 
-<AnchorPane id="AnchorPane" fx:id="container" minWidth="500.0" styleClass="BigAnchorPane" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UiComponents.Controllers.TweetTemplateController">
+<AnchorPane id="AnchorPane" fx:id="container" minWidth="500.0" prefHeight="78.0" prefWidth="510.0" styleClass="BigAnchorPane" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UiComponents.Controllers.TweetTemplateController">
    <children>
       <VBox layoutX="2.0" layoutY="2.0" spacing="5.0">
          <children>
-            <Line endX="406.29290771484375" startX="-100.0" />
             <HBox spacing="10.0">
                <children>
                   <Circle fx:id="profileImg" fill="WHITE" radius="40.0" stroke="BLACK" strokeType="INSIDE" />
@@ -23,7 +23,10 @@
                      <children>
                         <HBox alignment="BOTTOM_LEFT" prefHeight="33.0" prefWidth="381.0" spacing="10.0">
                            <children>
-                              <Text fx:id="user" strokeType="OUTSIDE" strokeWidth="0.0" text="User" />
+                              <Text fx:id="user" strokeType="OUTSIDE" strokeWidth="0.0" text="User">
+                                 <font>
+                                    <Font name="System Bold" size="13.0" />
+                                 </font></Text>
                               <Text fx:id="userName" strokeType="OUTSIDE" strokeWidth="0.0" text="UserName" />
                            </children>
                         </HBox>
@@ -64,4 +67,10 @@
          </children>
       </VBox>
    </children>
+   <opaqueInsets>
+      <Insets top="10.0" />
+   </opaqueInsets>
+   <padding>
+      <Insets top="10.0" />
+   </padding>
 </AnchorPane>

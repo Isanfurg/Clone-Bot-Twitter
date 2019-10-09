@@ -32,7 +32,6 @@ public class BOT implements Notification{
     private boolean access ;
     
     private BOT() throws TwitterException{
-        twitterBot.
         setPin();
 
     }
@@ -327,7 +326,7 @@ public class BOT implements Notification{
 //                    });
 //                    
                 } catch (TwitterException ex) {
-                    Logger.getLogger(BOT.class.getName()).log(Level.SEVERE, null, ex);
+                    System.out.println("No hay acceso por el momento...");
                 }
             }
             

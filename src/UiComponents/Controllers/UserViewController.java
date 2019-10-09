@@ -159,16 +159,23 @@ public class UserViewController implements Initializable, Notification {
     }
 
     @FXML
-    private void show_direct_messages(ActionEvent event) throws IOException, TwitterException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/UiComponents/Fxml/messagesView.fxml"));
-        rootAnchorPane.setDisable(true);
-        rootAnchorPane.setEffect(new BoxBlur(3, 3, 3));
-        JFXDialog messages = new JFXDialog(rootPane, loader.load(), JFXDialog.DialogTransition.TOP);
-        messages.setOverlayClose(false);
-        MessagesViewController controller = loader.getController();
-        controller.setToClose(messages, rootAnchorPane);
-        controller.setData();
-        messages.show();
+    private void show_direct_messages(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/UiComponents/Fxml/messagesView.fxml"));
+            rootAnchorPane.setDisable(true);
+            rootAnchorPane.setEffect(new BoxBlur(3, 3, 3));
+            JFXDialog messages = new JFXDialog(rootPane, loader.load(), JFXDialog.DialogTransition.TOP);
+            messages.setOverlayClose(false);
+            MessagesViewController controller = loader.getController();
+            controller.setToClose(messages, rootAnchorPane);
+            controller.setData();
+            messages.show();
+        } catch (Exception e) {
+            rootAnchorPane.setDisable(false);
+            rootAnchorPane.setEffect(null);
+            this.newNotification("No se pueden cargar los mensajes por favor espere\nal menos 15 minutos\n"+e.getMessage());
+        }
+
     }
     public void deleteRetweet(AnchorPane delete){
         this.tweets.getChildren().remove(delete);
@@ -180,12 +187,12 @@ public class UserViewController implements Initializable, Notification {
 
     @FXML
     private void view_profile(ActionEvent event) {
-        
+        tweets.getChildren().clear();
         new Thread(()->{
             //fadeContentPane(1, 0, 2000);
             
             Platform.runLater(()->{
-                tweets.getChildren().clear();
+                
                 
                 try {
                     setTimelineInUi(BOT.getInstance().getTimeLine());
@@ -208,11 +215,9 @@ public class UserViewController implements Initializable, Notification {
 
     @FXML
     private void view_home(ActionEvent event) {
-        
+        tweets.getChildren().clear();
         new Thread(()->{
-            Platform.runLater(()->{
-                tweets.getChildren().clear();
-                
+            Platform.runLater(()->{                
                 try {
                     setTimelineInUi(BOT.getInstance().getHomeTimeLine());
                     fadeContentPane(0, 1, 2000);

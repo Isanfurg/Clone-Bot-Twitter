@@ -143,7 +143,7 @@ public class TweetTemplateController implements Initializable, Notification{
             }
             tweetContent.getChildren().add(text);
         }
-        this.user.setText("</b>"+user+"</b>");
+        this.user.setText(user);
         Image img = new Image(profileImgURL);
         profileImg.setFill(new ImagePattern(img));
         this.userName.setText("@"+userName);

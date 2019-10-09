@@ -154,14 +154,14 @@ public class MessagesViewController implements Initializable {
                   FXMLLoader loader = new FXMLLoader(getClass().getResource("/UiComponents/Fxml/messageTemplate.fxml"));
                   chatView.getChildren().add(0, loader.load());
                   MessageTemplateController controller = loader.getController();
-                  controller.setInfo(Pos.CENTER_RIGHT, dm.getText());
+                  controller.setInfo(Pos.CENTER_RIGHT, dm,"#1DA1F2" ,"#FFFFFF");
                   
             }else if(dm.getSenderId() == userId && dm.getRecipientId()==myId){
                 
                   FXMLLoader loader = new FXMLLoader(getClass().getResource("/UiComponents/Fxml/messageTemplate.fxml"));
                   chatView.getChildren().add(0,loader.load());
                   MessageTemplateController controller = loader.getController();
-                  controller.setInfo(Pos.CENTER_LEFT, dm.getText());
+                  controller.setInfo(Pos.CENTER_LEFT, dm,"#E6ECF0","#14171A");
             }
         }
         
