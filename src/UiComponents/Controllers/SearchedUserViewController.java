@@ -7,17 +7,22 @@ package UiComponents.Controllers;
 
 import BotComponents.BOT;
 import com.jfoenix.controls.JFXDialog;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
+import twitter4j.Status;
 import twitter4j.TwitterException;
 import twitter4j.User;
 
@@ -37,11 +42,7 @@ public class SearchedUserViewController implements Initializable {
     @FXML
     private Text userName;
     @FXML
-    private Text followers;
-    @FXML
-    private Text following;
-    @FXML
-    private ScrollPane timeLineContainer;
+    private VBox timeLineContainer;
     private long id;
     private JFXDialog thisContainer;
     /**
@@ -67,7 +68,7 @@ public class SearchedUserViewController implements Initializable {
     public void setToClose(JFXDialog thisContainer){
        this.thisContainer = thisContainer;
     }
-    public void setItems(User thisUser) throws TwitterException{
+    public void setItems(User thisUser) throws TwitterException, IOException{
         name.setText(BOT.getInstance().getName(thisUser.getScreenName()));
         userName.setText("@"+thisUser.getScreenName());
         profileImg.setFill(new ImagePattern(new Image(thisUser.getOriginalProfileImageURL())));
@@ -80,7 +81,14 @@ public class SearchedUserViewController implements Initializable {
         }
         this.id = thisUser.getId();
         if(!thisUser.isProtected()){
-            System.out.println("Cargar media");
+            for (Status status : BOT.getInstance().viewUserTimeline(thisUser.getId())) {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/UiComponents/Fxml/tweetTemplate.fxml"));
+            AnchorPane thisTweet = loader.load();
+            timeLineContainer.getChildren().add(thisTweet);
+            TweetTemplateController templateController = loader.getController();
+            templateController.setItems(status, timeLineContainer.getChildren().indexOf(status),timeLineContainer, thisTweet);
+            
+        }            
         }else{
             System.out.println("Usuario privado");
         }
