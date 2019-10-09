@@ -15,6 +15,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
@@ -47,9 +48,17 @@ public class MessageTemplateController implements Initializable {
         
         containerMsg.setStyle(" -fx-background-color : "+colorB);
         System.out.println(dm.getText());
-        Text text = new Text(dm.getText());
-        text.setFill(Paint.valueOf(colorS));
-        textContent.getChildren().add(text);
+        
+        for (String string : dm.getText().split(" ")){
+            Text text = new Text(string+" ");
+            text.setFill(Paint.valueOf(colorS));
+            if(string.length()>0){
+                if(string.charAt(0)=='#' || string.charAt(0)=='@'){
+                    text.setFill(Color.BLUE);
+                }
+            }
+            textContent.getChildren().add(text);
+        }
         for (MediaEntity mediaEntity : dm.getMediaEntities()) {
             if(!"video".equals(mediaEntity.getType())){
                 Image img = new Image(mediaEntity.getMediaURL());
