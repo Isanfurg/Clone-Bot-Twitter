@@ -143,7 +143,7 @@ public class TweetTemplateController implements Initializable, Notification{
             }
             tweetContent.getChildren().add(text);
         }
-        this.user.setText("</b>"+user+"</b>");
+        this.user.setText(user);
         Image img = new Image(profileImgURL);
         profileImg.setFill(new ImagePattern(img));
         this.userName.setText("@"+userName);
@@ -223,7 +223,7 @@ public class TweetTemplateController implements Initializable, Notification{
                 
                 else{
                     Status unretweetedStatus = bot.unRetweet(idTweet);
-                    
+                    retweet.setStyle(null);
                     if(data.isRetweet()){
                         Platform.runLater(()->{
                             parent.getChildren().remove(thisTweet);
@@ -231,7 +231,7 @@ public class TweetTemplateController implements Initializable, Notification{
                         }); 
                     }
     
-                    retweet.setStyle(null);
+                    
                     isRetweetedByMe = false;
                 }
             } catch (TwitterException ex) {

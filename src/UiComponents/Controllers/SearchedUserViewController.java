@@ -69,9 +69,10 @@ public class SearchedUserViewController implements Initializable {
     }
     public void setItems(User thisUser) throws TwitterException{
         name.setText(BOT.getInstance().getName(thisUser.getScreenName()));
-        userName.setText(thisUser.getScreenName());
+        userName.setText("@"+thisUser.getScreenName());
         profileImg.setFill(new ImagePattern(new Image(thisUser.getOriginalProfileImageURL())));
         try {
+            bannerImg.setFitWidth(600);
             bannerImg.setPreserveRatio(false);
             bannerImg.setImage(new Image(thisUser.getProfileBannerURL()));
         } catch (Exception e) {
