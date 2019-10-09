@@ -5,6 +5,7 @@
  */
 package lohkumahcabroh;
 
+import BotComponents.BOT;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -26,7 +27,6 @@ public class LohKumahCabroh extends Application {
         stage.initStyle(StageStyle.UNDECORATED);
         stage.setScene(scene);
         stage.show();
-        
     }
 
     public static void main(String[] args) {

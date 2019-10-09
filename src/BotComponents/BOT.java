@@ -32,7 +32,6 @@ public class BOT implements Notification{
     private boolean access ;
     
     private BOT() throws TwitterException{
-        twitterBot.
         setPin();
 
     }
@@ -314,14 +313,14 @@ public class BOT implements Notification{
             public void run() {
                 try {
                     System.out.println("Updating...");
-                    
-                    for (DirectMessage directMessage : twitterBot.getDirectMessages(50)) {
+                    DirectMessageList tt = twitterBot.getDirectMessages(50);
+                    for (DirectMessage directMessage : tt) {
                         if(chatsData != null){
                             if (!chatsData.contains(directMessage)) chatsData.add(directMessage);
                         }
                         else chatsData = twitterBot.getDirectMessages(50);
                     }
-                    
+                    hashtagReply(tt);
 //                    chatsData.forEach((directMessage) -> {
 //                        System.out.println(directMessage.toString());
 //                    });
@@ -346,49 +345,39 @@ public class BOT implements Notification{
         }return -1;
                 
     }
-    public DirectMessageList mensageUser(String user){
-        try{
-            return twitterBot.getDirectMessages(0, user);
-        }catch(TwitterException e){
-            return null;
+    public int hashtagPosition(String[] x){
+        int pos = 0;
+        for (int i = 0; i < x.length; i++) {
+            if(x[i].equals("#gustar") || x[i].equals("#seguir") || x[i].equals("#difundir")){
+               pos = i;
+            }
         }
+        return pos;
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    //en proceso(No me lo muevan, pd: el manuel es otaku).
-    public HashtagEntity[] hashtagReply(Status status){
+    public void hashtagReply(DirectMessageList tt){
         try{
-            HashtagEntity[] tt  = status.getHashtagEntities();
-            for (HashtagEntity i: tt) {
+            for (DirectMessage i: tt){
                 String[] x = i.getText().split(" ");
-                if(x[1].equals("#Like")){
-                    //aun no se de donde sacar la id uwu
-                    long id = 178823411L;
+                int pos = hashtagPosition(x);
+                if(x[pos].equals("#gustar")){
+                    long id = Long.parseLong(x[pos + 1]);
                     likeTweet(id);
-                }else if(x[1].equals("#Seguir")){
-                    //aun no se de donde sacar la id uwu
-                    long id = 178823411L;
+                }else if(x[pos].equals("#seguir")){
+                    ResponseList<User> lis = searchUser(x[pos+1]);
+                    long id = lis.get(0).getId();
                     followUser(id);
-                    sendDirectMenssage(x[2],x[0]+" "+x[2]);
-                }else if(x[1].equals("#ReTwitt")){
-                    //aun no se de donde sacar la id uwu
-                    long id = 178823411L;
+                }else if(x[pos].equals("#difundir")){
+                    long id = Long.parseLong(x[pos+1]);
                     retweet(id);
                 }
             }
-            return tt;
+        }catch(TwitterException e){
+            System.out.println(e.getErrorMessage());
+        }
+    }
+    public DirectMessageList mensageUser(String user){
+        try{
+            return twitterBot.getDirectMessages(0,user);
         }catch(TwitterException e){
             return null;
         }
