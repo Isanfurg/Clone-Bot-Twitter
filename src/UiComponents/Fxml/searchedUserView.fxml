@@ -8,6 +8,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
 <AnchorPane id="AnchorPane" maxHeight="500.0" maxWidth="600.0" minHeight="500.0" minWidth="600.0" prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UiComponents.Controllers.SearchedUserViewController">
@@ -16,12 +17,13 @@
       <HBox layoutX="30.0" layoutY="39.0" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
          <children>
             <Circle fx:id="profileImg" fill="DODGERBLUE" radius="48.0" stroke="BLACK" strokeType="INSIDE" />
-            <VBox alignment="BASELINE_LEFT" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
+            <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
                <children>
-                  <Text fx:id="name" strokeType="OUTSIDE" strokeWidth="0.0" text="Screen Name" />
-                  <Text fx:id="userName" strokeType="OUTSIDE" strokeWidth="0.0" text="Username" />
-                  <Text fx:id="followers" strokeType="OUTSIDE" strokeWidth="0.0" text="Seguidores" />
-                  <Text fx:id="following" strokeType="OUTSIDE" strokeWidth="0.0" text="Seguidos" />
+                  <Text fx:id="name" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Screen Name">
+                     <font>
+                        <Font size="20.0" />
+                     </font></Text>
+                  <Text fx:id="userName" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Username" />
                </children>
             </VBox>
          </children>
@@ -30,24 +32,24 @@
          <children>
             <Button minHeight="28.0" minWidth="108.0" mnemonicParsing="false" onAction="#blockThisUser" text="Bloquear">
                <graphic>
-                  <FontAwesomeIconView />
+                  <FontAwesomeIconView glyphName="BAN" />
                </graphic>
             </Button>
             <Button minHeight="28.0" minWidth="108.0" mnemonicParsing="false" onAction="#FollowUser" text="Seguir">
                <graphic>
-                  <FontAwesomeIconView />
+                  <FontAwesomeIconView glyphName="CHECK" />
                </graphic>
             </Button>
          </children>
       </HBox>
-      <ScrollPane fx:id="timeLineContainer" hbarPolicy="NEVER" layoutY="150.0" prefHeight="355.0" prefWidth="600.0">
+      <ScrollPane hbarPolicy="NEVER" layoutY="150.0" prefHeight="355.0" prefWidth="600.0">
          <content>
-            <VBox />
+            <VBox fx:id="timeLineContainer" />
          </content>
       </ScrollPane>
       <Button layoutX="478.0" layoutY="14.0" minHeight="28.0" minWidth="108.0" mnemonicParsing="false" onAction="#backSearch" text="Volver">
          <graphic>
-            <FontAwesomeIconView text="" />
+            <FontAwesomeIconView glyphName="ARROW_LEFT" />
          </graphic>
       </Button>
    </children>

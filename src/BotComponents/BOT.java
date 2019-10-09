@@ -296,7 +296,14 @@ public class BOT implements Notification{
             return null;
         }
     }
-    
+    public ResponseList<Status> viewUserTimeline(long id){
+        try {
+            return twitterBot.getUserTimeline(id);
+        } catch (TwitterException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
     public ResponseList<Status> getHomeTimeLine(){
         try {
             return twitterBot.getHomeTimeline();
