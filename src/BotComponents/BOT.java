@@ -327,7 +327,7 @@ public class BOT implements Notification{
                         }
                         else chatsData = twitterBot.getDirectMessages(50);
                     }
-                    hashtagReply(tt);
+                    //hashtagReply(tt);
 //                    chatsData.forEach((directMessage) -> {
 //                        System.out.println(directMessage.toString());
 //                    });
@@ -388,5 +388,9 @@ public class BOT implements Notification{
         }catch(TwitterException e){
             return null;
         }
+    }
+    
+    public Twitter instance(){
+        return twitterBot;
     }
 }
