@@ -7,7 +7,6 @@ package UiComponents.Controllers;
 
 import BotComponents.BOT;
 import UiComponents.Interfaces.Notification;
-import javafx.scene.shape.Line;
 import com.jfoenix.controls.JFXDialog;
 import java.io.IOException;
 import java.net.URL;
@@ -16,6 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -23,7 +23,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.BoxBlur;
-import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -37,8 +36,6 @@ import twitter4j.ResponseList;
 import twitter4j.Status;
 import twitter4j.TwitterException;
 import twitter4j.User;
-import twitter4j.UserStreamAdapter;
-import twitter4j.UserStreamListener;
 
 /**
  * FXML Controller class
@@ -56,16 +53,18 @@ public class UserViewController implements Initializable, Notification {
     @FXML private VBox tweets;
     @FXML private TextField id_user;
     @FXML private StackPane rootPane;
-    @FXML private ScrollPane scrolltweets;
     @FXML private AnchorPane rootAnchorPane;
-
+    @FXML private ScrollPane scrolltweets;
+    
+    ResponseList<Status> actualTimeLine;
+    
+   
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         try {
-            //BotComponents.BOT.getInstance().test();
             
             if(BOT.getInstance().getProfileBannerURL()!=null){
                 bannerImg.setImage(
@@ -73,27 +72,52 @@ public class UserViewController implements Initializable, Notification {
                 );
             }
             
-                profileImg.setFill(new ImagePattern(
-                        new Image(BOT.getInstance().getProfileImageURL())
-                    )
-                );
-
+            profileImg.setFill(new ImagePattern(
+                    new Image(BOT.getInstance().getProfileImageURL())
+                )
+            );
+                    
            
             name.setText(
                     BOT.getInstance().getName()
-            );
+                    );
+            
             userName.setText(
                     "@"+BOT.getInstance().getUserName()
-            );
+                    );
+            
             following.setText(
                     Integer.toString(BOT.getInstance().getFriendsCount())+" Siguiendo"
                     );
+            
             followers.setText(
                     Integer.toString(BOT.getInstance().getFollowersCount())+" Seguidores"
                     );   
+            
+            
+            
+            actualTimeLine = BOT.getInstance().getHomeTimeLine();
+            
+            
+            setTimelineInUi(actualTimeLine);
+        
+        //Scroll event
+        
+        scrolltweets.vvalueProperty().addListener(
+            (ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+            if(newValue.doubleValue() == 1.0d){
+                try {
+                    setTimelineInUi(actualTimeLine);
+                } catch (TwitterException ex) {
+                    Logger.getLogger(UserViewController.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(UserViewController.class.getName()).log(Level.SEVERE, null, ex);
+                }
 
-            setTimelineInUi(BOT.getInstance().getHomeTimeLine());
-            // TODO
+            }
+        });
+        
+        
         } catch (TwitterException ex) {
             
         } catch (IOException ex) {
@@ -101,18 +125,46 @@ public class UserViewController implements Initializable, Notification {
         }
     }
     
+
+    
+    
+    //Set the first 4 status in UI and then delete them.
     
     private void setTimelineInUi(ResponseList<Status> statusList) throws TwitterException, IOException{
+        new Thread(()->
+        {
+            int i = 0;
+            for (Status status : statusList) 
+            {
+                if(i<4)
+                {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/UiComponents/Fxml/tweetTemplate.fxml"));
+                    Platform.runLater(()->{
+
+                        try {
+                            AnchorPane thisTweet = loader.load();
+                            tweets.getChildren().add(thisTweet);
+                            TweetTemplateController templateController = loader.getController();
+                            templateController.setItems(status, statusList.indexOf(status),tweets, thisTweet);
+                            statusList.remove(status);
+
+                        } catch (IOException ex) {
+                            Logger.getLogger(UserViewController.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (TwitterException ex) {
+                            Logger.getLogger(UserViewController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
 
 
-        for (Status status : statusList) {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/UiComponents/Fxml/tweetTemplate.fxml"));
-            AnchorPane thisTweet = loader.load();
-            tweets.getChildren().add(thisTweet);
-            TweetTemplateController templateController = loader.getController();
-            templateController.setItems(status, statusList.indexOf(status),tweets, thisTweet);
+                    });
             
-        }            
+                }
+                i++;
+            }
+        
+        
+        }).start();
+
+           
             
     }
 
@@ -186,8 +238,9 @@ public class UserViewController implements Initializable, Notification {
     }
 
     @FXML
-    private void view_profile(ActionEvent event) {
+    private void view_profile(ActionEvent event) throws TwitterException {
         tweets.getChildren().clear();
+        actualTimeLine = BOT.getInstance().getTimeLine();
         new Thread(()->{
             //fadeContentPane(1, 0, 2000);
             
@@ -195,7 +248,7 @@ public class UserViewController implements Initializable, Notification {
                 
                 
                 try {
-                    setTimelineInUi(BOT.getInstance().getTimeLine());
+                    setTimelineInUi(actualTimeLine);
                     
                     fadeContentPane(0, 1, 2000);
                     
@@ -214,12 +267,13 @@ public class UserViewController implements Initializable, Notification {
 
 
     @FXML
-    private void view_home(ActionEvent event) {
+    private void view_home(ActionEvent event) throws TwitterException {
         tweets.getChildren().clear();
+        actualTimeLine = BOT.getInstance().getHomeTimeLine();
         new Thread(()->{
             Platform.runLater(()->{                
                 try {
-                    setTimelineInUi(BOT.getInstance().getHomeTimeLine());
+                    setTimelineInUi(actualTimeLine);
                     fadeContentPane(0, 1, 2000);
                     
                 } catch (TwitterException ex) {
@@ -239,10 +293,11 @@ public class UserViewController implements Initializable, Notification {
         
     
     private void fadeContentPane(int from, int to, int millis) {
-        FadeTransition fadeOut = new FadeTransition(Duration.millis(millis), scrolltweets);
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(millis), tweets);
         fadeOut.setFromValue(from);
         fadeOut.setToValue(to);
         fadeOut.play();
         
     }
+
 }
