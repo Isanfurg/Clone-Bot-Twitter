@@ -254,4 +254,5 @@ public class TweetTemplateController implements Initializable, Notification{
         this.isRetweet = isRetweet;
         this.isRetweetedByMe = isRetweetedByMe;
     }
+
 }
