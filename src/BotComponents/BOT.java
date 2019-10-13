@@ -323,7 +323,10 @@ public class BOT implements Notification{
                     DirectMessageList tt = twitterBot.getDirectMessages(50);
                     for (DirectMessage directMessage : tt) {
                         if(chatsData != null){
-                            if (!chatsData.contains(directMessage)) chatsData.add(directMessage);
+                            if (!chatsData.contains(directMessage)){
+                                hashtagReplyMessage(directMessage);
+                                chatsData.add(directMessage);
+                            }
                         }
                         else chatsData = twitterBot.getDirectMessages(50);
                     }
@@ -361,26 +364,54 @@ public class BOT implements Notification{
         }
         return pos;
     }
-    public void hashtagReply(DirectMessageList tt){
+    public void hashtagReplyMessage(DirectMessage tt){
         try{
-            for (DirectMessage i: tt){
-                String[] x = i.getText().split(" ");
-                int pos = hashtagPosition(x);
-                if(x[pos].equals("#gustar")){
-                    long id = Long.parseLong(x[pos + 1]);
-                    likeTweet(id);
-                }else if(x[pos].equals("#seguir")){
-                    ResponseList<User> lis = searchUser(x[pos+1]);
-                    long id = lis.get(0).getId();
-                    followUser(id);
-                }else if(x[pos].equals("#difundir")){
-                    long id = Long.parseLong(x[pos+1]);
-                    retweet(id);
-                }
+            String[] x = tt.getText().split(" ");
+            int pos = hashtagPosition(x);
+            if(x[pos].equals("#gustar")){
+                long id = Long.parseLong(x[pos + 1]);
+                likeTweet(id);
+            }else if(x[pos].equals("#seguir")){
+                ResponseList<User> lis = searchUser(x[pos+1]);
+                long id = lis.get(0).getId();
+                followUser(id);
+            }else if(x[pos].equals("#difundir")){
+                long id = Long.parseLong(x[pos+1]);
+                retweet(id);
             }
         }catch(TwitterException e){
             System.out.println(e.getErrorMessage());
         }
+    }
+    public void hashtagReplyTweet(){
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                try{
+                    ResponseList <Status> mentions = twitterBot.getMentionsTimeline ();
+                    for (Status s: mentions) {
+                        String[] x = s.getText().split(" ");
+                        int pos = hashtagPosition(x);
+                        if(x[pos].equals("#gustar")){
+                            long id = s.getId();
+                            likeTweet(id);
+                        }else if(x[pos].equals("#seguir")){
+                            ResponseList<User> lis = searchUser(x[pos+1]);
+                            long id = lis.get(0).getId();
+                            followUser(id);
+                        }else if(x[pos].equals("#difundir")){
+                            long id = s.getId();
+                            retweet(id);
+                        }
+                    }
+                }catch(TwitterException e){
+                    System.out.println(e.getErrorMessage());
+                }
+            }  
+        };
+        Timer timer = new Timer(true);
+        timer.scheduleAtFixedRate(timerTask, 0, 60*1000);
+        System.out.println("Hashtag reply tweet started");
     }
     public DirectMessageList mensageUser(String user){
         try{
