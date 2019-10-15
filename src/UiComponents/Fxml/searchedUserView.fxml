@@ -20,8 +20,6 @@
                <children>
                   <Text fx:id="name" strokeType="OUTSIDE" strokeWidth="0.0" text="Screen Name" />
                   <Text fx:id="userName" strokeType="OUTSIDE" strokeWidth="0.0" text="Username" />
-                  <Text fx:id="followers" strokeType="OUTSIDE" strokeWidth="0.0" text="Seguidores" />
-                  <Text fx:id="following" strokeType="OUTSIDE" strokeWidth="0.0" text="Seguidos" />
                </children>
             </VBox>
          </children>
@@ -40,9 +38,9 @@
             </Button>
          </children>
       </HBox>
-      <ScrollPane fx:id="timeLineContainer" hbarPolicy="NEVER" layoutY="150.0" prefHeight="355.0" prefWidth="600.0">
+      <ScrollPane hbarPolicy="NEVER" layoutY="150.0" prefHeight="355.0" prefWidth="600.0">
          <content>
-            <VBox />
+            <VBox fx:id="timeLineContainer" />
          </content>
       </ScrollPane>
       <Button layoutX="478.0" layoutY="14.0" minHeight="28.0" minWidth="108.0" mnemonicParsing="false" onAction="#backSearch" text="Volver">

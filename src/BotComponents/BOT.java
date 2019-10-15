@@ -32,7 +32,6 @@ public class BOT implements Notification{
     private boolean access ;
     
     private BOT() throws TwitterException{
-        twitterBot.
         setPin();
 
     }
@@ -307,7 +306,14 @@ public class BOT implements Notification{
         }
     }
     
-    
+    public ResponseList<Status> getTimeLine(long user){
+        try {
+            return twitterBot.getUserTimeline(user);
+        } catch (TwitterException e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
     public void streamMessages() throws TwitterException{     
         TimerTask timerTask = new TimerTask() {
             @Override
