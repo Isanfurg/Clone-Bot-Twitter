@@ -38,6 +38,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
@@ -141,40 +142,12 @@ public class UserViewController implements Initializable, Notification {
     //Set the first 4 status in UI and then delete them.
     
     private void setTimelineInUi(ResponseList<Status> statusList) throws TwitterException, IOException{
-        new Thread(()->
-        {
-            int i = 0;
-            for (Status status : statusList) 
-            {
-                if(i<4)
-                {
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/UiComponents/Fxml/tweetTemplate.fxml"));
-                    Platform.runLater(()->{
-
-                        try {
-                            AnchorPane thisTweet = loader.load();
-                            tweets.getChildren().add(thisTweet);
-                            TweetTemplateController templateController = loader.getController();
-                            templateController.setItems(status, statusList.indexOf(status),tweets, thisTweet);
-                            statusList.remove(status);
-
+        int i = 0;
         for (Status status : statusList) {
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/UiComponents/Fxml/tweetTemplate.fxml"));
-//            AnchorPane thisTweet = loader.load();
-//            tweets.getChildren().add(thisTweet);
-//            TweetTemplateController templateController = loader.getController();
-//            templateController.setItems(status, statusList.indexOf(status),tweets, thisTweet);
             tweets.getChildren().add(tweetTemplate(status));
-            
-                }
-                i++;
-            }
-        
-        
-        }).start();
-
-           
-            
+            i++;
+            if(i>=5)break;
+        }            
     }
     @FXML
     private void searchUser(ActionEvent event) throws TwitterException, IOException {
