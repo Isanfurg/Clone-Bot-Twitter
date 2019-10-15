@@ -9,10 +9,12 @@ import BotComponents.BOT;
 import com.jfoenix.controls.JFXDialog;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -23,6 +25,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
@@ -205,9 +209,10 @@ public class SearchedUserViewController implements Initializable {
     }
     public void setItems(User thisUser) throws TwitterException{
         name.setText(BOT.getInstance().getName(thisUser.getScreenName()));
-        userName.setText(thisUser.getScreenName());
+        userName.setText("@"+thisUser.getScreenName());
         profileImg.setFill(new ImagePattern(new Image(thisUser.getOriginalProfileImageURL())));
         try {
+            bannerImg.setFitWidth(600);
             bannerImg.setPreserveRatio(false);
             bannerImg.setImage(new Image(thisUser.getProfileBannerURL()));
         } catch (Exception e) {

@@ -92,6 +92,7 @@ public class TweetTemplateController implements Initializable, Notification{
         int textStart = 0;
         int textFinish = 0;
         String[] parts = status.getText().split(" ");
+        
         if("RT".equals(parts[0])){
             userName = parts[1].substring(1, parts[1].length()-1);
             //System.out.println(userName);
@@ -105,7 +106,15 @@ public class TweetTemplateController implements Initializable, Notification{
                 
             }
         }
-        for (MediaEntity mediaEntity : status.getMediaEntities()) {
+        MediaEntity[] mediaEntitys;
+        
+        if(status.isRetweet())  mediaEntitys = status.getRetweetedStatus().getMediaEntities();
+        else                    mediaEntitys = status.getMediaEntities();
+        
+        
+        
+        
+        for (MediaEntity mediaEntity : mediaEntitys) {
             if(!"video".equals(mediaEntity.getType())){
                 Image img = new Image(mediaEntity.getMediaURL());
                 ImageView imageView = new ImageView();
@@ -115,7 +124,16 @@ public class TweetTemplateController implements Initializable, Notification{
                 tweetInfoContainer.getChildren().add(2, imageView);
                 textFinish+=1;
             }
+            
         }
+        
+        try {
+            System.out.println("Retweet id: "+status.getRetweetedStatus().getId());
+        } catch (Exception e) {
+        }
+        
+        
+        
         for(int i = textStart;i<parts.length-textFinish;i++){
             Text text = new Text(parts[i]+" ");
             if(parts[i].length()>0){
@@ -125,7 +143,7 @@ public class TweetTemplateController implements Initializable, Notification{
             }
             tweetContent.getChildren().add(text);
         }
-        this.user.setText("</b>"+user+"</b>");
+        this.user.setText(user);
         Image img = new Image(profileImgURL);
         profileImg.setFill(new ImagePattern(img));
         this.userName.setText("@"+userName);
@@ -197,6 +215,7 @@ public class TweetTemplateController implements Initializable, Notification{
                 BOT bot = BOT.getInstance();
                 
                 if(!isRetweetedByMe){
+                    System.out.println("Tweet id: "+data.getId());
                     Status retweetedStatus = bot.retweet(idTweet);
                     retweet.setStyle("-fx-background-color: red");
                     isRetweetedByMe = true;
@@ -204,7 +223,7 @@ public class TweetTemplateController implements Initializable, Notification{
                 
                 else{
                     Status unretweetedStatus = bot.unRetweet(idTweet);
-                    
+                    retweet.setStyle(null);
                     if(data.isRetweet()){
                         Platform.runLater(()->{
                             parent.getChildren().remove(thisTweet);
@@ -213,7 +232,6 @@ public class TweetTemplateController implements Initializable, Notification{
                     }
     
                     
-                    retweet.setStyle(null);
                     isRetweetedByMe = false;
                 }
             } catch (TwitterException ex) {

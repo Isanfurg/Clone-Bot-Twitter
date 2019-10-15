@@ -296,7 +296,14 @@ public class BOT implements Notification{
             return null;
         }
     }
-    
+    public ResponseList<Status> viewUserTimeline(long id){
+        try {
+            return twitterBot.getUserTimeline(id);
+        } catch (TwitterException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
     public ResponseList<Status> getHomeTimeLine(){
         try {
             return twitterBot.getHomeTimeline();
@@ -320,20 +327,20 @@ public class BOT implements Notification{
             public void run() {
                 try {
                     System.out.println("Updating...");
-                    
-                    for (DirectMessage directMessage : twitterBot.getDirectMessages(50)) {
+                    DirectMessageList tt = twitterBot.getDirectMessages(50);
+                    for (DirectMessage directMessage : tt) {
                         if(chatsData != null){
                             if (!chatsData.contains(directMessage)) chatsData.add(directMessage);
                         }
                         else chatsData = twitterBot.getDirectMessages(50);
                     }
-                    
+                    //hashtagReply(tt);
 //                    chatsData.forEach((directMessage) -> {
 //                        System.out.println(directMessage.toString());
 //                    });
 //                    
                 } catch (TwitterException ex) {
-                    Logger.getLogger(BOT.class.getName()).log(Level.SEVERE, null, ex);
+                    System.out.println("No hay acceso por el momento...");
                 }
             }
             
@@ -352,51 +359,45 @@ public class BOT implements Notification{
         }return -1;
                 
     }
+    public int hashtagPosition(String[] x){
+        int pos = 0;
+        for (int i = 0; i < x.length; i++) {
+            if(x[i].equals("#gustar") || x[i].equals("#seguir") || x[i].equals("#difundir")){
+               pos = i;
+            }
+        }
+        return pos;
+    }
+    public void hashtagReply(DirectMessageList tt){
+        try{
+            for (DirectMessage i: tt){
+                String[] x = i.getText().split(" ");
+                int pos = hashtagPosition(x);
+                if(x[pos].equals("#gustar")){
+                    long id = Long.parseLong(x[pos + 1]);
+                    likeTweet(id);
+                }else if(x[pos].equals("#seguir")){
+                    ResponseList<User> lis = searchUser(x[pos+1]);
+                    long id = lis.get(0).getId();
+                    followUser(id);
+                }else if(x[pos].equals("#difundir")){
+                    long id = Long.parseLong(x[pos+1]);
+                    retweet(id);
+                }
+            }
+        }catch(TwitterException e){
+            System.out.println(e.getErrorMessage());
+        }
+    }
     public DirectMessageList mensageUser(String user){
         try{
-            return twitterBot.getDirectMessages(0, user);
+            return twitterBot.getDirectMessages(0,user);
         }catch(TwitterException e){
             return null;
         }
     }
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    //en proceso(No me lo muevan, pd: el manuel es otaku).
-    public HashtagEntity[] hashtagReply(Status status){
-        try{
-            HashtagEntity[] tt  = status.getHashtagEntities();
-            for (HashtagEntity i: tt) {
-                String[] x = i.getText().split(" ");
-                if(x[1].equals("#Like")){
-                    //aun no se de donde sacar la id uwu
-                    long id = 178823411L;
-                    likeTweet(id);
-                }else if(x[1].equals("#Seguir")){
-                    //aun no se de donde sacar la id uwu
-                    long id = 178823411L;
-                    followUser(id);
-                    sendDirectMenssage(x[2],x[0]+" "+x[2]);
-                }else if(x[1].equals("#ReTwitt")){
-                    //aun no se de donde sacar la id uwu
-                    long id = 178823411L;
-                    retweet(id);
-                }
-            }
-            return tt;
-        }catch(TwitterException e){
-            return null;
-        }
+    public Twitter instance(){
+        return twitterBot;
     }
 }
