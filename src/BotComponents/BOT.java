@@ -286,6 +286,16 @@ public class BOT implements Notification{
         }
         return false;
     }
+    
+    public boolean isFavoritedByMe(Status status) throws TwitterException{
+        return twitterBot.getFavorites().contains(status);
+    }
+    
+    public boolean isRetweetedByMe(Status status){
+        if(status.isRetweet()) return status.getUser().getId() == getMyUserID(); 
+        else return status.isRetweetedByMe();
+        
+    }
     public ResponseList<Status> getTimeLine(){
         try{
             
