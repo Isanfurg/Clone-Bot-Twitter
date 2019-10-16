@@ -60,6 +60,7 @@ public class BOT implements Notification{
     try{
         accessToken = twitterBot.getOAuthAccessToken(this.requestToken, pin);
                 streamMessages();
+                hashtagReplyTweet();
         this.access = true;
     } catch (TwitterException e) {
         Platform.runLater(()->{this.newNotification("Error al procesar el PIN.");});
@@ -365,6 +366,7 @@ public class BOT implements Notification{
         return pos;
     }
     public void hashtagReplyMessage(DirectMessage tt){
+        System.out.println("Entra?");
         try{
             String[] x = tt.getText().split(" ");
             int pos = hashtagPosition(x);
@@ -403,15 +405,16 @@ public class BOT implements Notification{
                             long id = s.getId();
                             retweet(id);
                         }
+                        System.out.println("txt: "+s.getText());
                     }
                 }catch(TwitterException e){
                     System.out.println(e.getErrorMessage());
                 }
-            }  
+            }
         };
         Timer timer = new Timer(true);
         timer.scheduleAtFixedRate(timerTask, 0, 60*1000);
-        System.out.println("Hashtag reply tweet started");
+        System.out.println("hashtag reply tweet started"); 
     }
     public DirectMessageList mensageUser(String user){
         try{
