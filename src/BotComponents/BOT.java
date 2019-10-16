@@ -282,6 +282,16 @@ public class BOT implements Notification{
         }
         return false;
     }
+    
+    public boolean isFavoritedByMe(Status status) throws TwitterException{
+        return twitterBot.getFavorites().contains(status);
+    }
+    
+    public boolean isRetweetedByMe(Status status){
+        if(status.isRetweet()) return status.getUser().getId() == getMyUserID(); 
+        else return status.isRetweetedByMe();
+        
+    }
     public ResponseList<Status> getTimeLine(){
         try{
             
@@ -309,7 +319,14 @@ public class BOT implements Notification{
         }
     }
     
-    
+    public ResponseList<Status> getTimeLine(long user){
+        try {
+            return twitterBot.getUserTimeline(user);
+        } catch (TwitterException e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
     public void streamMessages() throws TwitterException{     
         TimerTask timerTask = new TimerTask() {
             @Override

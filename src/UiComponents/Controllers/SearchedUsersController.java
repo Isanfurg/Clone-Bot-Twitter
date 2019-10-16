@@ -17,8 +17,18 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import BotComponents.BOT;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.geometry.Pos;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import twitter4j.ResponseList;
 import twitter4j.TwitterException;
@@ -58,11 +68,12 @@ public class SearchedUsersController implements Initializable {
         if(!users.isEmpty()){
         containerUsers.getChildren().clear();
             for(int i = from; i<users.size();i++){
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/UiComponents/Fxml/userButton.fxml"));
-                searched.add(loader.load(),columunIndex,rowIndex);
-                UserButtonController controller = loader.getController();
-                controller.setInfoUser(users.get(i),parentRootPane);
-                controller.checkFollow();
+                searched.add(setButton(users.get(i)),columunIndex,rowIndex);
+//                FXMLLoader loader = new FXMLLoader(getClass().getResource("/UiComponents/Fxml/userButton.fxml"));
+//                searched.add(loader.load(),columunIndex,rowIndex);
+//                UserButtonController controller = loader.getController();
+//                controller.setInfoUser(users.get(i),parentRootPane);
+//                controller.checkFollow();
                 rowIndex++;
                 
                 if(rowIndex==5){ rowIndex=0;columunIndex++; }
@@ -74,6 +85,54 @@ public class SearchedUsersController implements Initializable {
         
         }else{setTextOnScene();}
     }
+   private HBox setButton(User user){
+       HBox box = new HBox();
+       box.setMinSize(180, 80);
+       box.setPrefSize(180, 80);
+       box.setMaxSize(180, 80);
+       //Profile circle
+       Circle circle = new Circle();
+       circle.setRadius(34);
+       circle.setFill(new ImagePattern(new Image(user.get400x400ProfileImageURL())));
+       box.getChildren().add(circle);
+       //Vertical box
+       VBox vertical = new VBox();
+       box.getChildren().add(vertical);
+       vertical.setAlignment(Pos.CENTER);
+       //name
+       
+       String name = user.getScreenName();
+        if(name.length()>11){
+            name = name.substring(0, 10)+"...";
+        }
+       Text username = new Text(name);
+       vertical.getChildren().add(username);
+       //BUTTON
+       Button viewB = new Button();
+       FontAwesomeIconView viewI = new FontAwesomeIconView(FontAwesomeIcon.EYE);
+       viewI.setGlyphSize(10);
+       viewB.setGraphic(viewI);
+       viewB.setText("Ver perfil");
+       viewB.setOnAction((event) -> {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/UiComponents/Fxml/searchedUserView.fxml"));
+            JFXDialog seachedUser;
+           try {
+               seachedUser = new JFXDialog(parentRootPane,loader.load(), JFXDialog.DialogTransition.TOP);
+               seachedUser.setOverlayClose(false);
+            SearchedUserViewController controller = loader.getController();
+            controller.setItems(user);
+            controller.setToClose(seachedUser);
+            seachedUser.show();
+           } catch (IOException ex) {
+               Logger.getLogger(SearchedUsersController.class.getName()).log(Level.SEVERE, null, ex);
+           } catch (TwitterException ex) {
+               Logger.getLogger(SearchedUsersController.class.getName()).log(Level.SEVERE, null, ex);
+           }
+            
+           });
+       vertical.getChildren().add(viewB);
+       return box;
+   }
 
     @FXML
     private void closeDialog(ActionEvent event) {

@@ -9,7 +9,6 @@ import BotComponents.BOT;
 import UiComponents.Interfaces.Notification;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
@@ -80,9 +79,9 @@ public class TweetTemplateController implements Initializable, Notification{
         this.tweetPosition = tweetPosition;
         this.thisTweet = thisTweet;
         
-        if(status.getUser().getId() != BOT.getInstance().getMyUserID() || isRetweet) {
+        /*if(status.getUser().getId() != BOT.getInstance().getMyUserID() || isRetweet) {
             buttonBar.getChildren().remove(eliminarTweet);
-        }
+        }*/
         
         data = status;
         this.parent = parent;
@@ -149,17 +148,17 @@ public class TweetTemplateController implements Initializable, Notification{
         this.userName.setText("@"+userName);
         this.userName.setFill(Paint.valueOf("#7D94B3"));
         
-        if(isFav) like.setStyle("-fx-background-color: red;");
-        if(isRetweetedByMe) retweet.setStyle("-fx-background-color: red;");
+        /*if(isFav) like.setStyle("-fx-background-color: red;");
+        if(isRetweetedByMe) retweet.setStyle("-fx-background-color: red;");*/
         
-        if(status.isRetweet()){
+        /*if(status.isRetweet()){
             if(status.getUser().getId() == BOT.getInstance().getMyUserID()){
                 retweet.setStyle("-fx-background-color: red;");
                 isRetweetedByMe = true;
                 isRetweet = true;
                 
             }
-        }
+        }*/
         
         
         if(status.isRetweet()){
@@ -272,4 +271,5 @@ public class TweetTemplateController implements Initializable, Notification{
         this.isRetweet = isRetweet;
         this.isRetweetedByMe = isRetweetedByMe;
     }
+
 }
