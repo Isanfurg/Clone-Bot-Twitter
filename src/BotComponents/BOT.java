@@ -1,23 +1,18 @@
 package BotComponents;
 
-import java.io.File;
 import UiComponents.Interfaces.Notification;
 import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Platform;
 import twitter4j.DirectMessage;
 import twitter4j.DirectMessageList;
-import twitter4j.HashtagEntity;
 import twitter4j.ResponseList;
 import twitter4j.Status;
 import twitter4j.StatusUpdate;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
-import twitter4j.UploadedMedia;
 import twitter4j.User;
 import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
@@ -356,30 +351,44 @@ public class BOT implements Notification{
         }return -1;
                 
     }
-    public int hashtagPosition(String[] x){
-        int pos = 0;
+    public int[] hashtagPosition(String[] x){
+        int[] pos = new int[3];
+        int j = 0;
         for (int i = 0; i < x.length; i++) {
             if(x[i].equals("#gustar") || x[i].equals("#seguir") || x[i].equals("#difundir")){
-               pos = i;
+               pos[j] = i;
+               j++;
             }
         }
         return pos;
     }
+    //Devuelve el nombre del usuario que este en el mensaje o tweet.
+    public String us(String[] x){
+        String us = null;
+        for (int i = 0; i < x.length; i++) {
+            if(x[i].charAt(0) == '@'){
+                us = x[i];
+            }
+        }
+        return us;
+    }
     public void hashtagReplyMessage(DirectMessage tt){
-        System.out.println("Entra?");
         try{
             String[] x = tt.getText().split(" ");
-            int pos = hashtagPosition(x);
-            if(x[pos].equals("#gustar")){
-                long id = Long.parseLong(x[pos + 1]);
-                likeTweet(id);
-            }else if(x[pos].equals("#seguir")){
-                ResponseList<User> lis = searchUser(x[pos+1]);
-                long id = lis.get(0).getId();
-                followUser(id);
-            }else if(x[pos].equals("#difundir")){
-                long id = Long.parseLong(x[pos+1]);
-                retweet(id);
+            int pos[] = hashtagPosition(x);
+            String user = us(x);
+            for (int i = 0; i < 3; i++) {
+                if(x[pos[i]].equals("#gustar")){
+                    long id = Long.parseLong(x[x.length-1]);
+                    likeTweet(id);
+                }else if(x[pos[i]].equals("#seguir")){
+                    ResponseList<User> lis = searchUser(user);
+                    long id = lis.get(0).getId();
+                    followUser(id);
+                }else if(x[pos[i]].equals("#difundir")){
+                    long id = Long.parseLong(x[x.length-1]);
+                    retweet(id);
+                }
             }
         }catch(TwitterException e){
             System.out.println(e.getErrorMessage());
@@ -393,19 +402,21 @@ public class BOT implements Notification{
                     ResponseList <Status> mentions = twitterBot.getMentionsTimeline ();
                     for (Status s: mentions) {
                         String[] x = s.getText().split(" ");
-                        int pos = hashtagPosition(x);
-                        if(x[pos].equals("#gustar")){
-                            long id = s.getId();
-                            likeTweet(id);
-                        }else if(x[pos].equals("#seguir")){
-                            ResponseList<User> lis = searchUser(x[pos+1]);
-                            long id = lis.get(0).getId();
-                            followUser(id);
-                        }else if(x[pos].equals("#difundir")){
-                            long id = s.getId();
-                            retweet(id);
+                        int pos[] = hashtagPosition(x);
+                        String user = us(x);
+                        for (int i = 0; i < 3; i++) {
+                            if(x[pos[i]].equals("#gustar")){
+                                long id = s.getId();
+                                likeTweet(id);
+                            }else if(x[pos[i]].equals("#seguir")){
+                                ResponseList<User> lis = searchUser(user);
+                                long id = lis.get(0).getId();
+                                followUser(id);
+                            }else if(x[pos[i]].equals("#difundir")){
+                                long id = s.getId();
+                                retweet(id);
+                            }
                         }
-                        System.out.println("txt: "+s.getText());
                     }
                 }catch(TwitterException e){
                     System.out.println(e.getErrorMessage());
