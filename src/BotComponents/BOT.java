@@ -2,8 +2,13 @@ package BotComponents;
 
 import UiComponents.Interfaces.Notification;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import twitter4j.DirectMessage;
 import twitter4j.DirectMessageList;
@@ -416,27 +421,46 @@ public class BOT implements Notification{
             @Override
             public void run() {
                 try{
-                    ResponseList <Status> mentions = twitterBot.getMentionsTimeline ();
+                    int end = 0,first = 0;
+                    File fichero = new File("ultimaMencion.txt");
+                    Scanner lectura = new Scanner(fichero);
+                    String dirc = lectura.nextLine();
+                    long ultimoST =  Long.parseLong(dirc);
+                    ResponseList <Status> mentions = twitterBot.getMentionsTimeline();
                     for (Status s: mentions) {
-                        String[] x = s.getText().split(" ");
-                        int pos[] = hashtagPosition(x);
-                        String user = us(x);
-                        for (int i = 0; i < 3; i++) {
-                            if(x[pos[i]].equals("#gustar")){
-                                long id = s.getId();
-                                likeTweet(id);
-                            }else if(x[pos[i]].equals("#seguir")){
-                                ResponseList<User> lis = searchUser(user);
-                                long id = lis.get(0).getId();
-                                followUser(id);
-                            }else if(x[pos[i]].equals("#difundir")){
-                                long id = s.getId();
-                                retweet(id);
+                        if(ultimoST == s.getId()){
+                            end = 1;
+                        }
+                        if(end == 0 && ultimoST!=s.getId()){
+                            System.out.println("entro :((");
+                            if(first == 0){
+                                PrintWriter fic = new PrintWriter("ultimaMencion.txt");
+                                fic.write(" "+s.getId());
+                                first = 1;
+                                fic.close();
                             }
+                            String[] x = s.getText().split(" ");
+                            int pos[] = hashtagPosition(x);
+                            String user = us(x);
+                            for (int i = 0; i < 3; i++) {
+                                if(x[pos[i]].equals("#gustar")){
+                                    long id = s.getId();
+                                    likeTweet(id);
+                                }else if(x[pos[i]].equals("#seguir")){
+                                    ResponseList<User> lis = searchUser(user);
+                                    long id = lis.get(0).getId();
+                                    followUser(id);
+                                }else if(x[pos[i]].equals("#difundir")){
+                                    long id = s.getId();
+                                    retweet(id);
+                                }
+                            } 
                         }
                     }
                 }catch(TwitterException e){
                     System.out.println(e.getErrorMessage());
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(BOT.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         };
