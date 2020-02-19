@@ -61,11 +61,11 @@
                   </HBox>
                   <HBox alignment="BOTTOM_RIGHT" prefHeight="79.0" prefWidth="274.0" spacing="5.0">
                      <children>
-                        <Button mnemonicParsing="false" onAction="#new_tweet" prefHeight="28.0" prefWidth="108.0" text="New tweet">
+                        <Button mnemonicParsing="false" onAction="#new_tweet" prefHeight="28.0" prefWidth="108.0" text="Twitear">
                            <graphic>
                               <FontAwesomeIconView glyphName="SHARE_SQUARE_ALT" />
                            </graphic></Button>
-                        <Button mnemonicParsing="false" onAction="#show_direct_messages" prefHeight="28.0" prefWidth="107.0" text="Messages">
+                        <Button mnemonicParsing="false" onAction="#show_direct_messages" prefHeight="28.0" prefWidth="107.0" text="Mensajes">
                            <graphic>
                               <FontAwesomeIconView glyphName="COMMENT_ALT" />
                            </graphic></Button>
@@ -76,12 +76,12 @@
                   </HBox>
                   <HBox prefHeight="100.0" prefWidth="200.0" spacing="5.0">
                      <children>
-                        <Button mnemonicParsing="false" onAction="#view_profile" prefHeight="26.0" prefWidth="108.0" text="Profile">
+                        <Button mnemonicParsing="false" onAction="#view_profile" prefHeight="26.0" prefWidth="108.0" text="Perfil">
                            <graphic>
                               <FontAwesomeIconView glyphName="USER" />
                            </graphic>
                         </Button>
-                        <Button mnemonicParsing="false" onAction="#view_home" prefHeight="26.0" prefWidth="107.0" text="Home">
+                        <Button mnemonicParsing="false" onAction="#view_home" prefHeight="26.0" prefWidth="107.0" text="Inicio">
                            <graphic>
                               <FontAwesomeIconView glyphName="HOME" />
                            </graphic>
