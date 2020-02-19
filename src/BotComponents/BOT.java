@@ -2,6 +2,9 @@ package BotComponents;
 
 import UiComponents.Interfaces.Notification;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.InputMismatchException;
+import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
@@ -347,6 +350,7 @@ public class BOT implements Notification{
                         if(chatsData != null){
                             if (!chatsData.contains(directMessage)){
                                 hashtagReplyMessage(directMessage);
+                                reportSpamMensajes(directMessage);
                                 chatsData.add(directMessage);
                             }
                         }
@@ -359,6 +363,8 @@ public class BOT implements Notification{
 //                    
                 } catch (TwitterException ex) {
                     System.out.println("No hay acceso por el momento...");
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(BOT.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
             
@@ -470,7 +476,44 @@ public class BOT implements Notification{
         twitterStream.filter("@"+getUserName());
 
     }
-    
+    //por si lo piden(uwu)
+    private void reportSpamStatus(Status status) throws TwitterException{
+        File archivo = new File("stopWords.txt");
+        try{
+            String[] x = status.getText().split(" ");
+            Scanner entrada = new Scanner(archivo);
+            int nPalabras = entrada.nextInt();
+            try{
+                for (int i = 0; i < nPalabras; i++) {
+                    String palabra = entrada.next();
+                    for (int j = 0; j < x.length; j++) {
+                        if(x[j].equals(palabra)){
+                            twitterBot.reportSpam(status.getId());
+                        }
+                    }
+                }
+            }catch(InputMismatchException i ){
+                System.out.println("Error de Ingreso de Entero");
+            }
+
+        }catch(FileNotFoundException f){
+            System.out.println("Error de archivo!");
+        }
+    }
+    private void reportSpamMensajes(DirectMessage tt) throws FileNotFoundException, TwitterException{
+        String[] x = tt.getText().split(" ");
+        File archivo = new File("stopWords.txt");
+        Scanner entrada = new Scanner(archivo);
+        int nPalabras = entrada.nextInt();
+        for (int i = 0; i < nPalabras; i++) {
+            String palabra = entrada.next();
+            for (int j = 0; j < x.length; j++) {
+                if(x[j].equals(palabra)){
+                    sendDirectMenssage("@"+twitterBot.showUser(tt.getSenderId()).getName(),"El mensaje contiene alguna palabra con spam!");
+                }
+            }
+        }
+    }
     private void hashtagReply(Status status) throws TwitterException
     {
         String[] x = status.getText().split(" ");
