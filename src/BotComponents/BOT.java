@@ -438,10 +438,12 @@ public class BOT implements Notification{
             {
                 try
                 {
+                    String[] x = status.getText().split(" ");
+                    String user = us(x);
                     hashtagReply(status);
                 } catch (TwitterException ex)
                 {
-                    Logger.getLogger(BOT.class.getName()).log(Level.SEVERE, null, ex);
+                    System.out.println(ex.getMessage());
                 }
             }
 
