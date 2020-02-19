@@ -24,6 +24,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
+import javafx.scene.effect.BoxBlur;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
@@ -60,8 +61,8 @@ public class MessagesViewController implements Initializable {
         rootPane.setEffect(null);
         rootPane.setDisable(false);
         toClose.close();
-    }
-        public void setToClose(JFXDialog toClose, AnchorPane rootPane){
+    }   
+    public void setToClose(JFXDialog toClose, AnchorPane rootPane){
         this.rootPane = rootPane;
         this.toClose = toClose;
     }
@@ -94,7 +95,7 @@ public class MessagesViewController implements Initializable {
         setUserIdsOnScreen();
     }
     public void refreshMesssages(){
-        TimerTask timerTask = new TimerTask() {
+            TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
                 try {
@@ -132,7 +133,7 @@ public class MessagesViewController implements Initializable {
                     Logger.getLogger(MessagesViewController.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (TwitterException ex) {
                     Logger.getLogger(MessagesViewController.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                }  
                 selectedUser = user.getId();
                 System.out.println(user.getId());
             });
@@ -169,6 +170,11 @@ public class MessagesViewController implements Initializable {
         System.out.println(scrollPChts.getVmax());
         System.out.println(scrollPChts.getVmin());
         scrollPChts.setVvalue(scrollPChts.getVmin());
+    }
+
+    @FXML
+    private void newMessage(ActionEvent event) {
+        toClose.setEffect((new BoxBlur(3, 3, 3)));
     }
 
 }

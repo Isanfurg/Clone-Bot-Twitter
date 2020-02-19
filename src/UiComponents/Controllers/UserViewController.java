@@ -215,7 +215,11 @@ public class UserViewController implements Initializable, Notification {
         } catch (Exception e) {
             rootAnchorPane.setDisable(false);
             rootAnchorPane.setEffect(null);
-            this.newNotification("No se pueden cargar los mensajes por favor espere\nal menos 15 minutos\n"+e.getMessage());
+            if(e.getMessage()!=null){
+                this.newNotification("No se pueden cargar los mensajes"+e.getMessage());
+            }else{
+                this.newNotification("Recuerde que debe tener mensajes\nde los ultimos 15 dias");
+            }
         }
 
     }
