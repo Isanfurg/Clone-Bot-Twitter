@@ -4,18 +4,27 @@ import UiComponents.Interfaces.Notification;
 import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import twitter4j.DirectMessage;
 import twitter4j.DirectMessageList;
+import twitter4j.FilterQuery;
 import twitter4j.ResponseList;
+import twitter4j.StallWarning;
 import twitter4j.Status;
+import twitter4j.StatusDeletionNotice;
+import twitter4j.StatusListener;
 import twitter4j.StatusUpdate;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
+import twitter4j.TwitterStream;
+import twitter4j.TwitterStreamFactory;
 import twitter4j.User;
 import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
+import twitter4j.conf.ConfigurationBuilder;
 public class BOT implements Notification{
     private static BOT instance = null;
     private final static String CONSUMER_KEY = "SrIUForUjeiOw76LBGnsbnq86";
@@ -54,8 +63,8 @@ public class BOT implements Notification{
     public void tryPin(String pin) throws TwitterException{
     try{
         accessToken = twitterBot.getOAuthAccessToken(this.requestToken, pin);
-                streamMessages();
-                hashtagReplyTweet();
+        streamMessages();
+        hashtagReplyTweet();
         this.access = true;
     } catch (TwitterException e) {
         Platform.runLater(()->{this.newNotification("Error al procesar el PIN.");});
@@ -357,7 +366,7 @@ public class BOT implements Notification{
         Timer timer = new Timer(true);
         timer.scheduleAtFixedRate(timerTask, 0, 60*1000);
         System.out.println("Stream of messages started");
-          
+         
     }
     public long getMyUserID(){
         try {
@@ -411,39 +420,76 @@ public class BOT implements Notification{
             System.out.println(e.getErrorMessage());
         }
     }
-    public void hashtagReplyTweet(){
-        TimerTask timerTask = new TimerTask() {
+    public void hashtagReplyTweet() throws TwitterException{
+        
+        System.out.println("Starting status stream...");
+        ConfigurationBuilder  cb  = new ConfigurationBuilder();
+        cb.setOAuthConsumerKey(CONSUMER_KEY)
+        .setOAuthConsumerSecret(CONSUMER_KEY_SECRET)
+        .setOAuthAccessToken(accessToken.getToken())
+        .setOAuthAccessTokenSecret(accessToken.getTokenSecret());
+        
+        TwitterStream twitterStream = new TwitterStreamFactory(cb.build()).getInstance();
+        
+        StatusListener listener = new StatusListener()
+        {
             @Override
-            public void run() {
-                try{
-                    ResponseList <Status> mentions = twitterBot.getMentionsTimeline ();
-                    for (Status s: mentions) {
-                        String[] x = s.getText().split(" ");
-                        int pos[] = hashtagPosition(x);
-                        String user = us(x);
-                        for (int i = 0; i < 3; i++) {
-                            if(x[pos[i]].equals("#gustar")){
-                                long id = s.getId();
-                                likeTweet(id);
-                            }else if(x[pos[i]].equals("#seguir")){
-                                ResponseList<User> lis = searchUser(user);
-                                long id = lis.get(0).getId();
-                                followUser(id);
-                            }else if(x[pos[i]].equals("#difundir")){
-                                long id = s.getId();
-                                retweet(id);
-                            }
-                        }
-                    }
-                }catch(TwitterException e){
-                    System.out.println(e.getErrorMessage());
+            public void onStatus(Status status)
+            {
+                try
+                {
+                    hashtagReply(status);
+                } catch (TwitterException ex)
+                {
+                    Logger.getLogger(BOT.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
+
+            @Override
+            public void onDeletionNotice(StatusDeletionNotice sdn){}
+            @Override
+            public void onTrackLimitationNotice(int i){}
+
+            @Override
+            public void onScrubGeo(long l, long l1){}
+
+            @Override
+            public void onStallWarning(StallWarning sw){}
+
+            @Override
+            public void onException(Exception excptn)
+            {
+                System.out.println("Error: "+excptn.getMessage());
+            }
+
+
         };
-        Timer timer = new Timer(true);
-        timer.scheduleAtFixedRate(timerTask, 0, 60*1000);
-        System.out.println("hashtag reply tweet started"); 
+        
+        twitterStream.addListener(listener);
+        twitterStream.filter("@"+getUserName());
+
     }
+    
+    private void hashtagReply(Status status) throws TwitterException
+    {
+        String[] x = status.getText().split(" ");
+        int pos[] = hashtagPosition(x);
+        String user = us(x);
+        for (int i = 0; i < 3; i++) {
+            if(x[pos[i]].equals("#gustar")){
+                long id = status.getId();
+                likeTweet(id);
+            }else if(x[pos[i]].equals("#seguir")){
+                ResponseList<User> lis = searchUser(user);
+                long id = lis.get(0).getId();
+                followUser(id);
+            }else if(x[pos[i]].equals("#difundir")){
+                long id = status.getId();
+                retweet(id);
+            }
+        }
+    }
+    
     public DirectMessageList mensageUser(String user){
         try{
             return twitterBot.getDirectMessages(0,user);
