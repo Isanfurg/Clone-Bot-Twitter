@@ -466,7 +466,6 @@ public class BOT implements Notification{
 
 
         };
-        
         twitterStream.addListener(listener);
         twitterStream.filter("@"+getUserName());
 
