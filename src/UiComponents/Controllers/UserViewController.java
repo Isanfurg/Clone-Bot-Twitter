@@ -498,23 +498,20 @@ public class UserViewController implements Initializable, Notification {
 
     @FXML   
     private void applyFilter(ActionEvent event) throws TwitterException, IOException {
-        int i=0;
+        tweets.getChildren().clear();
         for (Status status : actualTimeLine) {
             boolean flag = false;
             for (HashtagEntity hashtag : status.getHashtagEntities()) {
-                //System.out.println(hashtag.getText().contains((CharSequence) textFilter));
+                //System.out.println(hashtag.getText().contains((CharSequence) tesxtFilter));
                 if(hashtag.getText().contains((CharSequence) textFilter.getText())){
                     flag=true;
                     break;
                 }
             }
-            if(!flag){
-                tweets.getChildren().remove(i);
-                i-=1;
+            if(flag){
+                tweetTemplate(status, tweets);
             }
-            i+=1;
         }
-        setTimelineInUi(actualTimeLine);
         
     }
 
