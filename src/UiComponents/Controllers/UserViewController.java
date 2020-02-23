@@ -498,6 +498,7 @@ public class UserViewController implements Initializable, Notification {
 
     @FXML   
     private void applyFilter(ActionEvent event) throws TwitterException, IOException {
+        System.out.println("Aplicando filtro");
         tweets.getChildren().clear();
         for (Status status : actualTimeLine) {
             boolean flag = false;
@@ -509,9 +510,14 @@ public class UserViewController implements Initializable, Notification {
                 }
             }
             if(flag){
-                tweetTemplate(status, tweets);
+                  tweets.getChildren().add(tweetTemplate(status,tweets));
+            
             }
-        }
+            if(tweets.getChildren().size()>=5){
+                break;
+            }
+        }textFilter.setText("");
+        System.out.println("Filtro aplicado");
         
     }
 
