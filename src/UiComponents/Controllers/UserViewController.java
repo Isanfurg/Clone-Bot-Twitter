@@ -12,9 +12,11 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
@@ -43,7 +45,9 @@ import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
+import twitter4j.HashtagEntity;
 import twitter4j.MediaEntity;
+import twitter4j.PagableResponseList;
 import twitter4j.ResponseList;
 import twitter4j.Status;
 import twitter4j.TwitterException;
@@ -67,8 +71,9 @@ public class UserViewController implements Initializable, Notification {
     @FXML private StackPane rootPane;
     @FXML private AnchorPane rootAnchorPane;
     @FXML private ScrollPane scrolltweets;
-    
     ResponseList<Status> actualTimeLine;
+    @FXML
+    private TextField textFilter;
     
    
     /**
@@ -488,6 +493,28 @@ public class UserViewController implements Initializable, Notification {
         fadeOut.setFromValue(from);
         fadeOut.setToValue(to);
         fadeOut.play();
+        
+    }
+
+    @FXML   
+    private void applyFilter(ActionEvent event) throws TwitterException, IOException {
+        int i=0;
+        for (Status status : actualTimeLine) {
+            boolean flag = false;
+            for (HashtagEntity hashtag : status.getHashtagEntities()) {
+                //System.out.println(hashtag.getText().contains((CharSequence) textFilter));
+                if(hashtag.getText().contains((CharSequence) textFilter.getText())){
+                    flag=true;
+                    break;
+                }
+            }
+            if(!flag){
+                tweets.getChildren().remove(i);
+                i-=1;
+            }
+            i+=1;
+        }
+        setTimelineInUi(actualTimeLine);
         
     }
 
