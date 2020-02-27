@@ -2,7 +2,12 @@ package BotComponents;
 
 import UiComponents.Interfaces.Notification;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.Timer;
@@ -37,6 +42,7 @@ public class BOT implements Notification{
     private RequestToken requestToken ;
     private AccessToken accessToken;
     private boolean access ;
+    private ArrayList<Long> answeredMessages = new ArrayList<Long>();
     
     private BOT() throws TwitterException{
         setPin();
@@ -343,19 +349,32 @@ public class BOT implements Notification{
         TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
-                try {
+                try {        
+                    getAnsweredMessages();
                     System.out.println("Updating...");
                     DirectMessageList tt = twitterBot.getDirectMessages(50);
                     for (DirectMessage directMessage : tt) {
-                        if(chatsData != null){
-                            if (!chatsData.contains(directMessage)){
-                                hashtagReplyMessage(directMessage);
-                                reportSpamMensajes(directMessage);
-                                chatsData.add(directMessage);
+                        if(!twitterBot.showUser(directMessage.getSenderId()).getScreenName().equals(twitterBot.getScreenName())){
+                            if(!answeredMessages.contains((Long)directMessage.getId())){
+                                System.out.println("Message from: "+twitterBot.showUser(directMessage.getSenderId()).getScreenName());
+                                System.out.println(directMessage.getText());
+                                System.out.println("id: "+directMessage.getId());
+                                answeredMessages.add((Long)directMessage.getId());
                             }
+                            
+                            
+                            
                         }
-                        else chatsData = twitterBot.getDirectMessages(50);
                     }
+                    /*getAnsweredMessages();
+                    System.out.println("Answered messages: ");
+                    for (Long answeredMessage : answeredMessages) {
+                        System.out.println(answeredMessage);
+                    }*/
+                    
+                    saveAnsweredMessages();
+
+                    
                     //hashtagReply(tt);
 //                    chatsData.forEach((directMessage) -> {
 //                        System.out.println(directMessage.toString());
@@ -363,8 +382,6 @@ public class BOT implements Notification{
 //                    
                 } catch (TwitterException ex) {
                     System.out.println("No hay acceso por el momento...");
-                } catch (FileNotFoundException ex) {
-                    Logger.getLogger(BOT.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
             
@@ -374,6 +391,29 @@ public class BOT implements Notification{
         System.out.println("Stream of messages started");
          
     }
+    
+    private void saveAnsweredMessages(){
+        try {
+            FileOutputStream fos = new FileOutputStream("answeredMessages.txt", false);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(answeredMessages);
+            oos.close();
+            fos.close();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    
+    private void getAnsweredMessages(){
+        try {
+            FileInputStream fis = new FileInputStream("answeredMessages.txt");
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            answeredMessages = (ArrayList) ois.readObject();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    
     public long getMyUserID(){
         try {
 
