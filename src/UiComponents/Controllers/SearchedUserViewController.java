@@ -61,6 +61,10 @@ public class SearchedUserViewController implements Initializable {
     private JFXDialog thisContainer;
     ResponseList<Status> timeline; 
     @FXML private ScrollPane scrolltweets;
+    @FXML
+    private Button blockedButton;
+    @FXML
+    private Button followButton;
     /**
      * Initializes the controller class.
      */
@@ -80,7 +84,8 @@ public class SearchedUserViewController implements Initializable {
     }
 
     @FXML
-    private void FollowUser(ActionEvent event) {
+    private void FollowUser(ActionEvent event) throws TwitterException {
+        BOT.getInstance().followUser(this.id);
     }
 
     @FXML
@@ -298,6 +303,7 @@ public class SearchedUserViewController implements Initializable {
             System.out.println("Imagen no disponible");
         }
         this.id = thisUser.getId();
+        BOT.getInstance().isPendingTo(id);
         if(!thisUser.isProtected()){
             
             if(timeline!=null){

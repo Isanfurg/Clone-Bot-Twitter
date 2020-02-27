@@ -374,6 +374,17 @@ public class BOT implements Notification{
         System.out.println("Stream of messages started");
          
     }
+    public boolean isPendingTo(long user1) throws TwitterException{
+        try{
+            BOT.getInstance().twitterBot.createFriendship(user1);   
+        }catch(TwitterException ex){
+            if(ex.getErrorCode() ==160){
+                System.out.println("Solicitud pendiente");
+                return true;
+            }
+        }BOT.getInstance().unfollowUser(user1);
+        return false;
+    }
     public long getMyUserID(){
         try {
 
