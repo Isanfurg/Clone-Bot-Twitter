@@ -23,6 +23,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
@@ -47,6 +48,10 @@ public class LoginViewController implements Initializable,UiComponents.Interface
     private JFXSpinner loadSpinner;
     @FXML
     private Circle rotate;
+    @FXML
+    private Button urlButton;
+    @FXML
+    private Button loginButton;
     
     /**
      * Initializes the controller class.
@@ -63,7 +68,7 @@ public class LoginViewController implements Initializable,UiComponents.Interface
 
     @FXML
     private void copiarUrl(ActionEvent event) throws TwitterException {
-        
+       Platform.runLater(()->{urlButton.setDisable(true); loginButton.setDisable(true);});
        new Thread(this::copyUrlThread).start();
        
 
@@ -71,6 +76,7 @@ public class LoginViewController implements Initializable,UiComponents.Interface
 
     @FXML
     private void login(ActionEvent event) throws IOException{
+        Platform.runLater(()->{urlButton.setDisable(true); loginButton.setDisable(true);});
         new Thread(this::loginThread).start();
         
     }
@@ -98,7 +104,7 @@ public class LoginViewController implements Initializable,UiComponents.Interface
                 });
 
             }else{
-                
+                Platform.runLater(()->{urlButton.setDisable(false); loginButton.setDisable(false);});
             }
         } catch (TwitterException ex) {
             Logger.getLogger(LoginViewController.class.getName()).log(Level.SEVERE, null, ex);
@@ -115,8 +121,9 @@ public class LoginViewController implements Initializable,UiComponents.Interface
             clpbrd.setContents(stringSelection, null);
             Platform.runLater(()->{
                 this.newNotification("Url copiado al portapapeles");
+                urlButton.setDisable(false);
+                loginButton.setDisable(false);
                 loadSpinner.setVisible(false);
-            
             });
             
             
