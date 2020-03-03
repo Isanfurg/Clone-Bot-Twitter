@@ -74,6 +74,7 @@ public class UserViewController implements Initializable, Notification {
     ResponseList<Status> actualTimeLine;
     @FXML
     private TextField textFilter;
+    private boolean isHome = false;
     
    
     /**
@@ -114,6 +115,7 @@ public class UserViewController implements Initializable, Notification {
             
             
             actualTimeLine = BOT.getInstance().getHomeTimeLine();
+            isHome = true;
             
             
             setTimelineInUi(actualTimeLine);
@@ -134,16 +136,12 @@ public class UserViewController implements Initializable, Notification {
             }
         });
         
-        
         } catch (TwitterException ex) {
             
         } catch (IOException ex) {
             Logger.getLogger(UserViewController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-
-    
     
     //Set the first 4 status in UI and then delete them.
     
@@ -240,6 +238,7 @@ public class UserViewController implements Initializable, Notification {
     private void view_profile(ActionEvent event) throws TwitterException {
         tweets.getChildren().clear();
         actualTimeLine = BOT.getInstance().getTimeLine();
+        isHome = false;
         new Thread(()->{
             //fadeContentPane(1, 0, 2000);
             
@@ -269,6 +268,7 @@ public class UserViewController implements Initializable, Notification {
     private void view_home(ActionEvent event) throws TwitterException {
         tweets.getChildren().clear();
         actualTimeLine = BOT.getInstance().getHomeTimeLine();
+        isHome = true;
         new Thread(()->{
             Platform.runLater(()->{                
                 try {
@@ -498,28 +498,41 @@ public class UserViewController implements Initializable, Notification {
 
     @FXML   
     private void applyFilter(ActionEvent event) throws TwitterException, IOException {
-        if(textFilter.getText().charAt(0) == '#'){
-            textFilter.setText(textFilter.getText().substring(1));
-        }
         tweets.getChildren().clear();
-        for (Status status : actualTimeLine) {
-            boolean flag = false;
-            for (HashtagEntity hashtag : status.getHashtagEntities()) {
-                //System.out.println(hashtag.getText().contains((CharSequence) tesxtFilter));
-                if(hashtag.getText().contains((CharSequence) textFilter.getText())){
-                    flag=true;
+        
+        if(isHome){ 
+            actualTimeLine = BOT.getInstance().getHomeTimeLine();
+            isHome = true;
+        }
+        else{
+            actualTimeLine = BOT.getInstance().getTimeLine();
+            isHome = false;
+        
+        }
+        
+        System.out.println("Timeline initial size: "+actualTimeLine.size());
+
+        int i = 0;
+        while (i < actualTimeLine.size()) {
+            boolean flag = true;
+            for (HashtagEntity hashtag : actualTimeLine.get(i).getHashtagEntities()) {
+                System.out.println("Hashtag: "+hashtag.getText());
+                if(("#"+hashtag.getText().toLowerCase()).equals(textFilter.getText().toLowerCase())){
+                    System.out.println("Tweet: "+actualTimeLine.get(i).getText());
+                    flag = false;
                     break;
                 }
+                
+                
             }
-            if(flag){
-                  tweets.getChildren().add(tweetTemplate(status,tweets));
             
-            }
-            if(tweets.getChildren().size()>=5){
-                break;
-            }
+            if(flag) actualTimeLine.remove(actualTimeLine.get(i));
+            else i++;
         }
+        
         textFilter.setText("");
+        System.out.println("Filtered tweets size: "+actualTimeLine.size());
+        setTimelineInUi(actualTimeLine);
         System.out.println("Filtro aplicado");
         
     }
