@@ -35,6 +35,7 @@ import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import twitter4j.MediaEntity;
+import twitter4j.Relationship;
 import twitter4j.ResponseList;
 import twitter4j.Status;
 import twitter4j.TwitterException;
@@ -65,6 +66,7 @@ public class SearchedUserViewController implements Initializable {
     private Button blockedButton;
     @FXML
     private Button followButton;
+    int flagFollowButton= 1;
     /**
      * Initializes the controller class.
      */
@@ -85,7 +87,19 @@ public class SearchedUserViewController implements Initializable {
 
     @FXML
     private void FollowUser(ActionEvent event) throws TwitterException {
-        BOT.getInstance().followUser(this.id);
+        if(flagFollowButton==1){
+            BOT.getInstance().followUser(id);
+            if(BOT.getInstance().showUser(id).isProtected()){
+                followButton.setText("Solicitud pendiente");
+            }else{
+                followButton.setText("Dejar de seguir");
+            }
+            flagFollowButton=2;
+        }else if(flagFollowButton==2){
+            BOT.getInstance().unfollowUser(id);
+            flagFollowButton=1;
+            followButton.setText("Seguir");
+        }
     }
 
     @FXML
@@ -302,15 +316,25 @@ public class SearchedUserViewController implements Initializable {
         } catch (Exception e) {
             System.out.println("Imagen no disponible");
         }
+        
         this.id = thisUser.getId();
-        BOT.getInstance().isPendingTo(id);
-        if(!thisUser.isProtected()){
-            
-            if(timeline!=null){
-                setTimeLine();
+        Relationship thisFriendship = BOT.getInstance().getFriendship(BOT.getInstance().getMyUserID(), id);
+        if(thisUser.isProtected()){
+            if(BOT.getInstance().isPendingTo(id)){
+                flagFollowButton=2;
+                followButton.setText("Cancelar Solicitud");
+            }else if(thisFriendship.isSourceFollowingTarget()){
+                flagFollowButton=2;
+                followButton.setText("Dejar de seguir");
+                if(timeline!=null){
+                    setTimeLine();
+                }
             }
+            
         }else{
-            System.out.println("Usuario privado");
+            if(timeline!=null){
+                    setTimeLine();
+                }
         }
     }
     

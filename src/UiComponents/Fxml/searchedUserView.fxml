@@ -26,12 +26,12 @@
       </HBox>
       <HBox layoutX="365.0" layoutY="111.0" spacing="5.0">
          <children>
-            <Button fx:id="blockedButton" minHeight="28.0" minWidth="108.0" mnemonicParsing="false" onAction="#blockThisUser" text="Bloquear">
+            <Button fx:id="blockedButton" maxHeight="28.0" maxWidth="108.0" minHeight="28.0" minWidth="108.0" mnemonicParsing="false" onAction="#blockThisUser" prefHeight="28.0" prefWidth="108.0" text="Bloquear" wrapText="true">
                <graphic>
                   <FontAwesomeIconView glyphName="BAN" />
                </graphic>
             </Button>
-            <Button fx:id="followButton" minHeight="28.0" minWidth="108.0" mnemonicParsing="false" onAction="#FollowUser" text="Seguir">
+            <Button fx:id="followButton" maxHeight="28.0" maxWidth="108.0" minHeight="28.0" minWidth="108.0" mnemonicParsing="false" onAction="#FollowUser" prefHeight="28.0" prefWidth="108.0" text="Seguir" textAlignment="JUSTIFY" wrapText="true">
                <graphic>
                   <FontAwesomeIconView glyphName="CHECK" />
                </graphic>
