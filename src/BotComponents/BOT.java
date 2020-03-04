@@ -2,7 +2,12 @@ package BotComponents;
 
 import UiComponents.Interfaces.Notification;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.Timer;
@@ -38,14 +43,11 @@ public class BOT implements Notification{
     private RequestToken requestToken ;
     private AccessToken accessToken;
     private boolean access ;
+    private ArrayList<Long> answeredMessages = new ArrayList<Long>();
     
     private BOT() throws TwitterException{
         setPin();
 
-    }
-
-    public ResponseList<DirectMessage> getChatsData() {
-        return chatsData;
     }
     
     private void setPin() throws TwitterException{ 
@@ -64,9 +66,14 @@ public class BOT implements Notification{
         return requestToken.getAuthorizationURL();
     }
     
+    public ResponseList<DirectMessage> getChatsData() throws TwitterException{
+        return chatsData;
+    }
+    
     public void tryPin(String pin) throws TwitterException{
     try{
         accessToken = twitterBot.getOAuthAccessToken(this.requestToken, pin);
+        saveAnsweredMessages();
         streamMessages();
         hashtagReplyTweet();
         this.access = true;
@@ -84,6 +91,8 @@ public class BOT implements Notification{
     public boolean isAccess() {
         return access;
     }
+    
+
     
     public Status getStatus(long id) throws TwitterException{
         try{
@@ -156,12 +165,9 @@ public class BOT implements Notification{
     }
     public void sendDirectMenssage(String screenName, String text)throws TwitterException {
         try{    
-            chatsData.add(0,twitterBot.sendDirectMessage(screenName,text));
+            twitterBot.sendDirectMessage(screenName,text);
             System.out.println("Message sended.");
             
-            for (DirectMessage directMessage : chatsData) {
-                System.out.println(directMessage.toString());
-            }
             
         }catch(TwitterException e){
             System.out.println("update error by:"
@@ -342,23 +348,25 @@ public class BOT implements Notification{
         TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
-                try {
+                try {        
                     System.out.println("Updating...");
                     DirectMessageList tt = twitterBot.getDirectMessages(50);
+                    chatsData = tt;
                     for (DirectMessage directMessage : tt) {
-                        if(chatsData != null){
-                            if (!chatsData.contains(directMessage)){
-                                hashtagReplyMessage(directMessage);
+                        if(!twitterBot.showUser(directMessage.getSenderId()).getScreenName().equals(twitterBot.getScreenName())){
+                            if(!answeredMessages.contains((Long)directMessage.getId())){
+                                System.out.println("Message from: "+twitterBot.showUser(directMessage.getSenderId()).getScreenName());
+                                System.out.println(directMessage.getText());
+                                System.out.println("id: "+directMessage.getId());
                                 reportSpamMensajes(directMessage);
-                                chatsData.add(directMessage);
+                                answeredMessages.add((Long)directMessage.getId());
                             }
+                            
+                            
+                            
                         }
-                        else chatsData = twitterBot.getDirectMessages(50);
                     }
-                    //hashtagReply(tt);
-//                    chatsData.forEach((directMessage) -> {
-//                        System.out.println(directMessage.toString());
-//                    });
+
 //                    
                 } catch (TwitterException ex) {
                     System.out.println("No hay acceso por el momento...");
@@ -395,6 +403,18 @@ public class BOT implements Notification{
             return false;
         }
     }
+
+    
+    private void saveAnsweredMessages() throws TwitterException{
+        chatsData = twitterBot.getDirectMessages(50);
+        for (DirectMessage directMessage :chatsData) {
+            if(!twitterBot.showUser(directMessage.getSenderId()).getScreenName().equals(twitterBot.getScreenName())){
+                answeredMessages.add(directMessage.getId());
+            }
+        }
+    }
+    
+      
     public long getMyUserID(){
         try {
 
@@ -526,14 +546,60 @@ public class BOT implements Notification{
         File archivo = new File("stopWords.txt");
         Scanner entrada = new Scanner(archivo);
         int nPalabras = entrada.nextInt();
-        for (int i = 0; i < nPalabras; i++) {
+        boolean isSpam = false;
+        
+        for (int i = 0; i < nPalabras && !isSpam; i++) {
             String palabra = entrada.next();
             for (int j = 0; j < x.length; j++) {
-                if(x[j].equals(palabra)){
-                    sendDirectMenssage("@"+twitterBot.showUser(tt.getSenderId()).getName(),"El mensaje contiene alguna palabra con spam!");
+                if(x[j].toLowerCase().equals(palabra)){
+                    System.out.println("Spam detectado");
+                    sendDirectMenssage("@"+twitterBot.showUser(tt.getSenderId()).getScreenName(),"El mensaje contiene alguna palabra con spam!");
+                    isSpam = true;
+                    break;
                 }
             }
         }
+        
+        if(!isSpam){
+            archivo = new File("saludos.txt");
+            entrada = new Scanner(archivo);
+            nPalabras = entrada.nextInt();
+            boolean isSaludo = false;
+            for (int i = 0; i < nPalabras && !isSaludo; i++) {
+                String palabra = entrada.next();
+                for (int j = 0; j < x.length; j++) {
+                    if(x[j].toLowerCase().equals(palabra)){
+                        System.out.println("Saludo detectado");
+                        sendDirectMenssage("@"+twitterBot.showUser(tt.getSenderId()).getScreenName(),"Saludos");
+                        isSaludo = true;
+                        break;
+                    }
+                }
+            }
+            
+            if(!isSaludo){
+                archivo = new File("insultos.txt");
+                entrada = new Scanner(archivo);
+                nPalabras = entrada.nextInt();
+                boolean isInsulto = false;
+                for (int i = 0; i < nPalabras && !isInsulto; i++) {
+                    String palabra = entrada.next();
+                    for (int j = 0; j < x.length; j++) {
+                        if(x[j].toLowerCase().equals(palabra)){
+                            System.out.println("Insulto detectado: "+x[j]);
+                            sendDirectMenssage("@"+twitterBot.showUser(tt.getSenderId()).getScreenName(),"Que wea te pasa tonto sapo y la conchetumare");
+                            isInsulto = true;
+                            break;
+                        }
+                    }
+                }
+                
+            }
+
+            
+        }
+        
+        entrada.close();
     }
     private void hashtagReply(Status status) throws TwitterException
     {
