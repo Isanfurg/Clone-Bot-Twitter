@@ -476,8 +476,9 @@ public class BOT implements Notification{
             {
                 try
                 {
-                    String[] x = status.getText().split(" ");
-                    String user = us(x);
+                    //String[] x = status.getText().split(" ");
+                    //String user = us(x);
+                    System.out.println("Status: "+status.getText());
                     hashtagReply(status);
                 } catch (TwitterException ex)
                 {
