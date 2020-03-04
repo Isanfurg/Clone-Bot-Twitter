@@ -18,6 +18,7 @@ import javafx.application.Platform;
 import twitter4j.DirectMessage;
 import twitter4j.DirectMessageList;
 import twitter4j.FilterQuery;
+import twitter4j.Relationship;
 import twitter4j.ResponseList;
 import twitter4j.StallWarning;
 import twitter4j.Status;
@@ -105,9 +106,8 @@ public class BOT implements Notification{
     public void followUser(long id)throws TwitterException {
         try{
             twitterBot.createFriendship(id);
-        System.out.println("Sucesfull!");
         }catch(TwitterException e){
-            System.out.println("update error by:"
+            System.out.println("ERROR :"
             +e.getMessage());
         }  
     }
@@ -115,9 +115,8 @@ public class BOT implements Notification{
     public void unfollowUser(long id)throws TwitterException {
         try{
             twitterBot.destroyFriendship(id);
-        System.out.println("Sucesfull!");
         }catch(TwitterException e){
-            System.out.println("update error by:"
+            System.out.println("ERROR:"
             +e.getMessage());
 
         }  
@@ -382,17 +381,27 @@ public class BOT implements Notification{
         System.out.println("Stream of messages started");
          
     }
-
+    public Relationship getFriendship(long from,long target){
+        try{
+            return BOT.getInstance().twitterBot.showFriendship(from, target);
+            
+        }catch(TwitterException ex){
+            return null;
+        }
+    }
+    public void cancelRequest(long user1){
+        try{
+            twitterBot.createFriendship(user1, false);
+        }catch(TwitterException ex){
+            System.out.println("ERROR:"+ ex.getMessage());
+        }
+    }
     public boolean isPendingTo(long user1) throws TwitterException{
         try{
-            BOT.getInstance().twitterBot.createFriendship(user1);   
+            return twitterBot.showUser(user1).isFollowRequestSent();   
         }catch(TwitterException ex){
-            if(ex.getErrorCode() ==160){
-                System.out.println("Solicitud pendiente");
-                return true;
-            }
-        }BOT.getInstance().unfollowUser(user1);
-        return false;
+            return false;
+        }
     }
 
     
