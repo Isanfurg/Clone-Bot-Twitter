@@ -91,12 +91,18 @@ public class SearchedUserViewController implements Initializable {
             BOT.getInstance().followUser(id);
             if(BOT.getInstance().showUser(id).isProtected()){
                 followButton.setText("Solicitud pendiente");
+                followButton.setDisable(true);
             }else{
                 followButton.setText("Dejar de seguir");
             }
             flagFollowButton=2;
         }else if(flagFollowButton==2){
-            BOT.getInstance().unfollowUser(id);
+            if(BOT.getInstance().isPendingTo(id)){
+                BOT.getInstance().cancelRequest(id);
+            }
+            else{
+               BOT.getInstance().unfollowUser(id);
+            }
             flagFollowButton=1;
             followButton.setText("Seguir");
         }
@@ -323,6 +329,7 @@ public class SearchedUserViewController implements Initializable {
             if(BOT.getInstance().isPendingTo(id)){
                 flagFollowButton=2;
                 followButton.setText("Cancelar Solicitud");
+                followButton.setDisable(true);
             }else if(thisFriendship.isSourceFollowingTarget()){
                 flagFollowButton=2;
                 followButton.setText("Dejar de seguir");

@@ -97,7 +97,6 @@ public class BOT implements Notification{
     public void followUser(long id)throws TwitterException {
         try{
             twitterBot.createFriendship(id);
-        System.out.println("Sucesfull!");
         }catch(TwitterException e){
             System.out.println("ERROR :"
             +e.getMessage());
@@ -382,16 +381,19 @@ public class BOT implements Notification{
             return null;
         }
     }
+    public void cancelRequest(long user1){
+        try{
+            twitterBot.createFriendship(user1, false);
+        }catch(TwitterException ex){
+            System.out.println("ERROR:"+ ex.getMessage());
+        }
+    }
     public boolean isPendingTo(long user1) throws TwitterException{
         try{
-            BOT.getInstance().twitterBot.createFriendship(user1);   
+            return twitterBot.showUser(user1).isFollowRequestSent();   
         }catch(TwitterException ex){
-            if(ex.getErrorCode() ==160){
-                System.out.println("Solicitud pendiente");
-                return true;
-            }
-        }BOT.getInstance().unfollowUser(user1);
-        return false;
+            return false;
+        }
     }
     public long getMyUserID(){
         try {
