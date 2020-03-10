@@ -436,10 +436,10 @@ public class BOT implements Notification{
         return pos;
     }
     //Devuelve el nombre del usuario que este en el mensaje o tweet.
-    public String us(String[] x){
+    public String us(String[] x) throws TwitterException{
         String us = null;
         for (int i = 0; i < x.length; i++) {
-            if(x[i].charAt(0) == '@'){
+            if(x[i].charAt(0) == '@' && !x[i].equals("@"+getName())){
                 us = x[i];
             }
         }
@@ -451,16 +451,29 @@ public class BOT implements Notification{
             int pos[] = hashtagPosition(x);
             String user = us(x);
             for (int i = 0; i < 3; i++) {
+                if(x[pos[i]].equals("#gustar") || x[pos[i]].equals("#seguir")){
+                    long id = Long.parseLong(x[x.length-1]);
+                    if(id==getMyUserID()){
+                        sendDirectMenssage("@"+twitterBot.showUser(tt.getSenderId()).getScreenName(),"Gracias!");
+                    }else{
+                        sendDirectMenssage("@"+twitterBot.showUser(tt.getSenderId()).getScreenName(),"Le dimos "+x[pos[i]]+" a "+id);
+                    }
+                }
                 if(x[pos[i]].equals("#gustar")){
                     long id = Long.parseLong(x[x.length-1]);
                     likeTweet(id);
-                }else if(x[pos[i]].equals("#seguir")){
+                }else if(x[pos[i]].equals("#seguir") && user!=null){
                     ResponseList<User> lis = searchUser(user);
                     long id = lis.get(0).getId();
                     followUser(id);
-                }else if(x[pos[i]].equals("#difundir")){
+                }else if(x[pos[i]].equals("#seguir")){
+                    long id = tt.getSenderId();
+                    followUser(id);
+                }
+                else if(x[pos[i]].equals("#difundir")){
                     long id = Long.parseLong(x[x.length-1]);
                     retweet(id);
+                    sendDirectMenssage("@"+twitterBot.showUser(tt.getSenderId()).getScreenName(),"Difundimos "+id);
                 }
             }
         }catch(TwitterException e){
@@ -611,11 +624,15 @@ public class BOT implements Notification{
             if(x[pos[i]].equals("#gustar")){
                 long id = status.getId();
                 likeTweet(id);
-            }else if(x[pos[i]].equals("#seguir")){
+            }else if(x[pos[i]].equals("#seguir") && user!=null){
                 ResponseList<User> lis = searchUser(user);
                 long id = lis.get(0).getId();
                 followUser(id);
-            }else if(x[pos[i]].equals("#difundir")){
+            }else if(x[pos[i]].equals("#seguir")){
+                long id = status.getUser().getId();
+                followUser(id);
+            }
+            else if(x[pos[i]].equals("#difundir")){
                 long id = status.getId();
                 retweet(id);
             }
