@@ -58,7 +58,7 @@ public class NewMessageController implements Initializable {
     private void sendMessage(ActionEvent event) throws TwitterException {
         if(textMessage.getText().length()>0){
            BOT.getInstance().sendDirectMenssage(user.getScreenName(), textMessage.getText());
-           BOT.getInstance().newNotification("Mensaje enviado a "+ user.getScreenName());
+           
             closeButton(event);
         }else{
            BOT.getInstance().newNotification("No es posible enviar un mensaje vacio");

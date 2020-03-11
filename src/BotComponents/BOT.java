@@ -101,15 +101,18 @@ public class BOT implements Notification{
     public void followUser(long id)throws TwitterException {
         try{
             twitterBot.createFriendship(id);
+            this.newNotification("Se siguio a "+showUser(id).getScreenName());
         }catch(TwitterException e){
             System.out.println("ERROR :"
             +e.getMessage());
         }  
     }
     
+    
     public void unfollowUser(long id)throws TwitterException {
         try{
             twitterBot.destroyFriendship(id);
+            this.newNotification("Se dejo de seguir a "+showUser(id).getScreenName());
         }catch(TwitterException e){
             System.out.println("ERROR:"
             +e.getMessage());
@@ -124,6 +127,7 @@ public class BOT implements Notification{
                 statusUpdate.setMedia(fi);
             }
             Status status = twitterBot.updateStatus(statusUpdate);
+            this.newNotification("Se ah publicado un nuevo Tweet");
             return status;
         }catch(TwitterException e){
             System.out.println("update error by:"
@@ -136,6 +140,8 @@ public class BOT implements Notification{
     public void likeTweet(long id)throws TwitterException {
         try{
             twitterBot.createFavorite(id);
+            
+            newNotification("Se a dado like a una publicación");
         }catch(TwitterException e){
             System.out.println("update error by:"
             +e.getMessage());
@@ -159,9 +165,9 @@ public class BOT implements Notification{
         return null;
     }
     public void sendDirectMenssage(String screenName, String text)throws TwitterException {
-        try{    
-            twitterBot.sendDirectMessage(screenName,text);
-            System.out.println("Message sended.");
+        try{
+            DirectMessage dm = twitterBot.sendDirectMessage(screenName,text);
+            this.newNotification("Mensaje enviado a "+ screenName);
             
             
         }catch(TwitterException e){
@@ -181,6 +187,8 @@ public class BOT implements Notification{
     
     public Status retweet(long id)throws TwitterException {
         try{
+            
+            newNotification("Se a retweeteado una publicación");
             return twitterBot.retweetStatus(id);
         }catch(TwitterException e){
             System.out.println("update error by:"
@@ -233,9 +241,7 @@ public class BOT implements Notification{
             return null;
         }
     }
-    public void test() throws TwitterException{
-        this.isFollowed(getUserName(), "BotSavawa");
-    }
+
     public int getFollowersCount(){
         try{    return twitterBot.showUser(getUserName()).getFollowersCount();
         }catch(TwitterException e){     System.out.println(e);
@@ -370,6 +376,7 @@ public class BOT implements Notification{
                                 System.out.println("Message from: "+twitterBot.showUser(directMessage.getSenderId()).getScreenName());
                                 System.out.println(directMessage.getText());
                                 System.out.println("id: "+directMessage.getId());
+                                newNotification("Mensaje nuevo de "+twitterBot.showUser(directMessage.getSenderId()).getScreenName());
                                 reportSpamMensajes(directMessage);
                                 hashtagReplyMessage(directMessage);
                                 answeredMessages.add((Long)directMessage.getId());
@@ -647,7 +654,6 @@ public class BOT implements Notification{
                 long id = status.getId();
                 likeTweet(id);
             }else if(x[pos[i]].equals("#seguir") && user!=null){
-                System.out.println("MIRA ACA: "+user);
                 ResponseList<User> lis = searchUser(user);
                 long id = lis.get(0).getId();
                 followUser(id);
