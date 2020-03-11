@@ -151,6 +151,7 @@ public class BOT implements Notification{
     public void destroylikeTweet(long id)throws TwitterException {
         try{
             twitterBot.destroyFavorite(id);
+            newNotification("Se elimino el like de una publicación");
         }catch(TwitterException e){
             System.out.println("update error by:"
             +e.getMessage());
@@ -168,8 +169,7 @@ public class BOT implements Notification{
         try{
             DirectMessage dm = twitterBot.sendDirectMessage(screenName,text);
             this.newNotification("Mensaje enviado a "+ screenName);
-            
-            
+            chatsData.add(0, dm);
         }catch(TwitterException e){
             System.out.println("update error by:"
             +e.getMessage());

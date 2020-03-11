@@ -24,7 +24,6 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.effect.BoxBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -140,9 +139,9 @@ public class SearchedUserViewController implements Initializable {
         VBox VBox = new VBox();
         VBox.setStyle("fx-padding: 10 10 10 10");
         VBox.setSpacing(5);
-        VBox.setPrefWidth(600);
-        VBox.setMaxWidth(600);
-        VBox.setMinWidth(600);
+        VBox.setPrefWidth(500);
+        VBox.setMaxWidth(500);
+        VBox.setMinWidth(500);
         //linea 1 del hbox
         
         if(status.isRetweet()){
@@ -161,9 +160,9 @@ public class SearchedUserViewController implements Initializable {
         HBox hbox = new HBox();
         hbox.setSpacing(5);
         VBox.getChildren().add(hbox);
-        hbox.setPrefWidth(600);
-        hbox.setMaxWidth(600);
-        hbox.setMinWidth(600);
+        hbox.setPrefWidth(500);
+        hbox.setMaxWidth(500);
+        hbox.setMinWidth(500);
         //imagen del retweet
         Circle circle = new Circle(40);
         circle.setFill(new ImagePattern(new Image(status.getUser().get400x400ProfileImageURL())));

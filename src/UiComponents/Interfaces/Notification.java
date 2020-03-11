@@ -5,6 +5,7 @@
  */
 package UiComponents.Interfaces;
 
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
@@ -14,13 +15,18 @@ import org.controlsfx.control.Notifications;
  * @author isanfurg
  */
 public interface Notification {
-    default void newNotification(String msg){
+    default void newNotification(String msg) {
                 Notifications noti = Notifications.create()
                 .title("Savawa Bot")
                 .text(msg)
                 //.graphic(new ImageView("/Img/noti.png"))
                 .hideAfter(Duration.seconds(5))
                 .position(Pos.TOP_RIGHT);
-        noti.show();
+        Thread t = new Thread(() -> {
+            noti.show();
+            
+        });
+        Platform.runLater(t);
+       
     }
 }

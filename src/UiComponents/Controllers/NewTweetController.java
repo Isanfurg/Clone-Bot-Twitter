@@ -114,14 +114,15 @@ public class NewTweetController implements Initializable, UiComponents.Interface
                     TweetTemplateController tweetTemplateController = loader.getController();
                     tweetTemplateController.setItems(status, 0, timeline, tweetTemplate);
 
-
                     Platform.runLater(()->{
                         timeline.getChildren().add(0, tweetTemplate);
                         close(event);
                     });
                 }else{
                     Platform.runLater(()->{ 
-                        this.newNotification("Tweet no cumple el formato.");
+                        
+                            this.newNotification("Tweet no cumple el formato.");
+                      
                     
                     });
                 }
