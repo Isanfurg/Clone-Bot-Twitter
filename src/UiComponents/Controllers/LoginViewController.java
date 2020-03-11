@@ -6,7 +6,6 @@
 package UiComponents.Controllers;
 
 import BotComponents.BOT;
-import UiComponents.Interfaces.Notification;
 import com.jfoenix.controls.JFXSpinner;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;

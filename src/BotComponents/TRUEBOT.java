@@ -1,6 +1,10 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package BotComponents;
 
-import UiComponents.Interfaces.Notification;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -10,7 +14,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.application.Platform;
 import twitter4j.DirectMessage;
 import twitter4j.DirectMessageList;
 import twitter4j.Relationship;
@@ -26,72 +29,49 @@ import twitter4j.TwitterFactory;
 import twitter4j.TwitterStream;
 import twitter4j.TwitterStreamFactory;
 import twitter4j.User;
-import twitter4j.auth.AccessToken;
-import twitter4j.auth.RequestToken;
 import twitter4j.conf.ConfigurationBuilder;
-public class BOT implements Notification{
-    private static BOT instance = null;
+
+/**
+ *
+ * @author isanfurg
+ */
+public class TRUEBOT {
+    private static TRUEBOT instance = null;
     private final static String CONSUMER_KEY = "SrIUForUjeiOw76LBGnsbnq86";
     private final static String CONSUMER_KEY_SECRET = "2JXMuQ1mM2eLl2EdWjy0e6fjsI1iVCycK72PCHs5YojGBqvY2Q";
+    private final static String ACCESS_TOKEN = "1159865543291211776-3s7Lh87Rrmm7S21dPteNlTwSr8ZDpc";
+    private final static String ACCESS_TOKEN_SECRET = "8P5oXRNWR45CuN9zXZ21cb3wLF6ReAWs329D43UGghcE6";
+    private Twitter twitter;
     private ResponseList<DirectMessage> chatsData = null;
-    private Twitter twitterBot;
-    private RequestToken requestToken ;
-    private AccessToken accessToken;
-    private boolean access ;
     private ArrayList<Long> answeredMessages = new ArrayList<Long>();
+
     
-    private BOT() throws TwitterException{
-        setPin();
-    }
     
-    private void setPin() throws TwitterException{ 
-        this.twitterBot = new TwitterFactory().getInstance();
-        this.twitterBot.setOAuthConsumer(CONSUMER_KEY, CONSUMER_KEY_SECRET);
-        this.requestToken = twitterBot.getOAuthRequestToken();
-        this.access = false;
+    private TRUEBOT() throws TwitterException{
+       
+        ConfigurationBuilder  cb  = new ConfigurationBuilder();
+            cb.setOAuthConsumerKey(CONSUMER_KEY)
+            .setOAuthConsumerSecret(CONSUMER_KEY_SECRET)
+            .setOAuthAccessToken(ACCESS_TOKEN)
+            .setOAuthAccessTokenSecret(ACCESS_TOKEN_SECRET);
+        this.twitter = new TwitterFactory(cb.build()).getInstance();
+
     }
-    public static BOT getInstance() throws TwitterException{
-        if(instance == null){
-            instance = new BOT();   
-        }return instance;
-    }
-    
-    public String generateUrl() throws TwitterException{
-        return requestToken.getAuthorizationURL();
-    }
-    
-    public ResponseList<DirectMessage> getChatsData() throws TwitterException{
-        return chatsData;
-    }
-    
-    public void tryPin(String pin) throws TwitterException{
-    try{
-        accessToken = twitterBot.getOAuthAccessToken(this.requestToken, pin);
-        saveAnsweredMessages();
+    public void run() throws TwitterException{
         streamMessages();
         hashtagReplyTweet();
-        this.access = true;
-        TRUEBOT.getInstance();
-    } catch (TwitterException e) {
-        Platform.runLater(()->{this.newNotification("Error al procesar el PIN.");});
-        
-        System.out.println("Failed to get access token, caused by: "
-        + e.getMessage());
-        requestToken = null; 
-        System.out.println("Retry input PIN");
+    }    
+    public static TRUEBOT getInstance() throws TwitterException{
+        if(instance == null){
+            instance = new TRUEBOT();   
+        }return instance;
     }
-    if(requestToken == null) setPin();
+    public Twitter instance(){
+        return twitter;
     }
-
-    public boolean isAccess() {
-        return access;
-    }
-    
-
-    
     public Status getStatus(long id) throws TwitterException{
         try{
-            return twitterBot.showStatus(id);
+            return twitter.showStatus(id);
         }catch(TwitterException e){
             
             return null;
@@ -100,7 +80,7 @@ public class BOT implements Notification{
     
     public void followUser(long id)throws TwitterException {
         try{
-            twitterBot.createFriendship(id);
+            twitter.createFriendship(id);
         }catch(TwitterException e){
             System.out.println("ERROR :"
             +e.getMessage());
@@ -109,7 +89,7 @@ public class BOT implements Notification{
     
     public void unfollowUser(long id)throws TwitterException {
         try{
-            twitterBot.destroyFriendship(id);
+            twitter.destroyFriendship(id);
         }catch(TwitterException e){
             System.out.println("ERROR:"
             +e.getMessage());
@@ -123,7 +103,7 @@ public class BOT implements Notification{
             if(fi!=null){
                 statusUpdate.setMedia(fi);
             }
-            Status status = twitterBot.updateStatus(statusUpdate);
+            Status status = twitter.updateStatus(statusUpdate);
             return status;
         }catch(TwitterException e){
             System.out.println("update error by:"
@@ -135,7 +115,7 @@ public class BOT implements Notification{
     
     public void likeTweet(long id)throws TwitterException {
         try{
-            twitterBot.createFavorite(id);
+            twitter.createFavorite(id);
         }catch(TwitterException e){
             System.out.println("update error by:"
             +e.getMessage());
@@ -144,7 +124,7 @@ public class BOT implements Notification{
     
     public void destroylikeTweet(long id)throws TwitterException {
         try{
-            twitterBot.destroyFavorite(id);
+            twitter.destroyFavorite(id);
         }catch(TwitterException e){
             System.out.println("update error by:"
             +e.getMessage());
@@ -152,7 +132,7 @@ public class BOT implements Notification{
     }
     public User showUser(long id){
         try{
-            return twitterBot.showUser(id);
+            return twitter.showUser(id);
         }catch(TwitterException e){
             System.out.println(e.getMessage());
         }
@@ -160,7 +140,7 @@ public class BOT implements Notification{
     }
     public void sendDirectMenssage(String screenName, String text)throws TwitterException {
         try{    
-            twitterBot.sendDirectMessage(screenName,text);
+            twitter.sendDirectMessage(screenName,text);
             System.out.println("Message sended.");
             
             
@@ -172,7 +152,7 @@ public class BOT implements Notification{
     
     public void destroyDirectMenssage(long id)throws TwitterException {
         try{
-            twitterBot.destroyDirectMessage(id);
+            twitter.destroyDirectMessage(id);
         }catch(TwitterException e){
             System.out.println("update error by:"
             +e.getMessage());
@@ -181,7 +161,7 @@ public class BOT implements Notification{
     
     public Status retweet(long id)throws TwitterException {
         try{
-            return twitterBot.retweetStatus(id);
+            return twitter.retweetStatus(id);
         }catch(TwitterException e){
             System.out.println("update error by:"
             +e.getMessage());
@@ -192,7 +172,7 @@ public class BOT implements Notification{
     public Status unRetweet(long id) throws TwitterException{
         
         try {
-            return twitterBot.unRetweetStatus(id);
+            return twitter.unRetweetStatus(id);
         } catch (TwitterException e) {
             System.out.println("Unretweet error by: "+e.getMessage());
             return null;
@@ -201,7 +181,7 @@ public class BOT implements Notification{
     }
     public void destroyTweet(long id)throws TwitterException {
         try{
-            twitterBot.destroyStatus(id);
+            twitter.destroyStatus(id);
         }catch(TwitterException e){
             System.out.println("update error by:"
             +e.getMessage());
@@ -210,7 +190,7 @@ public class BOT implements Notification{
     
     public String getUserName() throws TwitterException{
         try{
-            return twitterBot.getScreenName();
+            return twitter.getScreenName();
         }catch(TwitterException e){
             System.out.println(e);
             return null;
@@ -218,7 +198,7 @@ public class BOT implements Notification{
     }
     public String getName() throws TwitterException{
         try{
-            return twitterBot.showUser(getUserName()).getName();
+            return twitter.showUser(getUserName()).getName();
         }catch(TwitterException e){
             System.out.println(e);
             return null;
@@ -227,7 +207,7 @@ public class BOT implements Notification{
     
     public String getName(String userName) throws TwitterException{
         try{
-            return twitterBot.showUser(userName).getName();
+            return twitter.showUser(userName).getName();
         }catch(TwitterException e){
             System.out.println(e);
             return null;
@@ -237,56 +217,56 @@ public class BOT implements Notification{
         this.isFollowed(getUserName(), "BotSavawa");
     }
     public int getFollowersCount(){
-        try{    return twitterBot.showUser(getUserName()).getFollowersCount();
+        try{    return twitter.showUser(getUserName()).getFollowersCount();
         }catch(TwitterException e){     System.out.println(e);
         } return -1;
     }
     public int getFollowersCount(String userName){
-        try{    return twitterBot.showUser(userName).getFollowersCount();
+        try{    return twitter.showUser(userName).getFollowersCount();
         }catch(TwitterException e){     System.out.println(e);
         } return -1;
     }
     public int getFriendsCount(){
-        try{    return twitterBot.showUser(getUserName()).getFriendsCount();
+        try{    return twitter.showUser(getUserName()).getFriendsCount();
         }catch(TwitterException e){     System.out.println(e);
         } return -1;
     }
     public int getFriendsCount(String userName){
-        try{    return twitterBot.showUser(userName).getFriendsCount();
+        try{    return twitter.showUser(userName).getFriendsCount();
         }catch(TwitterException e){     System.out.println(e);
         } return -1;
     }
     public String getProfileBannerURL(){
-        try{    return twitterBot.showUser(getUserName()).getProfileBanner600x200URL();
+        try{    return twitter.showUser(getUserName()).getProfileBanner600x200URL();
         }catch(TwitterException e){     System.out.println(e);
         } return null;
     }
     
     public String getProfileBannerURL(String userName){
-        try{    return twitterBot.showUser(userName).getProfileBanner600x200URL();
+        try{    return twitter.showUser(userName).getProfileBanner600x200URL();
         }catch(TwitterException e){     System.out.println(e);
         } return null;
     }
     public String getProfileImageURL(){
-         try{    return twitterBot.showUser(getUserName()).get400x400ProfileImageURL();
+         try{    return twitter.showUser(getUserName()).get400x400ProfileImageURL();
         }catch(TwitterException e){     System.out.println(e);
         } return null;
     }
     public String getProfileImageURL(String userName){
-         try{    return twitterBot.showUser(userName).get400x400ProfileImageURL();
+         try{    return twitter.showUser(userName).get400x400ProfileImageURL();
         }catch(TwitterException e){     System.out.println(e);
         } return null;
     }
     public ResponseList<User> searchUser(String user){
         try{
-            return twitterBot.searchUsers(user, 0);
+            return twitter.searchUsers(user, 0);
         }catch(TwitterException e){
             return null;
         }
     }
     public boolean isFollowed(String isFollowing,String thisUser){
         try{
-            return twitterBot.showFriendship(isFollowing, thisUser).isSourceFollowingTarget();
+            return twitter.showFriendship(isFollowing, thisUser).isSourceFollowingTarget();
                 
 
         }catch(TwitterException e){
@@ -294,26 +274,9 @@ public class BOT implements Notification{
         }
         return false;
     }
-    public void blockUser(long id){
-        try{
-            twitterBot.createBlock(id);
-            this.newNotification(twitterBot.showUser(id).getScreenName()+" ah sido bloqueado");
-            
-        }catch(TwitterException e){
-            System.out.println("Error:" + e.getErrorMessage());
-        }
-    }
-        public void unBlockUser(long id){
-        try{
-            twitterBot.destroyBlock(id);
-            this.newNotification(twitterBot.showUser(id).getScreenName()+" ah sido desbloqueado");
-            
-        }catch(TwitterException e){
-            System.out.println("Error:" + e.getErrorMessage());
-        }
-    }
+    
     public boolean isFavoritedByMe(Status status) throws TwitterException{
-        return twitterBot.getFavorites().contains(status);
+        return twitter.getFavorites().contains(status);
     }
     
     public boolean isRetweetedByMe(Status status){
@@ -325,7 +288,7 @@ public class BOT implements Notification{
         try{
             
             //System.out.println(twitterBot.getUserTimeline());
-            return twitterBot.getUserTimeline();
+            return twitter.getUserTimeline();
         }catch(TwitterException e){
             System.out.println(e.getMessage());
             return null;
@@ -333,7 +296,7 @@ public class BOT implements Notification{
     }
     public ResponseList<Status> viewUserTimeline(long id){
         try {
-            return twitterBot.getUserTimeline(id);
+            return twitter.getUserTimeline(id);
         } catch (TwitterException e) {
             System.out.println(e.getMessage());
             return null;
@@ -341,7 +304,7 @@ public class BOT implements Notification{
     }
     public ResponseList<Status> getHomeTimeLine(){
         try {
-            return twitterBot.getHomeTimeline();
+            return twitter.getHomeTimeline();
         } catch (TwitterException ex) {
             System.out.println(ex.getMessage());
             return null;
@@ -350,7 +313,7 @@ public class BOT implements Notification{
     
     public ResponseList<Status> getTimeLine(long user){
         try {
-            return twitterBot.getUserTimeline(user);
+            return twitter.getUserTimeline(user);
         } catch (TwitterException e) {
             System.out.println(e.getMessage());
         }
@@ -362,12 +325,12 @@ public class BOT implements Notification{
             public void run() {
                 try {        
                     System.out.println("Updating...");
-                    DirectMessageList tt = twitterBot.getDirectMessages(50);
+                    DirectMessageList tt = twitter.getDirectMessages(50);
                     chatsData = tt;
                     for (DirectMessage directMessage : tt) {
-                        if(!twitterBot.showUser(directMessage.getSenderId()).getScreenName().equals(twitterBot.getScreenName())){
+                        if(!twitter.showUser(directMessage.getSenderId()).getScreenName().equals(twitter.getScreenName())){
                             if(!answeredMessages.contains((Long)directMessage.getId())){
-                                System.out.println("Message from: "+twitterBot.showUser(directMessage.getSenderId()).getScreenName());
+                                System.out.println("Message from: "+twitter.showUser(directMessage.getSenderId()).getScreenName());
                                 System.out.println(directMessage.getText());
                                 System.out.println("id: "+directMessage.getId());
                                 reportSpamMensajes(directMessage);
@@ -396,7 +359,7 @@ public class BOT implements Notification{
     }
     public Relationship getFriendship(long from,long target){
         try{
-            return BOT.getInstance().twitterBot.showFriendship(from, target);
+            return twitter.showFriendship(from, target);
             
         }catch(TwitterException ex){
             return null;
@@ -404,14 +367,14 @@ public class BOT implements Notification{
     }
     public void cancelRequest(long user1){
         try{
-            twitterBot.createFriendship(user1, false);
+            twitter.createFriendship(user1, false);
         }catch(TwitterException ex){
             System.out.println("ERROR:"+ ex.getMessage());
         }
     }
     public boolean isPendingTo(long user1) throws TwitterException{
         try{
-            return twitterBot.showUser(user1).isFollowRequestSent();   
+            return twitter.showUser(user1).isFollowRequestSent();   
         }catch(TwitterException ex){
             return false;
         }
@@ -419,9 +382,9 @@ public class BOT implements Notification{
 
     
     private void saveAnsweredMessages() throws TwitterException{
-        chatsData = twitterBot.getDirectMessages(50);
+        chatsData = twitter.getDirectMessages(50);
         for (DirectMessage directMessage :chatsData) {
-            if(!twitterBot.showUser(directMessage.getSenderId()).getScreenName().equals(twitterBot.getScreenName())){
+            if(!twitter.showUser(directMessage.getSenderId()).getScreenName().equals(twitter.getScreenName())){
                 answeredMessages.add(directMessage.getId());
             }
         }
@@ -431,7 +394,7 @@ public class BOT implements Notification{
     public long getMyUserID(){
         try {
 
-            return twitterBot.getId();
+            return twitter.getId();
         } catch (TwitterException e) {
             System.out.println(e.getMessage());
         }return -1;
@@ -454,13 +417,13 @@ public class BOT implements Notification{
         for (int i = 0; i < x.length; i++) {
             String word = x[i];
             word = word.replaceAll("\n", "");
-            System.out.println(word+" , "+"@"+twitterBot.getScreenName());
+            System.out.println(word+" , "+"@"+twitter.getScreenName());
             System.out.println("chat at 0: "+word.charAt(0));
             System.out.println("chat at 1: "+word.charAt(1));
             System.out.println("chat at 2: "+word.charAt(2));
             System.out.println("igual: "+(word.charAt(0) == '@'));
-            System.out.println("equals: "+word.equals("@"+twitterBot.getScreenName()));
-            if(word.charAt(0) == '@' && !word.equals("@"+twitterBot.getScreenName())){
+            System.out.println("equals: "+word.equals("@"+twitter.getScreenName()));
+            if(word.charAt(0) == '@' && !word.equals("@"+twitter.getScreenName())){
                 System.out.println("In if");
                 us = word;
                 break;
@@ -479,15 +442,15 @@ public class BOT implements Notification{
                     long id = Long.parseLong(x[x.length-1]);
                     likeTweet(id);
                     if(id==getMyUserID()){
-                        sendDirectMenssage("@"+twitterBot.showUser(tt.getSenderId()).getScreenName(),"Gracias!");
+                        sendDirectMenssage("@"+twitter.showUser(tt.getSenderId()).getScreenName(),"Gracias!");
                     }else{
-                        sendDirectMenssage("@"+twitterBot.showUser(tt.getSenderId()).getScreenName(),"Le dimos "+x[pos[i]]+" a "+id);
+                        sendDirectMenssage("@"+twitter.showUser(tt.getSenderId()).getScreenName(),"Le dimos "+x[pos[i]]+" a "+id);
                     }
                 }else if(x[pos[i]].equals("#seguir") && user!=null){
                     ResponseList<User> lis = searchUser(user);
                     long id = lis.get(0).getId();
                     followUser(id);
-                    sendDirectMenssage("@"+twitterBot.showUser(tt.getSenderId()).getScreenName(),"Le dimos "+x[pos[i]]+" a "+id);
+                    sendDirectMenssage("@"+twitter.showUser(tt.getSenderId()).getScreenName(),"Le dimos "+x[pos[i]]+" a "+id);
                 }else if(x[pos[i]].equals("#seguir")){
                     long id = tt.getSenderId();
                     followUser(id);
@@ -495,7 +458,7 @@ public class BOT implements Notification{
                 else if(x[pos[i]].equals("#difundir")){
                     long id = Long.parseLong(x[x.length-1]);
                     retweet(id);
-                    sendDirectMenssage("@"+twitterBot.showUser(tt.getSenderId()).getScreenName(),"Difundimos "+id);
+                    sendDirectMenssage("@"+twitter.showUser(tt.getSenderId()).getScreenName(),"Difundimos "+id);
                 }
             }
         }catch(TwitterException e){
@@ -508,8 +471,8 @@ public class BOT implements Notification{
         ConfigurationBuilder  cb  = new ConfigurationBuilder();
         cb.setOAuthConsumerKey(CONSUMER_KEY)
         .setOAuthConsumerSecret(CONSUMER_KEY_SECRET)
-        .setOAuthAccessToken(accessToken.getToken())
-        .setOAuthAccessTokenSecret(accessToken.getTokenSecret());
+        .setOAuthAccessToken(ACCESS_TOKEN)
+        .setOAuthAccessTokenSecret(ACCESS_TOKEN_SECRET);
         
         TwitterStream twitterStream = new TwitterStreamFactory(cb.build()).getInstance();
         
@@ -565,7 +528,7 @@ public class BOT implements Notification{
                     String palabra = entrada.next();
                     for (int j = 0; j < x.length; j++) {
                         if(x[j].equals(palabra)){
-                            twitterBot.reportSpam(status.getId());
+                            twitter.reportSpam(status.getId());
                         }
                     }
                 }
@@ -589,7 +552,7 @@ public class BOT implements Notification{
             for (int j = 0; j < x.length; j++) {
                 if(x[j].toLowerCase().equals(palabra)){
                     System.out.println("Spam detectado");
-                    sendDirectMenssage("@"+twitterBot.showUser(tt.getSenderId()).getScreenName(),"El mensaje contiene alguna palabra con spam!");
+                    sendDirectMenssage("@"+twitter.showUser(tt.getSenderId()).getScreenName(),"El mensaje contiene alguna palabra con spam!");
                     isSpam = true;
                     break;
                 }
@@ -606,7 +569,7 @@ public class BOT implements Notification{
                 for (int j = 0; j < x.length; j++) {
                     if(x[j].toLowerCase().equals(palabra)){
                         System.out.println("Saludo detectado");
-                        sendDirectMenssage("@"+twitterBot.showUser(tt.getSenderId()).getScreenName(),"Saludos");
+                        sendDirectMenssage("@"+twitter.showUser(tt.getSenderId()).getScreenName(),"Saludos");
                         isSaludo = true;
                         break;
                     }
@@ -623,7 +586,7 @@ public class BOT implements Notification{
                     for (int j = 0; j < x.length; j++) {
                         if(x[j].toLowerCase().equals(palabra)){
                             System.out.println("Insulto detectado: "+x[j]);
-                            sendDirectMenssage("@"+twitterBot.showUser(tt.getSenderId()).getScreenName(),"Que wea te pasa tonto sapo y la conchetumare");
+                            sendDirectMenssage("@"+twitter.showUser(tt.getSenderId()).getScreenName(),"Que wea te pasa tonto sapo y la conchetumare");
                             isInsulto = true;
                             break;
                         }
@@ -664,13 +627,10 @@ public class BOT implements Notification{
     
     public DirectMessageList mensageUser(String user){
         try{
-            return twitterBot.getDirectMessages(0,user);
+            return twitter.getDirectMessages(0,user);
         }catch(TwitterException e){
             return null;
         }
     }
     
-    public Twitter instance(){
-        return twitterBot;
-    }
 }

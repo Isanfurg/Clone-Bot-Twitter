@@ -18,11 +18,13 @@ import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.effect.BoxBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -67,6 +69,10 @@ public class SearchedUserViewController implements Initializable {
     @FXML
     private Button followButton;
     int flagFollowButton= 1;
+    int flagBlockedButton = 1;
+    int flagMessageButton = 1;
+    @FXML
+    private Button newMessageButton;
     /**
      * Initializes the controller class.
      */
@@ -82,7 +88,20 @@ public class SearchedUserViewController implements Initializable {
     }    
 
     @FXML
-    private void blockThisUser(ActionEvent event) {
+    private void blockThisUser(ActionEvent event) throws TwitterException {
+        Relationship thisFriendship = BOT.getInstance().getFriendship(BOT.getInstance().getMyUserID(), id);
+        if(flagBlockedButton == 1){
+            BOT.getInstance().blockUser(id);
+            blockedButton.setText("Desbloquear");
+            flagBlockedButton =0;
+            newMessageButton.setDisable(true);
+        }else{
+            BOT.getInstance().unBlockUser(id);
+            blockedButton.setText("Bloquear");
+            if(thisFriendship.canSourceDm())newMessageButton.setDisable(false);
+            flagBlockedButton =1;
+        }
+       
     }
 
     @FXML
@@ -325,6 +344,14 @@ public class SearchedUserViewController implements Initializable {
         
         this.id = thisUser.getId();
         Relationship thisFriendship = BOT.getInstance().getFriendship(BOT.getInstance().getMyUserID(), id);
+        if(!thisFriendship.canSourceDm()){
+            newMessageButton.setDisable(true);
+        }
+        if(thisFriendship.isSourceBlockingTarget()){
+           newMessageButton.setDisable(true);
+           blockedButton.setText("Desbloquear");
+           flagBlockedButton=0;
+        }
         if(thisUser.isProtected()){
             if(BOT.getInstance().isPendingTo(id)){
                 flagFollowButton=2;
@@ -361,6 +388,21 @@ public class SearchedUserViewController implements Initializable {
 
             i++;
             if(i>=5)break;
+        }
+    }
+
+    @FXML
+    private void sendNewMessage(ActionEvent event) throws IOException, TwitterException {
+        FXMLLoader loader =new FXMLLoader(getClass().getResource("/UiComponents/Fxml/newMessage.fxml"));
+        JFXDialog newMessageWindow;
+        try{
+            newMessageWindow =new JFXDialog(thisContainer, loader.load(), JFXDialog.DialogTransition.TOP);
+            newMessageWindow.setOverlayClose(false);
+            NewMessageController controller = loader.getController();
+            controller.setItems(thisContainer, newMessageWindow, id);
+            newMessageWindow.show();
+        }catch(IOException e){
+            
         }
     }
 }
