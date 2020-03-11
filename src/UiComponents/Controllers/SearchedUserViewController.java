@@ -77,6 +77,7 @@ public class SearchedUserViewController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        scrolltweets.setCenterShape(true);
         scrolltweets.vvalueProperty().addListener(
                 (ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
                     if(newValue.doubleValue() == 1.0d){

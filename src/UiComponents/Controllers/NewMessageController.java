@@ -12,6 +12,7 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
@@ -30,7 +31,7 @@ public class NewMessageController implements Initializable {
     @FXML
     private Circle circle;
     @FXML
-    private TextField textMessage;
+    private TextArea textMessage;
     @FXML
     private Text userName;
     @FXML
