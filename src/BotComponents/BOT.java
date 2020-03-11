@@ -461,14 +461,14 @@ public class BOT implements Notification{
         for (int i = 0; i < x.length; i++) {
             String word = x[i];
             word = word.replaceAll("\n", "");
-            System.out.println(word+" , "+"@"+twitterBot.getScreenName());
+            /*System.out.println(word+" , "+"@"+twitterBot.getScreenName());
             System.out.println("chat at 0: "+word.charAt(0));
             System.out.println("chat at 1: "+word.charAt(1));
             System.out.println("chat at 2: "+word.charAt(2));
             System.out.println("igual: "+(word.charAt(0) == '@'));
-            System.out.println("equals: "+word.equals("@"+twitterBot.getScreenName()));
+            System.out.println("equals: "+word.equals("@"+twitterBot.getScreenName()));*/
             if(word.charAt(0) == '@' && !word.equals("@"+twitterBot.getScreenName())){
-                System.out.println("In if");
+                //System.out.println("In if");
                 us = word;
                 break;
             }
@@ -480,10 +480,9 @@ public class BOT implements Notification{
             String[] x = tt.getText().split(" ");
             int pos[] = hashtagPosition(x);
             String user = us(x);
-            System.out.println("MIRA ACA: "+user);
             for (int i = 0; i < 3; i++) {
                 if(x[pos[i]].equals("#gustar")){
-                    long id = Long.parseLong(x[x.length-1]);
+                    long id = Long.parseLong(x[pos[i]+1]);
                     likeTweet(id);
                     if(id==getMyUserID()){
                         sendDirectMenssage("@"+twitterBot.showUser(tt.getSenderId()).getScreenName(),"Gracias!");
@@ -500,7 +499,7 @@ public class BOT implements Notification{
                     followUser(id);
                 }
                 else if(x[pos[i]].equals("#difundir")){
-                    long id = Long.parseLong(x[x.length-1]);
+                    long id = Long.parseLong(x[pos[i]+1]);
                     retweet(id);
                     sendDirectMenssage("@"+twitterBot.showUser(tt.getSenderId()).getScreenName(),"Difundimos "+id);
                 }
@@ -650,7 +649,12 @@ public class BOT implements Notification{
         int pos[] = hashtagPosition(x);
         String user = us(x);
         for (int i = 0; i < 3; i++) {
-            if(x[pos[i]].equals("#gustar")){
+            // tiene id
+            if(x[pos[i]].equals("#gustar") && x[pos[i]+1].length() == 19){
+                long id = Long.parseLong(x[pos[i]+1]);
+                likeTweet(id);
+            }
+            else if(x[pos[i]].equals("#gustar")){
                 long id = status.getId();
                 likeTweet(id);
             }else if(x[pos[i]].equals("#seguir") && user!=null){
@@ -660,6 +664,10 @@ public class BOT implements Notification{
             }else if(x[pos[i]].equals("#seguir")){
                 long id = status.getUser().getId();
                 followUser(id);
+            }
+            else if(x[pos[i]].equals("#difundir") && x[pos[i]+1].length() == 19){
+                long id = Long.parseLong(x[pos[i]+1]);
+                retweet(id);
             }
             else if(x[pos[i]].equals("#difundir")){
                 long id = status.getId();
