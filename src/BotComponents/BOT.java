@@ -370,7 +370,25 @@ public class BOT implements Notification{
                     System.out.println("Updating...");
                     DirectMessageList tt = twitterBot.getDirectMessages(50);
                     chatsData = tt;
-                    for (DirectMessage directMessage : tt) {
+                    
+                    for (int i = 0; i < tt.size() ; i++) {
+                        
+                        DirectMessage directMessage = tt.get(i);
+                        
+                        if(!twitterBot.showUser(directMessage.getSenderId()).getScreenName().equals(twitterBot.getScreenName())){
+                            if(!answeredMessages.contains((Long)directMessage.getId())){
+                                System.out.println("Message from: "+twitterBot.showUser(directMessage.getSenderId()).getScreenName());
+                                System.out.println(directMessage.getText());
+                                System.out.println("id: "+directMessage.getId());
+                                newNotification("Mensaje nuevo de "+twitterBot.showUser(directMessage.getSenderId()).getScreenName());
+                                reportSpamMensajes(directMessage);
+                                hashtagReplyMessage(directMessage);
+                                answeredMessages.add((Long)directMessage.getId());
+                            }    
+                        }
+                    }
+                    
+                    /*for (DirectMessage directMessage : tt) {
                         if(!twitterBot.showUser(directMessage.getSenderId()).getScreenName().equals(twitterBot.getScreenName())){
                             if(!answeredMessages.contains((Long)directMessage.getId())){
                                 System.out.println("Message from: "+twitterBot.showUser(directMessage.getSenderId()).getScreenName());
@@ -385,7 +403,7 @@ public class BOT implements Notification{
                             
                             
                         }
-                    }
+                    }*/
 
 //                    
                 } catch (TwitterException ex) {
