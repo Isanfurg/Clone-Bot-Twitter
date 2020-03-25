@@ -26,7 +26,7 @@ valores impresionantes
 urgente
 ya hazlo ahora
 llama ahora
-inscríbete ahoraBOT.java:507
+inscríbete ahora
 aprovecha hoy
 no puedes vivir sin
 obtén ahora
@@ -1860,7 +1860,6 @@ zvuker.net
 100% (incluido 100% gratis, 100% satisfecho, etc.)
 50% de descuento
 $$$ (incluyendo ganar $, ahorrar $, solo $, etc.)
-# 1
 4U (para tí)
 Billón
 Únete a millones
@@ -2052,9 +2051,7 @@ Decisión de inversión
 Requiere inversión inicial
 Alerta de stock
 Selección de stock
-
 Finanzas personales
-
 Ingresos adicionales
 Evitar la bancarrota
 Sé tu propio jefe
@@ -2069,7 +2066,7 @@ Duplica tus ingresos
 Gana dinero extra
 Gana ingresos adicionales
 Eliminar mal crédito
- Eliminar la deuda
+Eliminar la deuda
 Espera ganar
 Ingresos adicionales
 Financieramente independiente
@@ -2256,5 +2253,3 @@ Cuota gratis
 Muestra gratis
 Prueba gratis
 Sitio web gratuito
-
-

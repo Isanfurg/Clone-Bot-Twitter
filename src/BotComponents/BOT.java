@@ -617,7 +617,7 @@ public class BOT implements Notification{
         String subString;
         
         while((subString = br.readLine()) != null && !isSpam) {
-            if(messageContent.contains(subString)){
+            if(messageContent.contains(subString.toLowerCase())){
                 System.out.println("Spam detectado");
                 sendDirectMenssage("@"+twitterBot.showUser(tt.getSenderId()).getScreenName(),"El mensaje contiene alguna palabra con spam!");
                 isSpam = true;
@@ -631,8 +631,8 @@ public class BOT implements Notification{
             br = new BufferedReader(fr);
             boolean isSaludo = false;
             
-            while((subString = br.readLine()) != null && !isSaludo){
-                if(messageContent.contains(subString)){
+            while((subString = br.readLine()) != null && !isSaludo){                
+                if(messageContent.contains(subString.toLowerCase())){
                     System.out.println("Saludo detectado");
                     sendDirectMenssage("@"+twitterBot.showUser(tt.getSenderId()).getScreenName(),"Saludos");
                     isSaludo = true;
@@ -647,7 +647,7 @@ public class BOT implements Notification{
                 boolean isInsulto = false;
                 
                 while((subString = br.readLine()) != null && !isInsulto) {
-                    if(messageContent.contains(subString)){
+                    if(messageContent.contains(subString.toLowerCase())){
                         System.out.println("Insulto detectado");
                         sendDirectMenssage("@"+twitterBot.showUser(tt.getSenderId()).getScreenName(),"Que wea te pasa tonto sapo y la conchetumare");
                         isInsulto = true;
