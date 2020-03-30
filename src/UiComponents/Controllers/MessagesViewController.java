@@ -94,22 +94,7 @@ public class MessagesViewController implements Initializable {
         this.ids = ids;
         setUserIdsOnScreen();
     }
-    public void refreshMesssages(){
-            TimerTask timerTask = new TimerTask() {
-            @Override
-            public void run() {
-                try {
-                    setData();
-                } catch (TwitterException ex) {
-                    Logger.getLogger(MessagesViewController.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IOException ex) {
-                    Logger.getLogger(MessagesViewController.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        };
-        Timer timer =new Timer();
-        timer.scheduleAtFixedRate(timerTask, 0, 60*1000);
-    }
+
     public void setUserIdsOnScreen() throws TwitterException, IOException{
         usersViev.getChildren().clear();
         

@@ -14,7 +14,6 @@ import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
-import jdk.jfr.events.FileReadEvent;
 import twitter4j.DirectMessage;
 import twitter4j.DirectMessageList;
 import twitter4j.Relationship;
@@ -77,7 +76,8 @@ public class BOT implements Notification{
         this.access = true;
         TRUEBOT.getInstance();
     } catch (TwitterException e) {
-        Platform.runLater(()->{this.newNotification("Error al procesar el PIN.");});
+        Platform.runLater(()->{this.newNotification("Error al procesar el PIN. "
+                + "por favor, copie la URL nuevamente.");});
         
         System.out.println("Failed to get access token, caused by: "
         + e.getMessage());
@@ -174,6 +174,7 @@ public class BOT implements Notification{
             DirectMessage dm = twitterBot.sendDirectMessage(screenName,text);
             this.newNotification("Mensaje enviado a "+ screenName);
             chatsData.add(0, dm);
+            answeredMessages.add(dm.getId());
         }catch(TwitterException e){
             System.out.println("update error by:"
             +e.getMessage());
@@ -372,29 +373,16 @@ public class BOT implements Notification{
             public void run() {
                 try {        
                     System.out.println("Updating...");
+                    newNotification("Actualizando mensajes...");
                     DirectMessageList tt = twitterBot.getDirectMessages(50);
-                    chatsData = tt;
-                    
                     for (int i = tt.size() - 1; i >= 0 ; i--) {
                         
                         DirectMessage directMessage = tt.get(i);
-                        
-                        if(!twitterBot.showUser(directMessage.getSenderId()).getScreenName().equals(twitterBot.getScreenName())){
-                            if(!answeredMessages.contains((Long)directMessage.getId())){
-                                System.out.println("Message from: "+twitterBot.showUser(directMessage.getSenderId()).getScreenName());
-                                System.out.println(directMessage.getText());
-                                System.out.println("id: "+directMessage.getId());
-                                newNotification("Mensaje nuevo de "+twitterBot.showUser(directMessage.getSenderId()).getScreenName());
-                                reportSpamMensajes(directMessage);
-                                hashtagReplyMessage(directMessage);
-                                answeredMessages.add((Long)directMessage.getId());
-                            }    
-                        }
-                    }
-                    
-                    /*for (DirectMessage directMessage : tt) {
-                        if(!twitterBot.showUser(directMessage.getSenderId()).getScreenName().equals(twitterBot.getScreenName())){
-                            if(!answeredMessages.contains((Long)directMessage.getId())){
+                 
+                        if(!answeredMessages.contains((Long)directMessage.getId())){
+                            chatsData.add(0, directMessage);
+                            if(!twitterBot.showUser(directMessage.getSenderId()).getScreenName().equals(twitterBot.getScreenName()))
+                            {
                                 System.out.println("Message from: "+twitterBot.showUser(directMessage.getSenderId()).getScreenName());
                                 System.out.println(directMessage.getText());
                                 System.out.println("id: "+directMessage.getId());
@@ -404,10 +392,16 @@ public class BOT implements Notification{
                                 answeredMessages.add((Long)directMessage.getId());
                             }
                             
-                            
-                            
-                        }
+                        }    
+                        
+                    }
+                    
+                    /*for (DirectMessage directMessage : chatsData)
+                    {
+                        System.out.println("Mensaje de: "+showUser(directMessage.getSenderId()).getScreenName());
+                        System.out.println(directMessage.getText());
                     }*/
+                    
 
 //                    
                 } catch (TwitterException ex) {
@@ -452,9 +446,10 @@ public class BOT implements Notification{
     private void saveAnsweredMessages() throws TwitterException{
         chatsData = twitterBot.getDirectMessages(50);
         for (DirectMessage directMessage :chatsData) {
-            if(!twitterBot.showUser(directMessage.getSenderId()).getScreenName().equals(twitterBot.getScreenName())){
-                answeredMessages.add(directMessage.getId());
-            }
+            System.out.println("Mensaje de: "+showUser(directMessage.getSenderId()).getScreenName());
+            System.out.println(directMessage.getText());
+            answeredMessages.add(directMessage.getId());
+   
         }
     }
     

@@ -288,7 +288,7 @@ public class UserViewController implements Initializable, Notification {
         
     public VBox tweetTemplate(Status status, VBox parent) throws TwitterException{
         System.out.println("setting status");
-//obtener data desde el user
+        //obtener data desde el user
         VBox VBox = new VBox();
         VBox.setStyle("fx-padding: 10 10 10 10");
         VBox.setSpacing(5);
@@ -471,7 +471,10 @@ public class UserViewController implements Initializable, Notification {
          buttons.getChildren().add(likeB);
          buttons.getChildren().add(retweetB);
          
-         if(BOT.getInstance().isRetweetedByMe(status)) 
+         
+         
+         if(status.getUser().getScreenName().equals(BOT.getInstance().getUserName())
+                 || BOT.getInstance().isRetweetedByMe(status))
              buttons.getChildren().add(deleteB);
          
          VBox.getChildren().add(buttons);

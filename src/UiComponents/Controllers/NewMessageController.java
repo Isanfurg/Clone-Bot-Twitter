@@ -18,6 +18,7 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
+import twitter4j.DirectMessage;
 import twitter4j.TwitterException;
 import twitter4j.User;
 
@@ -59,7 +60,6 @@ public class NewMessageController implements Initializable {
     private void sendMessage(ActionEvent event) throws TwitterException {
         if(textMessage.getText().length()>0){
            BOT.getInstance().sendDirectMenssage(user.getScreenName(), textMessage.getText());
-           
             closeButton(event);
         }else{
            BOT.getInstance().newNotification("No es posible enviar un mensaje vacio");
