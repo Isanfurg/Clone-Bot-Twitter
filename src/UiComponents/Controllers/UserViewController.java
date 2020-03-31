@@ -480,7 +480,12 @@ public class UserViewController implements Initializable, Notification {
          //line 
          Line line = new Line(0, 0, 600, 0);
          VBox.getChildren().add(line);
-         
+        try{
+            Status tweet = status.getRetweetedStatus();
+            if(BOT.getInstance().isFavoritedByMe(tweet)) likeB.setStyle("-fx-background-color: red;");
+        }catch(TwitterException e){
+            System.out.println(e.getMessage());
+        }
         if(BOT.getInstance().isFavoritedByMe(status)) likeB.setStyle("-fx-background-color: red;");
         if(BOT.getInstance().isRetweetedByMe(status)) retweetB.setStyle("-fx-background-color: red;");
 

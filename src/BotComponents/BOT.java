@@ -638,7 +638,8 @@ public class BOT implements Notification{
                 while((subString = br.readLine()) != null && !isInsulto) {
                     if(messageContent.contains(subString.toLowerCase())){
                         System.out.println("Insulto detectado");
-                        sendDirectMenssage("@"+twitterBot.showUser(tt.getSenderId()).getScreenName(),"Que wea te pasa tonto sapo y la conchetumare");
+                        sendDirectMenssage("@"+twitterBot.showUser(tt.getSenderId()).getScreenName(),"Que wea te pasa tonto sapo y la conchetumare \n La burla es la diversion de quienes no saben reir de corazon, di no al bullying!");
+                        isInsulto = true;
                         isInsulto = true;
                         break;
                      
