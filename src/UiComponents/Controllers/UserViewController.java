@@ -165,7 +165,6 @@ public class UserViewController implements Initializable, Notification {
         rootAnchorPane.setEffect(blur);
         JFXDialog newSearch = new JFXDialog(rootPane, loader.load(), JFXDialog.DialogTransition.TOP);
         newSearch.setOverlayClose(false);
-        
         SearchedUsersController controller = loader.getController();
         controller.setToClose(newSearch, rootAnchorPane,rootPane);
         if(id_user.getText().length()!=0){
@@ -516,7 +515,7 @@ public class UserViewController implements Initializable, Notification {
             boolean flag = true;
             for (HashtagEntity hashtag : actualTimeLine.get(i).getHashtagEntities()) {
                 System.out.println("Hashtag: "+hashtag.getText());
-                if(("#"+hashtag.getText().toLowerCase()).equals(textFilter.getText().toLowerCase())){
+                if(("#"+hashtag.getText().toLowerCase()).contains(textFilter.getText().toLowerCase())){
                     System.out.println("Tweet: "+actualTimeLine.get(i).getText());
                     flag = false;
                     break;

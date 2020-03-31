@@ -480,12 +480,6 @@ public class BOT implements Notification{
         for (int i = 0; i < x.length; i++) {
             String word = x[i];
             word = word.replaceAll("\n", "");
-            /*System.out.println(word+" , "+"@"+twitterBot.getScreenName());
-            System.out.println("chat at 0: "+word.charAt(0));
-            System.out.println("chat at 1: "+word.charAt(1));
-            System.out.println("chat at 2: "+word.charAt(2));
-            System.out.println("igual: "+(word.charAt(0) == '@'));
-            System.out.println("equals: "+word.equals("@"+twitterBot.getScreenName()));*/
             if(word.charAt(0) == '@' && !word.equals("@"+twitterBot.getScreenName())){
                 //System.out.println("In if");
                 us = word;
@@ -666,13 +660,17 @@ public class BOT implements Notification{
         String user = us(x);
         for (int i = 0; i < 3; i++) {
             // tiene id
-            if(x[pos[i]].equals("#gustar") && x[pos[i]+1].length() == 19){
-                long id = Long.parseLong(x[pos[i]+1]);
-                likeTweet(id);
-            }
-            else if(x[pos[i]].equals("#gustar")){
-                long id = status.getId();
-                likeTweet(id);
+            if(x[pos[i]].equals("#gustar")){
+                try
+                {
+                    long id = Long.parseLong(x[pos[i]+1]);
+                    likeTweet(id);
+
+                } catch (Exception e)
+                {
+                    likeTweet(status.getId());
+                }
+                
             }else if(x[pos[i]].equals("#seguir") && user!=null){
                 ResponseList<User> lis = searchUser(user);
                 long id = lis.get(0).getId();
@@ -681,13 +679,17 @@ public class BOT implements Notification{
                 long id = status.getUser().getId();
                 followUser(id);
             }
-            else if(x[pos[i]].equals("#difundir") && x[pos[i]+1].length() == 19){
-                long id = Long.parseLong(x[pos[i]+1]);
-                retweet(id);
-            }
+
             else if(x[pos[i]].equals("#difundir")){
-                long id = status.getId();
-                retweet(id);
+                
+                try
+                {
+                    long id = Long.parseLong(x[pos[i]+1]);
+                    retweet(id);
+                } catch (Exception e)
+                {
+                    retweet(status.getId());
+                }
             }
         }
     }
